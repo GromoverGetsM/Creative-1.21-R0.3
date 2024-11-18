@@ -1,5 +1,11 @@
 prefix: "&bCreative+ &8» &f"
 
+info:
+  locale-set: "Locale set: &6en_US"
+
+errors:
+  menu-not-defined: "&4⛔ &cMenu is not defined"
+
 global-items:
   menu-not-filled:
     name: "&c This menu is not filled yet "
@@ -22,13 +28,82 @@ global-items:
       - "&f go to the previous "
       - "&f page "
 
+coding:
+  var-types:
+    text:
+      name: "&bText"
+      lore:
+        - "&7Place a book here -"
+        - "&7- text variable"
+    numeric:
+      name: "&cNumber"
+      lore:
+        - "&7Place slime here -"
+        - "&7- numeric variable"
+    location:
+      name: "&fLocation"
+      lore:
+        - "&7Place a paper here -"
+        - "&7- location variable"
+    dynamic:
+      name: "&6Dynamic Variable"
+      lore:
+        - "&7Place magma cream here -"
+        - "&7- dynamic variable"
+
+
 menus:
-  my-worlds:
-    title: "My worlds"
+  worlds-option:
+    title: "Choose an Option"
     items:
-      new-world:
-        name: "&e Create World "
+      create-world:
+        name: "&eCreate Plot"
         lore:
-          - "&f Create a raft and dive "
-          - "&f into a world of endless fantasy "
-          - "&f of coding and building "
+          - "&7Creates a new plot if"
+          - "&7the limit has not been reached"
+          - "&7"
+          - "&7Available plots to create:"
+          - "&e%s"
+      worlds-browser:
+        name: "&eWorld Browser"
+        lore:
+          - "&7Opens the list of available worlds"
+      my-worlds:
+        name: "&eMy Worlds"
+        lore:
+          - "&7Opens your worlds"
+
+  create-world:
+    title: "World Creation"
+    items:
+      environment-parameter:
+        name: "&eEnvironment"
+        lore:
+          - "&7The game can exist in different"
+          - "&7world types. This affects"
+          - "&7game behavior and biomes in the world"
+        states:
+          normal: "Normal World"
+          nether: "The Nether"
+          the_end: "The End"
+      generation-parameter:
+        name: "&eWorld Type"
+        lore:
+          - "&7Different world types affect"
+          - "&7the generation of the world itself"
+        states:
+          normal: "Normal World"
+          flat: "Flat World"
+          large_biomes: "Large Biomes"
+          amplified: "Amplified Generation"
+      generate-structures:
+        name: "&eGenerate Structures"
+        lore:
+          - "&7Structures like villages,"
+          - "&7End cities, Nether fortresses, and"
+          - "&7so on will (not) be generated,"
+          - "&7depending on the decision"
+        states:
+          true: "Generate structures"
+          false: "Do not generate structures"
+

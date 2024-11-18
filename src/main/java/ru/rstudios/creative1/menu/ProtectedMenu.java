@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.rstudios.creative1.user.User;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public abstract class ProtectedMenu implements InventoryHolder {
 
     private String title;
     private byte rows;
-    private Map<Byte, ItemStack> items;
+    private Map<Byte, ItemStack> items = new LinkedHashMap<>();
     protected Inventory inventory;
 
     protected final static ItemStack AIR = new ItemStack(Material.AIR, 0);
@@ -96,6 +97,7 @@ public abstract class ProtectedMenu implements InventoryHolder {
             inventory = getInventory();
             user.player().openInventory(inventory);
         } catch (Exception e) {
+            e.printStackTrace();
             user.sendMessage("error.unknown", true, "");
         }
 

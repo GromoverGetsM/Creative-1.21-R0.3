@@ -5,6 +5,8 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class User {
@@ -56,19 +58,37 @@ public class User {
     public long getPlotLimit() {
         Object value = DatabaseUtil.getValue("players", "plot_limit", "player_name", name());
         if (value == null) value = 3;
-        return (long) value;
+        return Long.parseLong(value.toString());
     }
 
     public List<Integer> getPlotIds() {
         Object value = DatabaseUtil.getValue("players", "plot_ids", "player_name", name());
         List<String> cache = DatabaseUtil.jsonToStringList((String) value);
 
-        List<Integer> toReturn = new ArrayList<>();
+        List<Integer> toReturn = new LinkedList<>();
 
-        assert cache != null : "Произошла непредвиденная ошибка - нельзя создать список плотов игрока";
-        cache.forEach(elem -> toReturn.add(Integer.parseInt(elem)));
+        if (cache != null && !cache.isEmpty()) cache.forEach(elem -> toReturn.add(Integer.parseInt(elem)));
 
         return toReturn;
+    }
+
+    public long currentPlotsCount() {
+        return getPlotIds().size();
+    }
+
+    public List<String> getPlotNames() {
+        ResultSet rs = DatabaseUtil.executeQuery("SELECT plot_name FROM plots WHERE owner_name = " + name());
+        List<String> names = new LinkedList<>();
+
+        try {
+            while (rs.next()) {
+                names.add(rs.getString("plot_name"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return names;
     }
 
 

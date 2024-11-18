@@ -1,6 +1,7 @@
 package ru.rstudios.creative1.user;
 
 import net.kyori.adventure.text.Component;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -44,7 +45,22 @@ public class LocaleManages {
         return messagesC;
     }
 
+    public static List<String> getLocaleMessagesS (String locale, String messageCode, HashMap<Integer, String> localeChanges) {
+        FileConfiguration localizationFile = getLocaleConfig(locale);
+        List<String> messages = localizationFile.getStringList(messageCode);
+
+        for (Integer i : localeChanges.keySet()) {
+            messages.set(i, String.format(messages.get(i), localeChanges.get(i)).replace("&", "§"));
+        }
+
+        return messages;
+    }
+
     public static String getLocale (Player player) {
         return (String) DatabaseUtil.getValue("players", "player_locale", "player_name", player.getName());
+    }
+
+    public static String formattedString (String s, String change, String changeFor) {
+        return StringUtils.replace(s, change, changeFor);
     }
 }

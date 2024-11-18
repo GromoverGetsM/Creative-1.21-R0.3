@@ -4,14 +4,21 @@ import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.WorldUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class Plot {
 
@@ -33,12 +40,12 @@ public class Plot {
         this.owner = owner;
     }
 
-    public void create() {
+    public void create(String environment, String generation, boolean genStructures) {
         this.id = WorldUtil.getLastWorldId();
 
         String plotName = "world_plot_" + id + "_CraftPlot";
+        PlotManager.plots.putIfAbsent(plotName, this);
 
-        this.world = Bukkit.createWorld(new WorldCreator(plotName));
         this.customId = "";
         this.icon = Material.BRICKS;
         this.iconName = "§7Игра от игрока §e" + owner;
@@ -81,6 +88,8 @@ public class Plot {
 
             this.flags = config.getConfigurationSection("gameRules").getValues(false);
         } catch (IOException e) { throw new RuntimeException(e); }
+
+        generateWorld(environment, generation, genStructures);
     }
 
     public void init (long id) {
@@ -88,7 +97,6 @@ public class Plot {
     }
     public void init (String plotName) {
         this.id = Integer.parseInt(plotName.replace("world_plot_", "").replace("_CraftPlot", "").trim());
-        this.world = Bukkit.createWorld(new WorldCreator(plotName));
         this.customId = (String) DatabaseUtil.getValue("plots", "custom_id", "plot_name", plotName);
         this.icon = Material.valueOf((String) DatabaseUtil.getValue("plots", "icon", "plot_name", plotName));
         this.iconName = (String) DatabaseUtil.getValue("plots", "icon_name", "plot_name", plotName);
@@ -99,6 +107,8 @@ public class Plot {
         this.paidPlayers = new LinkedList<>();
         this.cost = Integer.parseInt((String) Objects.requireNonNull(DatabaseUtil.getValue("plots", "cost", "plot_name", plotName)));
         this.dev = new DevPlot(this);
+
+        PlotManager.plots.putIfAbsent(plotName, this);
 
         File file = new File(Bukkit.getWorldContainer() + File.separator + plotName + File.separator + "config.yml");
         if (file.exists()) {
@@ -112,7 +122,41 @@ public class Plot {
             this.flags = flags.getValues(false);
         }
 
+        String environment = (String) DatabaseUtil.getValue("plots", "environment", "id", id());
+        String generator = (String) DatabaseUtil.getValue("plots", "generation", "id", id());
+        boolean genStructures = (boolean) DatabaseUtil.getValue("plots", "gen_structures", "id", id());
+
+        generateWorld(environment, generator, genStructures);
+    }
+
+    private void generateWorld (String environment, String generator, boolean generateStructures) {
+        WorldCreator creator = new WorldCreator(plotName());
+        creator.type(WorldType.valueOf(generator.toUpperCase(Locale.ROOT)));
+        creator.environment(World.Environment.valueOf(environment));
+        creator.generateStructures(generateStructures);
+
+        this.world = creator.createWorld();
         applyGameRules();
+
+        world.setAutoSave(true);
+        world.setKeepSpawnInMemory(false);
+        if (world.getEnvironment() == World.Environment.THE_END) {
+            if (world.getEnderDragonBattle() != null) {
+                world.getEnderDragonBattle().setPreviouslyKilled(true);
+                world.getEnderDragonBattle().getBossBar().setVisible(false);
+            }
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (Entity entity : world.getEntities()) {
+                        if (entity instanceof EnderDragon dragon) {
+                            dragon.setHealth(0);
+                        }
+                    }
+                }
+            }.runTaskLater(plugin,10L);
+        }
+
     }
 
     private void applyGameRules() {
@@ -162,6 +206,9 @@ public class Plot {
         ItemStack icon = new ItemStack(this.icon);
         ItemMeta iconMeta = icon.getItemMeta();
         iconMeta.setDisplayName(this.iconName);
+
+        PersistentDataContainer pdc = iconMeta.getPersistentDataContainer();
+        pdc.set(new NamespacedKey(plugin, "plotName"), PersistentDataType.STRING, this.plotName());
 
         List<String> lore = new ArrayList<>();
         lore.add("§8§oАвтор: " + this.owner);

@@ -6,15 +6,20 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import ru.rstudios.creative1.menu.ProtectedMultipages;
+import ru.rstudios.creative1.plots.Plot;
+import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.user.User;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static ru.rstudios.creative1.user.LocaleManages.*;
 
 public class MyWorlds extends ProtectedMultipages {
     public MyWorlds(User user) {
-        super(getLocaleMessage(getLocale(user.player()), "menus.my-worlds.title", false, ""), user.player());
+        super(getLocaleMessage(getLocale(user.player()), "menus.my-worlds.title", false, ""), user);
     }
 
     @Override
@@ -24,7 +29,11 @@ public class MyWorlds extends ProtectedMultipages {
 
     @Override
     public List<ItemStack> getMenuElements() {
-        return null;
+        return user.getPlotNames().stream()
+                .map(PlotManager.plots::get)
+                .filter(Objects::nonNull)
+                .map(Plot::icon)
+                .collect(Collectors.toList());
     }
 
     @Override

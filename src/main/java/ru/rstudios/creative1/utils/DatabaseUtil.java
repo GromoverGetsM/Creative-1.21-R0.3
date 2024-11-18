@@ -43,7 +43,10 @@ public class DatabaseUtil {
                 icon VARCHAR(100),
                 icon_name VARCHAR(100),
                 icon_lore VARCHAR(500),
-                cost BIGINT
+                cost BIGINT,
+                environment VARCHAR(100),
+                generation VARCHAR(100),
+                gen_structures BOOLEAN
             );
         """;
 

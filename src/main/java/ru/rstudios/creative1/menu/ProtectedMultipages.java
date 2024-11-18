@@ -12,6 +12,7 @@ import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +22,7 @@ public abstract class ProtectedMultipages extends ProtectedMenu {
     protected Inventory inventory;
     protected byte currentPage;
 
-    protected List<ItemStack> menuElements;
+    protected List<ItemStack> menuElements = new LinkedList<>();
     protected byte[] itemsSlots = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25};
 
     protected byte menuDoNotFilled = 22;
