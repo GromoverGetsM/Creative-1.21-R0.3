@@ -59,5 +59,17 @@ public class User {
         return (long) value;
     }
 
+    public List<Integer> getPlotIds() {
+        Object value = DatabaseUtil.getValue("players", "plot_ids", "player_name", name());
+        List<String> cache = DatabaseUtil.jsonToStringList((String) value);
+
+        List<Integer> toReturn = new ArrayList<>();
+
+        assert cache != null : "Произошла непредвиденная ошибка - нельзя создать список плотов игрока";
+        cache.forEach(elem -> toReturn.add(Integer.parseInt(elem)));
+
+        return toReturn;
+    }
+
 
 }

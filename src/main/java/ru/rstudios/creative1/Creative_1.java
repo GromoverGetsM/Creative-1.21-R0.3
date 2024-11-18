@@ -1,6 +1,7 @@
 package ru.rstudios.creative1;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.FileUtil;
 
 import java.io.File;
@@ -13,6 +14,7 @@ public final class Creative_1 extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        DatabaseUtil.createTables();
 
         try {
             FileUtil.saveResourceFolder("dev", new File(getDataFolder() + File.separator + "templates" + File.separator + "dev"));
