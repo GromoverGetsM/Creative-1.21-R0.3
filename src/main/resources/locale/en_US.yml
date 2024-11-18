@@ -1,0 +1,34 @@
+prefix: "&bCreative+ &8» &f"
+
+global-items:
+  menu-not-filled:
+    name: "&c This menu is not filled yet "
+    lore:
+      - "&f The menu is currently "
+      - "&f under development. For more "
+      - "&f information about updates, "
+      - "&f please visit the Discord: "
+      - "&c @gromovergets "
+  next-page:
+    name: "&e Forward (#%s) "
+    lore:
+      - "&f Click on the item to "
+      - "&f go to the next "
+      - "&f page "
+  prev-page:
+    name: "&e Back (#%s) "
+    lore:
+      - "&f Click on the item to "
+      - "&f go to the previous "
+      - "&f page "
+
+menus:
+  my-worlds:
+    title: "My worlds"
+    items:
+      new-world:
+        name: "&e Create World "
+        lore:
+          - "&f Create a raft and dive "
+          - "&f into a world of endless fantasy "
+          - "&f of coding and building "
