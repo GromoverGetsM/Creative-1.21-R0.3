@@ -98,7 +98,7 @@ public abstract class ProtectedMenu implements InventoryHolder {
             user.player().openInventory(inventory);
         } catch (Exception e) {
             e.printStackTrace();
-            user.sendMessage("error.unknown", true, "");
+            user.sendMessage("errors.unknown", true, "");
         }
 
     }

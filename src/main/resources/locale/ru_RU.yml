@@ -2,9 +2,11 @@ prefix: "&bCreative+ &8» &f"
 
 info:
   locale-set: "Локализация установлена: &6ru_RU"
+  plot-is-creating: "Плот создаётся, пожалуйста подождите..."
 
 errors:
   menu-not-defined: "&4⛔ &cМеню ещё не определено"
+  plot-is-locked: "Владелец закрыл игру для посещения, попробуйте позже! :c"
 
 global-items:
   menu-not-filled:
@@ -110,3 +112,6 @@ menus:
         lore:
           - "&7Запускает создание мира с"
           - "&7заданными параметрами"
+
+  my-worlds:
+    title: "Мои миры"

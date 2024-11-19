@@ -40,6 +40,7 @@ public class DatabaseUtil {
                 plot_name VARCHAR(100) NOT NULL,
                 custom_id VARCHAR(100),
                 owner_name VARCHAR(100) NOT NULL,
+                openedState BOOLEAN,
                 icon VARCHAR(100),
                 icon_name VARCHAR(100),
                 icon_lore VARCHAR(500),

@@ -80,12 +80,14 @@ public class User {
         ResultSet rs = DatabaseUtil.executeQuery("SELECT plot_name FROM plots WHERE owner_name = " + name());
         List<String> names = new LinkedList<>();
 
-        try {
-            while (rs.next()) {
-                names.add(rs.getString("plot_name"));
+        if (rs != null) {
+            try {
+                while (rs.next()) {
+                    names.add(rs.getString("plot_name"));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
 
         return names;

@@ -8,9 +8,7 @@ import org.bukkit.entity.Player;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
@@ -35,26 +33,40 @@ public class LocaleManages {
         List<Component> messagesC = new LinkedList<>();
 
         for (Integer i : localeChanges.keySet()) {
-            messages.set(i, String.format(messages.get(i), localeChanges.get(i)).replace("&", "§"));
+            messages.set(i, String.format(messages.get(i), localeChanges.get(i)));
         }
 
         for (String s : messages) {
-            messagesC.add(Component.text(s));
+            messagesC.add(Component.text(s.replace("&", "§")));
         }
 
         return messagesC;
     }
 
-    public static List<String> getLocaleMessagesS (String locale, String messageCode, HashMap<Integer, String> localeChanges) {
+    public static List<String> getLocaleMessagesS(String locale, String messageCode, HashMap<Integer, String> localeChanges) {
+        // Получаем конфигурацию локализации
         FileConfiguration localizationFile = getLocaleConfig(locale);
-        List<String> messages = localizationFile.getStringList(messageCode);
+        List<String> messages = new ArrayList<>(localizationFile.getStringList(messageCode)); // Создаем копию, чтобы избежать изменений оригинала
 
-        for (Integer i : localeChanges.keySet()) {
-            messages.set(i, String.format(messages.get(i), localeChanges.get(i)).replace("&", "§"));
+        // Применяем изменения на основе localeChanges
+        for (Map.Entry<Integer, String> entry : localeChanges.entrySet()) {
+            Integer index = entry.getKey();
+            String replacement = entry.getValue();
+
+            if (index >= 0 && index < messages.size()) { // Проверяем корректность индекса
+                String originalMessage = messages.get(index);
+                messages.set(index, String.format(originalMessage, replacement));
+            }
+        }
+
+        // Заменяем символы "&" на "§" для всех сообщений
+        for (int i = 0; i < messages.size(); i++) {
+            messages.set(i, messages.get(i).replace("&", "§"));
         }
 
         return messages;
     }
+
 
     public static String getLocale (Player player) {
         return (String) DatabaseUtil.getValue("players", "player_locale", "player_name", player.getName());

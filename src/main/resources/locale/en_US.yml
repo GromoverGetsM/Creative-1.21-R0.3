@@ -2,6 +2,7 @@ prefix: "&bCreative+ &8» &f"
 
 info:
   locale-set: "Locale set: &6en_US"
+  plot-is-creating: "Plot is creating. Please wait..."
 
 errors:
   menu-not-defined: "&4⛔ &cMenu is not defined"

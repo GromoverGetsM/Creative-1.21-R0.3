@@ -22,7 +22,7 @@ public class OptionSelectorMenu extends ProtectedMenu {
     public void fillItems(User user) {
         setItem((byte) 10, ItemUtil.head("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBjOTdlNGI2OGFhYWFlODQ3MmUzNDFiMWQ4NzJiOTNiMzZkNGViNmVhODllY2VjMjZhNjZlNmM0ZTE3OCJ9fX0=",
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.worlds-option.items.create-world.name", false, ""),
-                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.worlds-option.items.create-world.lore", (java.util.HashMap<Integer, String>) Map.of(4, String.valueOf(user.getPlotLimit() - user.currentPlotsCount())))));
+                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.worlds-option.items.create-world.lore", new LinkedHashMap<>(Map.of(4, String.valueOf(user.getPlotLimit() - user.currentPlotsCount()))))));
         setItem((byte) 13, ItemUtil.head("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA0ODMxZjdhN2Q4ZjYyNGM5NjMzOTk2ZTM3OThlZGFkNDlhNWQ5YmNkMThlY2Y3NWJmYWU2NmJlNDhhMGE2YiJ9fX0=",
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.worlds-option.items.worlds-browser.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.worlds-option.items.worlds-browser.lore", new LinkedHashMap<>())));
@@ -38,7 +38,8 @@ public class OptionSelectorMenu extends ProtectedMenu {
         event.setCancelled(true);
 
         switch (event.getSlot()) {
-            case 10, 13 -> user.sendMessage("menu-not-defined", false, "");
+            case 10 -> new CreateWorldMenu(user).open(user);
+            case 13 -> user.sendMessage("errors.menu-not-defined", false, "");
             case 16 -> new MyWorlds(user).open(user);
         }
     }

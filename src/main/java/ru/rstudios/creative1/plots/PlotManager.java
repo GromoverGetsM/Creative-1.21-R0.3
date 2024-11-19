@@ -19,7 +19,7 @@ public class PlotManager {
             if (file.isDirectory() && file.getName().endsWith("_CraftPlot")) {
                 String owner = (String) DatabaseUtil.getValue("plots", "owner_name", "plot_name", file.getName());
 
-                new Plot(owner).init(file.getName());
+                new Plot(owner).init(file.getName(), false);
             }
         }
     }
@@ -31,7 +31,7 @@ public class PlotManager {
     }
 
     public static void loadPlot(String owner, String plotName) {
-        new Plot(owner).init(plotName);
+        new Plot(owner).init(plotName, true);
     }
 
     public static void unloadPlot(String plotName) {

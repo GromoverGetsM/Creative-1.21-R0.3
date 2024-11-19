@@ -6,11 +6,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.WorldUtil;
 
@@ -35,12 +37,21 @@ public class Plot {
     public List<String> paidPlayers;
     public long cost;
     public DevPlot dev;
+    public boolean isOpened;
 
     public Plot (String owner) {
         this.owner = owner;
     }
 
     public void create(String environment, String generation, boolean genStructures) {
+        Player player = Bukkit.getPlayerExact(owner);
+
+        if (player != null) {
+            User user = User.asUser(player);
+
+            user.sendMessage("info.plot-is-creating", true, "");
+        }
+
         this.id = WorldUtil.getLastWorldId();
 
         String plotName = "world_plot_" + id + "_CraftPlot";
@@ -56,6 +67,8 @@ public class Plot {
         this.paidPlayers = new LinkedList<>();
         this.cost = 0;
         this.dev = new DevPlot(this);
+        this.dev.create();
+        this.isOpened = false;
 
         DatabaseUtil.insertValue("plots", Arrays.asList("plot_name", "owner_name"), Arrays.asList(plotName, owner));
         DatabaseUtil.updateValue("plots", "custom_id", "", "plot_name", plotName);
@@ -63,6 +76,13 @@ public class Plot {
         DatabaseUtil.updateValue("plots", "icon_name", iconName, "plot_name", plotName);
         DatabaseUtil.updateValue("plots", "icon_lore", DatabaseUtil.stringsToJson(iconLore), "plot_name", plotName);
         DatabaseUtil.updateValue("plots", "cost", cost, "plot_name", plotName);
+        DatabaseUtil.updateValue("plots", "openedState", isOpened, "plot_name", plotName);
+        DatabaseUtil.updateValue("plots", "environment", environment, "plot_name", plotName);
+        DatabaseUtil.updateValue("plots", "generation", generation, "plot_name", plotName);
+        DatabaseUtil.updateValue("plots", "gen_structures", genStructures, "plot_name", plotName);
+
+        generateWorld(environment, generation, genStructures);
+        dev.load();
 
         File file = new File(Bukkit.getWorldContainer() + File.separator + plotName + File.separator + "config.yml");
         try {
@@ -88,14 +108,12 @@ public class Plot {
 
             this.flags = config.getConfigurationSection("gameRules").getValues(false);
         } catch (IOException e) { throw new RuntimeException(e); }
-
-        generateWorld(environment, generation, genStructures);
     }
 
-    public void init (long id) {
-        init("world_plot_" + id + "_CraftPlot");
+    public void init (long id, boolean needToInitWorld) {
+        init("world_plot_" + id + "_CraftPlot", needToInitWorld);
     }
-    public void init (String plotName) {
+    public void init (String plotName, boolean needToInitWorld) {
         this.id = Integer.parseInt(plotName.replace("world_plot_", "").replace("_CraftPlot", "").trim());
         this.customId = (String) DatabaseUtil.getValue("plots", "custom_id", "plot_name", plotName);
         this.icon = Material.valueOf((String) DatabaseUtil.getValue("plots", "icon", "plot_name", plotName));
@@ -107,6 +125,7 @@ public class Plot {
         this.paidPlayers = new LinkedList<>();
         this.cost = Integer.parseInt((String) Objects.requireNonNull(DatabaseUtil.getValue("plots", "cost", "plot_name", plotName)));
         this.dev = new DevPlot(this);
+        this.isOpened = Boolean.parseBoolean((String) DatabaseUtil.getValue("plots", "openedState", "plot_name", plotName));
 
         PlotManager.plots.putIfAbsent(plotName, this);
 
@@ -122,17 +141,15 @@ public class Plot {
             this.flags = flags.getValues(false);
         }
 
-        String environment = (String) DatabaseUtil.getValue("plots", "environment", "id", id());
-        String generator = (String) DatabaseUtil.getValue("plots", "generation", "id", id());
-        boolean genStructures = (boolean) DatabaseUtil.getValue("plots", "gen_structures", "id", id());
-
-        generateWorld(environment, generator, genStructures);
+        if (needToInitWorld) {
+            initWorld();
+        }
     }
 
     private void generateWorld (String environment, String generator, boolean generateStructures) {
         WorldCreator creator = new WorldCreator(plotName());
         creator.type(WorldType.valueOf(generator.toUpperCase(Locale.ROOT)));
-        creator.environment(World.Environment.valueOf(environment));
+        creator.environment(World.Environment.valueOf(environment.toUpperCase(Locale.ROOT)));
         creator.generateStructures(generateStructures);
 
         this.world = creator.createWorld();
@@ -157,6 +174,17 @@ public class Plot {
             }.runTaskLater(plugin,10L);
         }
 
+        world.getWorldBorder().setSize(1024);
+
+    }
+
+    public void initWorld() {
+        String environment = (String) DatabaseUtil.getValue("plots", "environment", "id", id());
+        String generator = (String) DatabaseUtil.getValue("plots", "generation", "id", id());
+        boolean genStructures = Boolean.parseBoolean((String) DatabaseUtil.getValue("plots", "gen_structures", "id", id()));
+
+        generateWorld(environment, generator, genStructures);
+        dev.load();
     }
 
     private void applyGameRules() {
@@ -179,6 +207,17 @@ public class Plot {
             } else {
                 throw new IllegalArgumentException("Неизвестное игровое правило: " + gamerule);
             }
+        }
+    }
+
+    public void teleportToPlot (User user) {
+        String name = user.name();
+
+        if (owner.equalsIgnoreCase(name) || allowedDevs.contains(name) || allowedBuilders.contains(name)) {
+            if (this.world == null) initWorld();
+            user.player().teleport(this.world.getSpawnLocation());
+        } else {
+            user.sendMessage("errors.plot-is-locked", true, "");
         }
     }
 
