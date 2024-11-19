@@ -1,7 +1,9 @@
 package ru.rstudios.creative1;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.rstudios.creative1.commands.WorldCommand;
 import ru.rstudios.creative1.commands.gamesCommand;
+import ru.rstudios.creative1.commands.plotCommand;
 import ru.rstudios.creative1.handlers.GlobalListener;
 import ru.rstudios.creative1.menu.ProtectedManager;
 import ru.rstudios.creative1.plots.PlotManager;
@@ -24,10 +26,9 @@ public final class Creative_1 extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
-        PlotManager.loadPlots();
-
         plugin = this;
         DatabaseUtil.createTables();
+        PlotManager.loadPlots();
 
         getServer().getPluginManager().registerEvents(new GlobalListener(), this);
         getServer().getPluginManager().registerEvents(new ProtectedManager(), this);
@@ -46,6 +47,9 @@ public final class Creative_1 extends JavaPlugin {
         }
 
         Objects.requireNonNull(getCommand("games")).setExecutor(new gamesCommand());
+        Objects.requireNonNull(getCommand("world")).setExecutor(new WorldCommand());
+        Objects.requireNonNull(getCommand("plot")).setExecutor(new plotCommand());
+
     }
 
     @Override

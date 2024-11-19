@@ -123,9 +123,9 @@ public class Plot {
         this.allowedDevs = new LinkedList<>();
         this.flags = new LinkedHashMap<>();
         this.paidPlayers = new LinkedList<>();
-        this.cost = Integer.parseInt((String) Objects.requireNonNull(DatabaseUtil.getValue("plots", "cost", "plot_name", plotName)));
+        this.cost = Long.parseLong(String.valueOf(Objects.requireNonNull(DatabaseUtil.getValue("plots", "cost", "plot_name", plotName))));
         this.dev = new DevPlot(this);
-        this.isOpened = Boolean.parseBoolean((String) DatabaseUtil.getValue("plots", "openedState", "plot_name", plotName));
+        this.isOpened = Boolean.parseBoolean(String.valueOf(DatabaseUtil.getValue("plots", "openedState", "plot_name", plotName)));
 
         PlotManager.plots.putIfAbsent(plotName, this);
 

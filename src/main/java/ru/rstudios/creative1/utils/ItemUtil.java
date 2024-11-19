@@ -41,4 +41,15 @@ public class ItemUtil {
 
         return item;
     }
+
+    public static ItemStack item (Material material, @Nullable String name, @Nullable List<String> lore) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+
+        if (name != null && !name.isEmpty()) meta.setDisplayName(name);
+        if (lore != null && !lore.isEmpty()) meta.setLore(lore);
+
+        item.setItemMeta(meta);
+        return item;
+    }
 }

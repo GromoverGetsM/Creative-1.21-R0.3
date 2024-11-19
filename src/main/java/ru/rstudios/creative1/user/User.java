@@ -3,6 +3,8 @@ package ru.rstudios.creative1.user;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import ru.rstudios.creative1.plots.Plot;
+import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 
 import java.sql.ResultSet;
@@ -91,6 +93,20 @@ public class User {
         }
 
         return names;
+    }
+
+    public boolean isOnPlot() {
+        return player.getWorld().getName().endsWith("_CraftPlot") || player.getWorld().getName().endsWith("_dev");
+    }
+
+    public Plot getCurrentPlot() {
+        if (!isOnPlot()) return null;
+
+        String name = "";
+        if (player.getWorld().getName().endsWith("_CraftPlot")) name = player.getWorld().getName();
+        else if (player.getWorld().getName().endsWith("_dev")) name = player.getWorld().getName().replace("_dev", "_CraftPlot");
+
+        return PlotManager.plots.get(name);
     }
 
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ProtectedManager implements Listener {
 
-    private static List<ProtectedMenu> menus = new LinkedList<>();
+    private static final List<ProtectedMenu> menus = new LinkedList<>();
 
     public static void addMenu (ProtectedMenu menu) {
         menus.add(menu);

@@ -108,3 +108,9 @@ menus:
           true: "Generate structures"
           false: "Do not generate structures"
 
+  my-worlds:
+    title: "My worlds"
+
+  plot:
+    title: "Plot control"
+

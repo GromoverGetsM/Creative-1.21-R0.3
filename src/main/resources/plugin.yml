@@ -13,3 +13,6 @@ commands:
       - пфьуы
       - ц
       - цщкдвы
+  world:
+    permission: creative.world
+  plot:
