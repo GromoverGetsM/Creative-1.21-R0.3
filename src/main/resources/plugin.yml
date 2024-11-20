@@ -16,3 +16,12 @@ commands:
   world:
     permission: creative.world
   plot:
+    usage: /plot
+  join:
+    usage: /join <id>
+  locale:
+    usage: /locale
+  build:
+    usage: /build
+  play:
+    usage: /play

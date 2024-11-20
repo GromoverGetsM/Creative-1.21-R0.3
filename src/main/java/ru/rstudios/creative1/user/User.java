@@ -1,15 +1,23 @@
 package ru.rstudios.creative1.user;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+
+import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class User {
 
@@ -64,32 +72,56 @@ public class User {
     }
 
     public List<Integer> getPlotIds() {
-        Object value = DatabaseUtil.getValue("players", "plot_ids", "player_name", name());
-        List<String> cache = DatabaseUtil.jsonToStringList((String) value);
+        List<Integer> plotIds = new LinkedList<>();
+        String query = "SELECT id FROM plots WHERE owner_name = ?";
 
-        List<Integer> toReturn = new LinkedList<>();
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-        if (cache != null && !cache.isEmpty()) cache.forEach(elem -> toReturn.add(Integer.parseInt(elem)));
+            pstmt.setString(1, name());
+            ResultSet rs = pstmt.executeQuery();
 
-        return toReturn;
+
+            while (rs.next()) {
+                plotIds.add(rs.getInt("id") - 1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return plotIds;
     }
+
 
     public long currentPlotsCount() {
-        return getPlotIds().size();
+        String query = "SELECT COUNT(*) AS count FROM plots WHERE owner_name = ?";
+        long count = 0;
+
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, name()); // Подстановка безопасного параметра
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getLong("count");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
     }
 
-    public List<String> getPlotNames() {
-        ResultSet rs = DatabaseUtil.executeQuery("SELECT plot_name FROM plots WHERE owner_name = " + name());
-        List<String> names = new LinkedList<>();
 
-        if (rs != null) {
-            try {
-                while (rs.next()) {
-                    names.add(rs.getString("plot_name"));
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+
+
+    public List<String> getPlotNames() {
+        List<Integer> ids = getPlotIds();
+        List<String> names = new ArrayList<>();
+
+        if (ids != null && !ids.isEmpty()) {
+            ids.forEach(id -> names.add("world_plot_" + id + "_CraftPlot"));
         }
 
         return names;
@@ -108,6 +140,50 @@ public class User {
 
         return PlotManager.plots.get(name);
     }
+
+    public void clear() {
+        Player player = player();
+
+        player.closeInventory();
+        player.getInventory().clear();
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
+        player.setFireTicks(0);
+        player.setFreezeTicks(0);
+        player.setNoDamageTicks(20);
+        player.setMaximumNoDamageTicks(20);
+        player.setArrowsInBody(0);
+        player.setExp(0);
+        player.setLevel(0);
+        player.setMaxHealth(20);
+        player.setHealth(20);
+        player.setFoodLevel(20);
+        player.setGameMode(GameMode.ADVENTURE);
+        player.setFlying(false);
+        player.setGliding(false);
+        player.setFlySpeed(0.1f);
+        player.setWalkSpeed(0.2f);
+        player.setCanPickupItems(true);
+        player.setGlowing(false);
+        player.resetPlayerTime();
+        player.resetPlayerWeather();
+        player.removeResourcePacks();
+        player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+        player.activeBossBars().forEach(player::hideBossBar);
+        for (Entity entity : player.getWorld().getEntities()) {
+            player.showEntity(plugin, entity);
+        }
+        for (Player p : player.getWorld().getPlayers()) {
+            player.showEntity(plugin, p);
+        }
+
+        for (Sound sound : Sound.values()) {
+            player.stopSound(sound);
+        }
+    }
+
+
 
 
 }

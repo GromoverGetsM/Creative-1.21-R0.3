@@ -95,9 +95,11 @@ public class SwitchItem {
         List<Component> stateLore = new LinkedList<>();
         int totalStates = this.statesKeys.size();
 
+        // Определяем индексы для предыдущих и следующих состояний
         int startIndex = Math.max(0, this.currentState - 2);
         int endIndex = Math.min(totalStates, this.currentState + 3);
 
+        // Если есть состояния перед видимой зоной, добавляем первое состояние и "..."
         if (startIndex > 0) {
             stateLore.add(Component.text("§7 ○ " + translateState(user, statesKeys.get(0))));
             stateLore.add(Component.text("§8 (...)"));
@@ -112,6 +114,7 @@ public class SwitchItem {
             }
         }
 
+        // Если есть состояния после видимой зоны, добавляем "..." и последнее состояние
         if (endIndex < totalStates) {
             stateLore.add(Component.text("§8 (...)"));
             stateLore.add(Component.text("§7 ○ " + translateState(user, statesKeys.get(totalStates - 1))));
@@ -126,6 +129,10 @@ public class SwitchItem {
 
     public void setCurrentState(int currentState) {
         this.currentState = currentState;
+    }
+
+    public void setCurrentState (String s) {
+        this.currentState = statesKeys.contains(s) ? statesKeys.indexOf(s) : 0;
     }
 
     public int getCurrentState() {

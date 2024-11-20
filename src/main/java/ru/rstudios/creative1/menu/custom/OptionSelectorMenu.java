@@ -38,8 +38,10 @@ public class OptionSelectorMenu extends ProtectedMenu {
         event.setCancelled(true);
 
         switch (event.getSlot()) {
-            case 10 -> new CreateWorldMenu(user).open(user);
-            case 13 -> user.sendMessage("errors.menu-not-defined", false, "");
+            case 10 -> {
+                if (user.getPlotLimit() - user.currentPlotsCount() > 0) new CreateWorldMenu(user).open(user);
+            }
+            case 13 -> new WorldBrowserMenu(user).open(user);
             case 16 -> new MyWorlds(user).open(user);
         }
     }

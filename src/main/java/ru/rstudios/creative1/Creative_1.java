@@ -1,9 +1,9 @@
 package ru.rstudios.creative1;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.rstudios.creative1.commands.WorldCommand;
-import ru.rstudios.creative1.commands.gamesCommand;
-import ru.rstudios.creative1.commands.plotCommand;
+import ru.rstudios.creative1.commands.*;
+import ru.rstudios.creative1.commands.modes.buildCommand;
+import ru.rstudios.creative1.commands.modes.playCommand;
 import ru.rstudios.creative1.handlers.GlobalListener;
 import ru.rstudios.creative1.menu.ProtectedManager;
 import ru.rstudios.creative1.plots.PlotManager;
@@ -32,6 +32,7 @@ public final class Creative_1 extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new GlobalListener(), this);
         getServer().getPluginManager().registerEvents(new ProtectedManager(), this);
+        getServer().getPluginManager().registerEvents(new PlotManager(), this);
 
         try {
             FileUtil.saveResourceFolder("dev", new File(getDataFolder() + File.separator + "templates" + File.separator + "dev"));
@@ -49,11 +50,14 @@ public final class Creative_1 extends JavaPlugin {
         Objects.requireNonNull(getCommand("games")).setExecutor(new gamesCommand());
         Objects.requireNonNull(getCommand("world")).setExecutor(new WorldCommand());
         Objects.requireNonNull(getCommand("plot")).setExecutor(new plotCommand());
-
+        Objects.requireNonNull(getCommand("join")).setExecutor(new joinCommand());
+        Objects.requireNonNull(getCommand("locale")).setExecutor(new localeCommand());
+        Objects.requireNonNull(getCommand("play")).setExecutor(new playCommand());
+        Objects.requireNonNull(getCommand("build")).setExecutor(new buildCommand());
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        PlotManager.unloadPlots();
     }
 }

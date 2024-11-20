@@ -3,19 +3,32 @@ prefix: "&bCreative+ &8» &f"
 info:
   locale-set: "Locale set: &6en_US"
   plot-is-creating: "Plot is creating. Please wait..."
+  plot-offline: "The plot you were on has been shut down."
+  plot-undefined: "The identifier &6%s &fdoes not exist or was entered incorrectly!"
+  plot-displayname-set: "Name set: &r%s"
+  plot-displayname-set-disclaimer: "The plot name must be up to &640 characters&f long! (Colors are not counted)"
+  plot-displayname-await: "Enter a name according to the specified criteria (up to &640 characters&f, colors and line breaks &6\\n&f)"
+  plot-set-mode-play: "The plot is now in &6play mode"
+  plot-set-mode-build: "The plot is now in &6build mode"
+  user-issued-play: "You have entered &6play mode"
+  user-issued-build: "You have entered &6build mode"
 
 errors:
   menu-not-defined: "&4⛔ &cMenu is not defined"
+  plot-is-locked: "The owner has closed the game for visitors, try again later! :c"
+  plot-undefined: "The identifier &6%s &fdoes not exist or was entered incorrectly!"
+  plot-displayname-too-long: "The text is too long! (&6%s/40 chars&f)"
+  plot-not-in-play-mode: "The plot is not in &6play mode"
+  plot-not-in-build-mode: "The plot is not in &6build mode"
 
 global-items:
   menu-not-filled:
-    name: "&c This menu is not filled yet "
+    name: "&cNo Items"
     lore:
-      - "&f The menu is currently "
-      - "&f under development. For more "
-      - "&f information about updates, "
-      - "&f please visit the Discord: "
-      - "&c @gromovergets "
+      - "&7The menu might still be under development"
+      - "&7or there are no available buttons for you."
+      - "&7Contact the administration or"
+      - "&7come back later!"
   next-page:
     name: "&e Forward (#%s) "
     lore:
@@ -112,5 +125,107 @@ menus:
     title: "My worlds"
 
   plot:
-    title: "Plot control"
+    title: "Plot Management"
+    items:
+      gamerule-management:
+        name: "&eGame Rule Management"
+        lore:
+          - "&7Opens a menu with toggles"
+          - "&7for various game rule"
+          - "&7states"
+      set-icon:
+        name: "&eSet Icon"
+        lore:
+          - "&7Click here with an item on your cursor"
+          - "&7to change the plot's icon"
+          - "&7"
+          - "&eImportant! &7Heads will become &eSteve's head,"
+          - "&7textures will reset."
+      set-name:
+        name: "&eSet Name"
+        lore:
+          - "&7Click here to change the plot's name."
+          - "&7The name will be set to the chat message."
+          - "&7Supports &1c&2o&3l&4o&5r&6s &7and line breaks"
+          - "&7using &6\\n"
+      dangerzone-filler:
+        name: "&cDanger Zone"
+        lore:
+          - "&7Be &ecareful&7!"
+          - "&7Below are buttons that"
+          - "&7directly affect the key"
+          - "&7settings of the plot!"
+      delete-plot:
+        name: "&eDelete Plot"
+        lore:
+          - "&7Erases the entire world, code, and information"
+          - "&7about the plot. Frees up a slot for creation"
+      shutdown-plot:
+        name: "&eShutdown Plot"
+        lore:
+          - "&7Completely shuts down the plot."
+          - "&7The world is unloaded, all players"
+          - "&7are sent back to the lobby. Changes"
+          - "&7in the world and code are saved."
+      closeable:
+        name: "&ePlot Accessibility"
+        lore:
+          - "&7If the plot is closed, only &emoderators&7,"
+          - "&7the owner, trusted coders, and builders"
+          - "&7can enter. When closed, the plot"
+          - "&7does not appear in the browser."
+        states:
+          true: "Open for visitors"
+          false: "Closed for visitors"
+
+  world-browser:
+    title: "Worlds browser"
+
+  locale-menu:
+    title: "Localization Selection"
+    items:
+      ru-ru:
+        name: "&eRussian Language"
+        lore:
+          - "&7Click to select"
+          - "&eRussian &7as the"
+          - "&7primary localization"
+      en-us:
+        name: "&eEnglish Language"
+        lore:
+          - "&7Click to select"
+          - "&eEnglish &7as the"
+          - "&7primary localization"
+
+  gamerule-management:
+    title: "Game Rule Management"
+    states:
+      true: "Enabled"
+      false: "Disabled"
+    items:
+      doTraderSpawning:
+        name: "&eWandering Trader Spawning"
+        lore:
+          - "&7Controls the appearance of the wandering"
+          - "&7trader in the world. If disabled, the trader"
+          - "&7does not spawn"
+      doWardenSpawning:
+        name: "&eWarden Spawning"
+        lore:
+          - "&7Controls the appearance of wardens through"
+          - "&7natural sculk sensors. If disabled,"
+          - "&7wardens do not spawn"
+      doPatrolSpawning:
+        name: "&ePillager Patrol Spawning"
+        lore:
+          - "&7Controls the appearance of pillager patrols"
+          - "&7in the world. If disabled, patrols do not"
+          - "&7spawn"
+      doImmediateRespawn:
+        name: "&eImmediate Respawn"
+        lore:
+          - "&7If disabled, players need to press a button"
+          - "&7to respawn. Otherwise, they immediately"
+          - "&7respawn at the spawn point"
+
 

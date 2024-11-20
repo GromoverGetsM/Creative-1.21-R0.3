@@ -29,8 +29,7 @@ public class DatabaseUtil {
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 player_name VARCHAR(100) NOT NULL,
                 player_locale VARCHAR(100),
-                plot_limit INT,
-                plot_ids VARCHAR(500)
+                plot_limit INT
             );
         """;
 
@@ -240,6 +239,16 @@ public class DatabaseUtil {
         }
 
         return null;
+    }
+
+    public static void executeUpdate (String SQLQuery) {
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(SQLQuery)) {
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String stringsToJson (List<String> list) {

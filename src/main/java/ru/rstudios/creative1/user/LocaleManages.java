@@ -72,6 +72,10 @@ public class LocaleManages {
         return (String) DatabaseUtil.getValue("players", "player_locale", "player_name", player.getName());
     }
 
+    public static void setLocale (User user, String locale) {
+        DatabaseUtil.updateValue("players", "player_locale", locale, "player_name", user.name());
+    }
+
     public static String formattedString (String s, String change, String changeFor) {
         return StringUtils.replace(s, change, changeFor);
     }
