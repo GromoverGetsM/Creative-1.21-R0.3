@@ -2,7 +2,10 @@ package ru.rstudios.creative1.user;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -131,6 +134,21 @@ public class User {
         return player.getWorld().getName().endsWith("_CraftPlot") || player.getWorld().getName().endsWith("_dev");
     }
 
+    public void sendTranslatedSign (Location signLocation) {
+        Block b = signLocation.getBlock();
+
+        if (b.getState() instanceof Sign sign) {
+            List<String> lines = Arrays.asList(sign.getLines());
+            List<String> result = new LinkedList<>();
+
+            for (String line : lines) {
+                result.add(LocaleManages.getLocaleMessage(getLocale(), line, false, ""));
+            }
+
+            player().sendSignChange(signLocation, result.toArray(String[]::new));
+        }
+    }
+
     public Plot getCurrentPlot() {
         if (!isOnPlot()) return null;
 
@@ -181,6 +199,10 @@ public class User {
         for (Sound sound : Sound.values()) {
             player.stopSound(sound);
         }
+    }
+
+    public void destroy() {
+        users.remove(this);
     }
 
 

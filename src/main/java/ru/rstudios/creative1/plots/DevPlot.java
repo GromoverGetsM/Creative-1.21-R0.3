@@ -2,10 +2,9 @@ package ru.rstudios.creative1.plots;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import ru.rstudios.creative1.utils.FileUtil;
 
 import java.io.File;
@@ -18,7 +17,6 @@ public class DevPlot {
     public Plot linked;
 
     public World world;
-    public File chestsFolder;
     public File dynamicVars;
 
     public DevPlot(Plot plot) {
@@ -35,15 +33,16 @@ public class DevPlot {
             plugin.getLogger().severe(e.getLocalizedMessage());
         }
 
+
         this.world = Bukkit.createWorld(new WorldCreator(linked.plotName().replace("_CraftPlot", "_dev")));
-        this.chestsFolder = new File(dev, "chests");
+        this.world.setSpawnLocation(new Location(world, 62, -59, 62));
         this.dynamicVars = new File(dev, "DynamicVariables.yml");
     }
 
     public void load() {
         this.world = Bukkit.createWorld(new WorldCreator(linked.plotName().replace("_CraftPlot", "_dev")));
+        this.world.setSpawnLocation(new Location(world, 62, -59, 62));
         File dev = new File(Bukkit.getWorldContainer() + File.separator + linked.plotName().replace("_CraftPlot", "_dev"));
-        this.chestsFolder = new File(dev, "chests");
         this.dynamicVars = new File(dev, "DynamicVariables.yml");
     }
 
@@ -53,5 +52,21 @@ public class DevPlot {
         CuboidRegion region = new CuboidRegion(pos1, pos2);
 
         return region.contains(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+    }
+
+    public static Material getMainBlock() {
+        return Material.WHITE_STAINED_GLASS;
+    }
+
+    public static Material getActionsBlock() {
+        return Material.LIGHT_GRAY_STAINED_GLASS;
+    }
+
+    public static Material getEventsBlock() {
+        return Material.LIGHT_BLUE_STAINED_GLASS;
+    }
+
+    public World world() {
+        return world;
     }
 }

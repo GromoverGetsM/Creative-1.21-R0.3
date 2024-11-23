@@ -25,3 +25,5 @@ commands:
     usage: /build
   play:
     usage: /play
+  dev:
+    usage: /dev

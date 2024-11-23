@@ -32,7 +32,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                         Bukkit.createWorld(new WorldCreator(args[0]));
                         world = Bukkit.getWorld(args[0]);
                     }
-                    ((Player) sender).teleport(new Location(world, 0, 64, 0));
+                    ((Player) sender).teleport(world.getSpawnLocation());
                 } else {
                     Bukkit.unloadWorld(args[0], true);
                 }

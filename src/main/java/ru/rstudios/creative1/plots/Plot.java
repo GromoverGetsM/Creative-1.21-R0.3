@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import ru.rstudios.creative1.coding.CodeHandler;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.FileUtil;
@@ -49,6 +50,7 @@ public class Plot {
     public DevPlot dev;
     public boolean isOpened;
     public PlotMode plotMode;
+    public CodeHandler handler;
 
     public Plot (String owner) {
         this.owner = owner;
@@ -82,6 +84,7 @@ public class Plot {
         this.dev.create();
         this.isOpened = false;
         this.plotMode = PlotMode.BUILD;
+        this.handler = new CodeHandler(this);
 
         DatabaseUtil.insertValue("plots", Arrays.asList("plot_name", "owner_name"), Arrays.asList(plotName, owner));
         DatabaseUtil.updateValue("plots", "custom_id", "", "plot_name", plotName);
@@ -142,6 +145,7 @@ public class Plot {
         this.dev = new DevPlot(this);
         this.isOpened = Boolean.parseBoolean(String.valueOf(DatabaseUtil.getValue("plots", "openedState", "plot_name", plotName)));
         this.plotMode = PlotMode.PLAY;
+        this.handler = new CodeHandler(this);
 
         plots.putIfAbsent(plotName, this);
         System.out.println(plots.get(plotName()));
@@ -279,8 +283,22 @@ public class Plot {
         }
     }
 
+    public void teleportToDev(User user) {
+        if (owner().equalsIgnoreCase(user.name()) || allowedDevs().contains(user.name())) {
+            user.clear();
+            user.player().setGameMode(GameMode.CREATIVE);
+            user.player().teleport(dev().world().getSpawnLocation());
+        }
+    }
+
 
     public void onPlotLoad() {}
+
+    public void onPlayerLeft() {
+        if (online().isEmpty()) {
+            unload(false, true);
+        }
+    }
 
     public boolean isUserInDev (User user) {
         return plotName().replace("_CraftPlot", "_dev").equalsIgnoreCase(user.player().getWorld().getName());

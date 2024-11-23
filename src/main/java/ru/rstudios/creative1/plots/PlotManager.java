@@ -1,6 +1,7 @@
 package ru.rstudios.creative1.plots;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -42,6 +43,10 @@ public class PlotManager implements Listener {
     public static void unloadPlot(String plotName, boolean onlyWorld, boolean needSave) {
         Plot plot = plots.get(plotName);
         plot.unload(onlyWorld, needSave);
+    }
+
+    public static boolean isDevWorld (World world) {
+        return world.getName().endsWith("_dev");
     }
 
     @EventHandler

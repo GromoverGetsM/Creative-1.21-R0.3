@@ -1,11 +1,14 @@
 package ru.rstudios.creative1.menu.custom.plot;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import ru.rstudios.creative1.menu.ProtectedMenu;
 import ru.rstudios.creative1.menu.SwitchItem;
+import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
@@ -70,6 +73,9 @@ public class PlotMenu extends ProtectedMenu {
         setItem((byte) 19, ItemUtil.item(Material.CHISELED_BOOKSHELF,
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.gamerule-management.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.gamerule-management.lore", new LinkedHashMap<>())));
+        setItem((byte) 12, ItemUtil.item(Material.ENDER_PEARL,
+                LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.set-spawnpoint.name", false, ""),
+                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.set-spawnpoint.lore", new LinkedHashMap<>())));
     }
 
     @Override
@@ -104,6 +110,17 @@ public class PlotMenu extends ProtectedMenu {
                 user.sendMessage("info.plot-displayname-await", true, "");
             }
             case 19 -> new GamerulesControlMenu(user).open(user);
+            case 12 -> {
+                Plot p = user.getCurrentPlot();
+                if (!p.isUserInDev(user)) {
+                    if (event.isLeftClick()) {
+                        user.getCurrentPlot().world().setSpawnLocation(user.player().getLocation());
+                    } else if (event.isLeftClick()) {
+                        World w = user.getCurrentPlot().world();
+                        w.setSpawnLocation(new Location(w, 0, w.getHighestBlockYAt(0, 0), 0));
+                    }
+                }
+            }
         }
     }
 

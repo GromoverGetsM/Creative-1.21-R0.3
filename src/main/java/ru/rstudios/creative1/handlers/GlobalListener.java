@@ -1,11 +1,18 @@
 package ru.rstudios.creative1.handlers;
 
+import com.jeff_media.morepersistentdatatypes.DataType;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.persistence.PersistentDataType;
+import ru.rstudios.creative1.plots.DevPlot;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.user.User;
@@ -24,6 +31,17 @@ public class GlobalListener implements Listener {
             String locale = event.getPlayer().getLocale().equalsIgnoreCase("ru_ru") ? "ru_RU" : "en_US";
 
             DatabaseUtil.updateValue("players", "player_locale", locale, "player_name", user.name());
+        }
+    }
+
+    @EventHandler
+    public void onPlayerLeft (PlayerQuitEvent event) {
+        User user = User.asUser(event.getPlayer());
+
+        if (user.isOnPlot()) {
+            Plot p = user.getCurrentPlot();
+            p.onPlayerLeft();
+            user.destroy();
         }
     }
 
@@ -50,6 +68,19 @@ public class GlobalListener implements Listener {
             }
 
             user.datastore().remove("inputtingPlotName");
+        }
+    }
+
+    @EventHandler
+    public void onBlockBroken (BlockBreakEvent event) {
+        User user = User.asUser(event.getPlayer());
+
+        if (user.isOnPlot()) {
+            Plot p = user.getCurrentPlot();
+
+            if (p.isUserInDev(user)) {
+                if (event.getBlock().getType() == DevPlot.getMainBlock() || event.getBlock().getType() == DevPlot.getActionsBlock() || event.getBlock().getType() == DevPlot.getEventsBlock()) event.setCancelled(true);
+            }
         }
     }
 

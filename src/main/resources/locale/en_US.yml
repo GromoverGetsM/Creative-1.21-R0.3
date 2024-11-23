@@ -177,6 +177,17 @@ menus:
         states:
           true: "Open for visitors"
           false: "Closed for visitors"
+      set-spawnpoint:
+        name: "&eSet Spawn Point"
+        lore:
+          - "&7Click here to change the spawn"
+          - "&7point for players."
+          - "&7"
+          - "&eLMB &7- Set spawn point at the current"
+          - "&7location"
+          - "&eRMB &7- Set spawn point at zero"
+          - "&7coordinates"
+
 
   world-browser:
     title: "Worlds browser"
