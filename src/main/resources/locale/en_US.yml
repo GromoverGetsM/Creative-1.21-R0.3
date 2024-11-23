@@ -43,6 +43,9 @@ global-items:
       - "&f page "
 
 coding:
+  player_event:
+    name: "Player Event"
+
   var-types:
     text:
       name: "&bText"

@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -17,6 +18,7 @@ import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
+import ru.rstudios.creative1.utils.Development;
 
 public class GlobalListener implements Listener {
 
@@ -68,6 +70,16 @@ public class GlobalListener implements Listener {
             }
 
             user.datastore().remove("inputtingPlotName");
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace (BlockPlaceEvent event) {
+        User user = User.asUser(event.getPlayer());
+        Plot p = user.getCurrentPlot();
+
+        if (p != null && p.isUserInDev(user)) {
+            Development.setCodingBlock(event);
         }
     }
 

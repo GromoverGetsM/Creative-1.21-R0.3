@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -23,6 +24,7 @@ import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
@@ -32,24 +34,26 @@ public class Development {
 
     public enum BlockTypes {
 
-        PLAYER_EVENT(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, true),
-        BLOCK_EVENT(Material.PRISMARINE_BRICKS, Material.PRISMARINE, true),
-        PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, false),
-        ENTITY_ACTION(Material.MUD_BRICKS, Material.PACKED_MUD, false),
-        ACTION_VAR(Material.IRON_BLOCK, Material.IRON_ORE, false),
-        WORLD_ACTION(Material.RED_NETHER_BRICKS, Material.NETHERRACK, false),
-        IF_PLAYER(Material.OAK_PLANKS, Material.PISTON, false),
-        IF_VARIABLE(Material.OBSIDIAN, Material.PISTON, false);
+        PLAYER_EVENT(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, true, false),
+        BLOCK_EVENT(Material.PRISMARINE_BRICKS, Material.PRISMARINE, true, false),
+        PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, false, false),
+        ENTITY_ACTION(Material.MUD_BRICKS, Material.PACKED_MUD, false, false),
+        ACTION_VAR(Material.IRON_BLOCK, Material.IRON_ORE, false, false),
+        WORLD_ACTION(Material.RED_NETHER_BRICKS, Material.NETHERRACK, false, false),
+        IF_PLAYER(Material.OAK_PLANKS, Material.PISTON, false, true),
+        IF_VARIABLE(Material.OBSIDIAN, Material.PISTON, false, true);
 
 
         private Material mainBlock;
         private Material additionalBlock;
         private boolean isEvent;
+        private boolean isCondition;
 
-        BlockTypes (Material mainBlock, Material additionalBlock, boolean isEvent) {
+        BlockTypes (Material mainBlock, Material additionalBlock, boolean isEvent, boolean isCondition) {
             this.mainBlock = mainBlock;
             this.additionalBlock = additionalBlock;
             this.isEvent = isEvent;
+            this.isCondition = isCondition;
         }
 
         public Material getAdditionalBlock() {
@@ -64,6 +68,10 @@ public class Development {
             return isEvent;
         }
 
+        public boolean isCondition() {
+            return isCondition;
+        }
+
         public static @Nullable BlockTypes getByMainBlock (Material mainBlock) {
             return Arrays.stream(values()).filter(bt -> bt.mainBlock == mainBlock).findFirst().orElse(null);
         }
@@ -73,23 +81,47 @@ public class Development {
         }
     }
 
-    public void setCodingBlock (BlockPlaceEvent event) {
+    public static void setCodingBlock (BlockPlaceEvent event) {
         Block block = event.getBlock();
         BlockTypes type = BlockTypes.getByMainBlock(block);
 
         if (type != null) {
             if (PlotManager.isDevWorld(block.getWorld())) {
+                if ((type.isEvent && block.getRelative(BlockFace.DOWN).getType() != Material.LIGHT_BLUE_STAINED_GLASS) || (!type.isEvent && block.getRelative(BlockFace.DOWN).getType() != Material.LIGHT_GRAY_STAINED_GLASS)) {
+                    event.setCancelled(true);
+                    return;
+                }
                 Block additional = block.getRelative(BlockFace.WEST);
+                Block lastBlock = getLastBlockInString(additional);
+
+                if (lastBlock != null) {
+                    Location last = lastBlock.getLocation();
+                    last.add(0, 1, -1);
+
+                    int distance = type.isCondition ? 4 : 2;
+                    System.out.println(distance);
+
+                    event.setCancelled(!moveBlocks(additional.getLocation(), last, BlockFace.WEST, distance));
+                    if (event.isCancelled()) return;
+                }
+
+                block.getLocation().getBlock().setType(block.getType());
                 additional.setType(type.additionalBlock);
 
                 if (type.additionalBlock == Material.PISTON) {
                     setPistonDirection(additional, BlockFace.WEST);
 
-                    // TODO: IF THERE ANY BLOCKS???
-
                     Block reversed = additional.getRelative(BlockFace.WEST, 2);
                     reversed.setType(Material.PISTON);
                     setPistonDirection(reversed, BlockFace.EAST);
+                }
+
+                Block signBlock = block.getRelative(BlockFace.NORTH);
+                signBlock.setType(Material.OAK_WALL_SIGN);
+
+                if (signBlock.getState() instanceof Sign sign) {
+                    sign.setLine(1, "coding." + type.name().toLowerCase(Locale.ROOT) + ".name");
+                    sign.update();
                 }
             }
         } else {
@@ -97,7 +129,22 @@ public class Development {
         }
     }
 
-    public void setPistonDirection (Block piston, BlockFace direction) {
+    public static Block getLastBlockInString(Block block) {
+        Location main = new Location(block.getWorld(), -64, block.getY(), block.getZ());
+
+        for (int x = -64; x <= block.getX(); x++) {
+            main.setX(x);
+
+            if (main.getBlock().getType() != Material.AIR) {
+                return main.getBlock();
+            }
+        }
+
+        return null;
+    }
+
+
+    public static void setPistonDirection (Block piston, BlockFace direction) {
         BlockData data = piston.getBlockData();
 
         if (data instanceof Directional directional) {

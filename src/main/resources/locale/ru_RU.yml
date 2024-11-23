@@ -42,6 +42,9 @@ global-items:
       - "&f страницу "
 
 coding:
+  player_event:
+    name: "Событие игрока"
+
   var-types:
     text:
       name: "&bТекст"
