@@ -86,13 +86,10 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onBlockBroken (BlockBreakEvent event) {
         User user = User.asUser(event.getPlayer());
+        Plot p = user.getCurrentPlot();
 
-        if (user.isOnPlot()) {
-            Plot p = user.getCurrentPlot();
-
-            if (p.isUserInDev(user)) {
-                if (event.getBlock().getType() == DevPlot.getMainBlock() || event.getBlock().getType() == DevPlot.getActionsBlock() || event.getBlock().getType() == DevPlot.getEventsBlock()) event.setCancelled(true);
-            }
+        if (p != null && p.isUserInDev(user)) {
+            Development.breakCodingBlock(event);
         }
     }
 

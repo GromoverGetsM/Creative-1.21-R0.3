@@ -17,6 +17,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.plots.DevPlot;
@@ -85,47 +86,100 @@ public class Development {
         Block block = event.getBlock();
         BlockTypes type = BlockTypes.getByMainBlock(block);
 
-        if (type != null) {
-            if (PlotManager.isDevWorld(block.getWorld())) {
-                if ((type.isEvent && block.getRelative(BlockFace.DOWN).getType() != Material.LIGHT_BLUE_STAINED_GLASS) || (!type.isEvent && block.getRelative(BlockFace.DOWN).getType() != Material.LIGHT_GRAY_STAINED_GLASS)) {
-                    event.setCancelled(true);
-                    return;
-                }
-                Block additional = block.getRelative(BlockFace.WEST);
-                Block lastBlock = getLastBlockInString(additional);
+        if (type != null && PlotManager.isDevWorld(block.getWorld())) {
+            if ((type.isEvent && block.getRelative(BlockFace.DOWN).getType() != Material.LIGHT_BLUE_STAINED_GLASS) || (!type.isEvent && block.getRelative(BlockFace.DOWN).getType() != Material.LIGHT_GRAY_STAINED_GLASS)) {
+                event.setCancelled(true);
+                return;
+            }
+            Block additional = block.getRelative(BlockFace.WEST);
+            Block lastBlock = getLastBlockInString(additional);
 
-                if (lastBlock != null) {
-                    Location last = lastBlock.getLocation();
-                    last.add(0, 1, -1);
+            if (lastBlock != null) {
+                Location last = lastBlock.getLocation();
+                last.add(0, 1, -1);
 
-                    int distance = type.isCondition ? 4 : 2;
-                    System.out.println(distance);
+                int distance = type.isCondition ? 4 : 2;
 
-                    event.setCancelled(!moveBlocks(additional.getLocation(), last, BlockFace.WEST, distance));
-                    if (event.isCancelled()) return;
-                }
+                event.setCancelled(!moveBlocks(additional.getLocation(), last, BlockFace.WEST, distance));
+                if (event.isCancelled()) return;
+            }
 
-                block.getLocation().getBlock().setType(block.getType());
-                additional.setType(type.additionalBlock);
+            block.getLocation().getBlock().setType(block.getType());
+            additional.setType(type.additionalBlock);
 
-                if (type.additionalBlock == Material.PISTON) {
-                    setPistonDirection(additional, BlockFace.WEST);
+            if (type.additionalBlock == Material.PISTON) {
+                setPistonDirection(additional, BlockFace.WEST);
 
-                    Block reversed = additional.getRelative(BlockFace.WEST, 2);
-                    reversed.setType(Material.PISTON);
-                    setPistonDirection(reversed, BlockFace.EAST);
-                }
+                Block reversed = additional.getRelative(BlockFace.WEST, 2);
+                reversed.setType(Material.PISTON);
+                setPistonDirection(reversed, BlockFace.EAST);
+            }
 
-                Block signBlock = block.getRelative(BlockFace.NORTH);
-                signBlock.setType(Material.OAK_WALL_SIGN);
+            Block signBlock = block.getRelative(BlockFace.NORTH);
+            signBlock.setType(Material.OAK_WALL_SIGN);
 
-                if (signBlock.getState() instanceof Sign sign) {
-                    sign.setLine(1, "coding." + type.name().toLowerCase(Locale.ROOT) + ".name");
-                    sign.update();
-                }
+            if (signBlock.getState() instanceof Sign sign) {
+                sign.setLine(1, "coding." + type.name().toLowerCase(Locale.ROOT) + ".name");
+                sign.update();
             }
         } else {
             event.setCancelled(true);
+        }
+    }
+
+    public static void breakCodingBlock (BlockBreakEvent event) {
+        event.setCancelled(true);
+
+        Block block = event.getBlock();
+        if (block.getType() == Material.OAK_WALL_SIGN) block = block.getRelative(BlockFace.SOUTH);
+
+        BlockTypes type = BlockTypes.getByMainBlock(block);
+
+        if (type != null && PlotManager.isDevWorld(block.getWorld())) {
+            if (type.isEvent) {
+                Block last = getLastBlockInString(block);
+
+                if (last != null) {
+                    Location loc = last.getLocation();
+                    loc.add(0, 1, -1);
+
+                    setBlocks(block.getWorld(), block.getLocation(), loc);
+                }
+            }
+
+            if (type.isCondition) {
+                Block closingBracket = getClosingPiston(block);
+
+                if (closingBracket != null) {
+                    Location loc = closingBracket.getLocation();
+                    loc.add(0, 1, -1);
+
+                    setBlocks(block.getWorld(), block.getLocation(), loc);
+
+                    Block lastInString = getLastBlockInString(closingBracket);
+                    if (lastInString != null) {
+                        int distance = (int) block.getLocation().distance(loc);
+                        System.out.println(distance);
+
+                        moveBlocks(closingBracket.getRelative(BlockFace.WEST).getLocation(), lastInString.getLocation(), BlockFace.EAST, distance + 1);
+                    }
+                }
+            } else {
+                block.getRelative(BlockFace.NORTH).setType(Material.AIR);
+                block.getRelative(BlockFace.UP).setType(Material.AIR);
+                block.getRelative(BlockFace.WEST).setType(Material.AIR);
+                block.setType(Material.AIR);
+
+                Block lastInString = getLastBlockInString(block.getRelative(BlockFace.WEST, 2));
+                if (lastInString != null) {
+                    Location loc = lastInString.getLocation();
+                    loc.add(0, 1, -1);
+
+                    moveBlocks(block.getRelative(BlockFace.WEST, 2).getLocation(), loc, BlockFace.EAST, 2);
+                }
+            }
+
+
         }
     }
 
@@ -141,6 +195,32 @@ public class Development {
         }
 
         return null;
+    }
+
+    public static Block getClosingPiston (Block main) {
+        if (main.getType() != Material.PISTON) main = main.getRelative(BlockFace.WEST);
+        int openingBrackets = 1;
+
+        org.bukkit.World dev = main.getWorld();
+
+        Plot p = PlotManager.plots.get(dev.getName().replace("_dev", "_CraftPlot"));
+
+        if (p != null && dev == p.dev().world()) {
+            while (p.dev().inTerritory(main.getLocation())) {
+                main = main.getRelative(BlockFace.WEST, 2);
+
+                if (main.getType() == Material.PISTON) {
+                    BlockFace facing = ((Directional) main.getBlockData()).getFacing();
+
+                    if (facing == BlockFace.WEST) openingBrackets++;
+                    else if (facing == BlockFace.EAST) openingBrackets--;
+
+                    if (openingBrackets == 0) return main;
+                }
+            }
+        }
+        return null;
+
     }
 
 
