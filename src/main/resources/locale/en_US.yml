@@ -44,7 +44,21 @@ global-items:
 
 coding:
   player_event:
-    name: "Player Event"
+    name: "&b&lPlayer Event"
+  block_event:
+    name: "&3&lBlock Event"
+  player_action:
+    name: "&7&lPlayer Action"
+  entity_action:
+    name: "&6&lEntity Action"
+  action_var:
+    name: "&f&lVariables"
+  world_action:
+    name: "&c&lWorld Action"
+  if_player:
+    name: "&6&lIf Player"
+  if_variable:
+    name: "&5&lIf Variable"
 
   var-types:
     text:

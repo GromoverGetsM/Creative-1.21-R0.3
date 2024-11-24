@@ -10,6 +10,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,14 +21,19 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.Nullable;
+import ru.rstudios.creative1.menu.ProtectedMenu;
+import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
+import ru.rstudios.creative1.menu.selector.PlayerEvent;
 import ru.rstudios.creative1.plots.DevPlot;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
+import ru.rstudios.creative1.user.User;
 
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
@@ -35,24 +41,26 @@ public class Development {
 
     public enum BlockTypes {
 
-        PLAYER_EVENT(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, true, false),
-        BLOCK_EVENT(Material.PRISMARINE_BRICKS, Material.PRISMARINE, true, false),
-        PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, false, false),
-        ENTITY_ACTION(Material.MUD_BRICKS, Material.PACKED_MUD, false, false),
-        ACTION_VAR(Material.IRON_BLOCK, Material.IRON_ORE, false, false),
-        WORLD_ACTION(Material.RED_NETHER_BRICKS, Material.NETHERRACK, false, false),
-        IF_PLAYER(Material.OAK_PLANKS, Material.PISTON, false, true),
-        IF_VARIABLE(Material.OBSIDIAN, Material.PISTON, false, true);
+        PLAYER_EVENT(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, PlayerEvent::new,true, false),
+        BLOCK_EVENT(Material.PRISMARINE_BRICKS, Material.PRISMARINE, null, true, false),
+        PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, null,false, false),
+        ENTITY_ACTION(Material.MUD_BRICKS, Material.PACKED_MUD, null,false, false),
+        ACTION_VAR(Material.IRON_BLOCK, Material.IRON_ORE, null,false, false),
+        WORLD_ACTION(Material.RED_NETHER_BRICKS, Material.NETHERRACK, null,false, false),
+        IF_PLAYER(Material.OAK_PLANKS, Material.PISTON, null,false, true),
+        IF_VARIABLE(Material.OBSIDIAN, Material.PISTON, null,false, true);
 
 
         private Material mainBlock;
         private Material additionalBlock;
+        private final Function<User, CodingCategoriesMenu> constructor;
         private boolean isEvent;
         private boolean isCondition;
 
-        BlockTypes (Material mainBlock, Material additionalBlock, boolean isEvent, boolean isCondition) {
+        BlockTypes (Material mainBlock, Material additionalBlock, Function<User, CodingCategoriesMenu> constructor, boolean isEvent, boolean isCondition) {
             this.mainBlock = mainBlock;
             this.additionalBlock = additionalBlock;
+            this.constructor = constructor;
             this.isEvent = isEvent;
             this.isCondition = isCondition;
         }
@@ -80,6 +88,14 @@ public class Development {
         public static @Nullable BlockTypes getByMainBlock (Block mainBlock) {
             return getByMainBlock(mainBlock.getType());
         }
+
+        public boolean hasConstructor() {
+            return constructor != null;
+        }
+
+        public CodingCategoriesMenu createMenuInstance(User user) {
+            return constructor.apply(user);
+        }
     }
 
     public static void setCodingBlock (BlockPlaceEvent event) {
@@ -100,8 +116,10 @@ public class Development {
 
                 int distance = type.isCondition ? 4 : 2;
 
-                event.setCancelled(!moveBlocks(additional.getLocation(), last, BlockFace.WEST, distance));
-                if (event.isCancelled()) return;
+                if (!type.isEvent) {
+                    event.setCancelled(!moveBlocks(additional.getLocation(), last, BlockFace.WEST, distance));
+                    if (event.isCancelled()) return;
+                }
             }
 
             block.getLocation().getBlock().setType(block.getType());
@@ -122,6 +140,7 @@ public class Development {
                 sign.setLine(1, "coding." + type.name().toLowerCase(Locale.ROOT) + ".name");
                 sign.update();
             }
+
         } else {
             event.setCancelled(true);
         }
@@ -137,14 +156,19 @@ public class Development {
 
         if (type != null && PlotManager.isDevWorld(block.getWorld())) {
             if (type.isEvent) {
-                Block last = getLastBlockInString(block);
+                if (event.getPlayer().isSneaking()) breakAsDefault(block, false);
+                else {
+                    Block last = getLastBlockInString(block);
 
-                if (last != null) {
-                    Location loc = last.getLocation();
-                    loc.add(0, 1, -1);
+                    if (last != null) {
+                        Location loc = last.getLocation();
+                        loc.add(0, 1, -1);
 
-                    setBlocks(block.getWorld(), block.getLocation(), loc);
+                        setBlocks(block.getWorld(), block.getLocation(), loc);
+                    }
                 }
+
+                return;
             }
 
             if (type.isCondition) {
@@ -159,27 +183,32 @@ public class Development {
                     Block lastInString = getLastBlockInString(closingBracket);
                     if (lastInString != null) {
                         int distance = (int) block.getLocation().distance(loc);
-                        System.out.println(distance);
 
                         moveBlocks(closingBracket.getRelative(BlockFace.WEST).getLocation(), lastInString.getLocation(), BlockFace.EAST, distance + 1);
                     }
                 }
             } else {
-                block.getRelative(BlockFace.NORTH).setType(Material.AIR);
-                block.getRelative(BlockFace.UP).setType(Material.AIR);
-                block.getRelative(BlockFace.WEST).setType(Material.AIR);
-                block.setType(Material.AIR);
-
-                Block lastInString = getLastBlockInString(block.getRelative(BlockFace.WEST, 2));
-                if (lastInString != null) {
-                    Location loc = lastInString.getLocation();
-                    loc.add(0, 1, -1);
-
-                    moveBlocks(block.getRelative(BlockFace.WEST, 2).getLocation(), loc, BlockFace.EAST, 2);
-                }
+                breakAsDefault(block, true);
             }
 
 
+        }
+    }
+
+    private static void breakAsDefault (Block block, boolean needToMoveBack) {
+        block.getRelative(BlockFace.NORTH).setType(Material.AIR);
+        block.getRelative(BlockFace.UP).setType(Material.AIR);
+        block.getRelative(BlockFace.WEST).setType(Material.AIR);
+        block.setType(Material.AIR);
+
+        if (needToMoveBack) {
+            Block lastInString = getLastBlockInString(block.getRelative(BlockFace.WEST, 2));
+            if (lastInString != null) {
+                Location loc = lastInString.getLocation();
+                loc.add(0, 1, -1);
+
+                moveBlocks(block.getRelative(BlockFace.WEST, 2).getLocation(), loc, BlockFace.EAST, 2);
+            }
         }
     }
 

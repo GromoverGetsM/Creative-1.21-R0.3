@@ -43,7 +43,21 @@ global-items:
 
 coding:
   player_event:
-    name: "Событие игрока"
+    name: "&b&lСобытие игрока"
+  block_event:
+    name: "&3&lСобытие блока"
+  player_action:
+    name: "&7&lДействие игрока"
+  entity_action:
+    name: "&6&lДействие сущности"
+  action_var:
+    name: "&f&lПеременные"
+  world_action:
+    name: "&c&lИгровое действие"
+  if_player:
+    name: "&6&lЕсли игрок"
+  if_variable:
+    name: "&5&lЕсли переменная"
 
   var-types:
     text:

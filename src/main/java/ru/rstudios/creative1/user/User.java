@@ -1,11 +1,15 @@
 package ru.rstudios.creative1.user;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.TileState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -134,20 +138,33 @@ public class User {
         return player.getWorld().getName().endsWith("_CraftPlot") || player.getWorld().getName().endsWith("_dev");
     }
 
-    public void sendTranslatedSign (Location signLocation) {
-        Block b = signLocation.getBlock();
+    public void sendTranslatedSign(Location signLocation) {
+        Block block = signLocation.getBlock();
 
-        if (b.getState() instanceof Sign sign) {
-            List<String> lines = Arrays.asList(sign.getLines());
-            List<String> result = new LinkedList<>();
-
-            for (String line : lines) {
-                result.add(LocaleManages.getLocaleMessage(getLocale(), line, false, ""));
-            }
-
-            player().sendSignChange(signLocation, result.toArray(String[]::new));
+        if (!(block.getState() instanceof Sign sign)) {
+            return;
         }
+
+        List<Component> newLines = new ArrayList<>();
+        for (Component line : sign.lines()) {
+            String content = ((TextComponent) line).content();
+            if (content.isEmpty()) {
+                newLines.add(Component.text(""));
+            } else {
+                newLines.add(Component.text(LocaleManages.getLocaleMessage(getLocale(), content, false, "")));
+            }
+        }
+
+        Sign newSign = (Sign) block.getBlockData().createBlockState();
+
+        for (int i = 0; i < 4; i++) {
+            newSign.line(i, newLines.get(i));
+        }
+
+        player().sendBlockUpdate(signLocation, newSign);
+
     }
+
 
     public Plot getCurrentPlot() {
         if (!isOnPlot()) return null;
