@@ -14,6 +14,8 @@ public abstract class Starter {
 
     public Starter () {}
 
+    public abstract StarterCategory getCategory();
+
     public List<Action> getActions() {
         return actions;
     }

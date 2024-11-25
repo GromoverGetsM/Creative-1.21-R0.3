@@ -9,12 +9,12 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class CodingMenu implements InventoryHolder {
 
@@ -52,12 +52,20 @@ public class CodingMenu implements InventoryHolder {
     private final String titlePath;
     private final MenuType menuType;
     private final List<ArgumentType> args;
-    private final Map<Integer, List<Object>> switches;
+    private final Map<Integer, SwitchItem> switches;
     private Inventory inventory;
     private final List<Integer> fillers = new ArrayList<>();
     private final Map<ArgumentType, List<Integer>> markers = new LinkedHashMap<>();
+    private final List<Integer> argumentSlots = new LinkedList<>();
 
-    public CodingMenu(String titlePath, MenuType menuType, List<ArgumentType> args, Map<Integer, List<Object>> switches) {
+    public CodingMenu() {
+        this.titlePath = "";
+        this.menuType = MenuType.DEFAULT;
+        this.args = new LinkedList<>();
+        this.switches = new LinkedHashMap<>();
+    }
+
+    public CodingMenu(String titlePath, MenuType menuType, List<ArgumentType> args, Map<Integer, SwitchItem> switches) {
         this.titlePath = titlePath;
         this.menuType = menuType;
         this.args = args;
@@ -69,50 +77,94 @@ public class CodingMenu implements InventoryHolder {
         switch (type) {
             case DEFAULT -> {
                 switch (args.size()) {
-                    case 1 -> setupDefaultMarkers(args, List.of(List.of(4, 12, 14, 22)));
-                    case 2 -> setupDefaultMarkers(args, List.of(List.of(2, 10, 12, 20), List.of(6, 14, 16, 24)));
-                    case 3 -> setupDefaultMarkers(args, List.of(
-                            List.of(1, 9, 11, 19),
-                            List.of(4, 12, 14, 22),
-                            List.of(7, 15, 17, 25)
-                    ));
-                    case 4 -> setupDefaultMarkers(args, List.of(
-                            List.of(1, 19), List.of(3, 21), List.of(5, 23), List.of(7, 25)
-                    ));
-                    case 5 -> setupDefaultMarkers(args, List.of(
-                            List.of(0, 18), List.of(2, 20), List.of(4, 22), List.of(6, 24), List.of(8, 26)
-                    ));
+                    case 1 -> {
+                        argumentSlots.add(13);
+                        setupDefaultMarkers(args, List.of(List.of(4, 12, 14, 22)));
+                    }
+                    case 2 -> {
+                        argumentSlots.add(11);
+                        argumentSlots.add(15);
+                        setupDefaultMarkers(args, List.of(List.of(2, 10, 12, 20), List.of(6, 14, 16, 24)));
+                    }
+                    case 3 -> {
+                        argumentSlots.add(10);
+                        argumentSlots.add(13);
+                        argumentSlots.add(16);
+                        setupDefaultMarkers(args, List.of(
+                                List.of(1, 9, 11, 19),
+                                List.of(4, 12, 14, 22),
+                                List.of(7, 15, 17, 25)
+                        ));
+                    }
+                    case 4 -> {
+                        argumentSlots.add(10);
+                        argumentSlots.add(12);
+                        argumentSlots.add(14);
+                        argumentSlots.add(16);
+                        setupDefaultMarkers(args, List.of(
+                                List.of(1, 19), List.of(3, 21), List.of(5, 23), List.of(7, 25)
+                        ));
+                    }
+                    case 5 -> {
+                        argumentSlots.add(9);
+                        argumentSlots.add(11);
+                        argumentSlots.add(13);
+                        argumentSlots.add(15);
+                        argumentSlots.add(17);
+                        setupDefaultMarkers(args, List.of(
+                                List.of(0, 18), List.of(2, 20), List.of(4, 22), List.of(6, 24), List.of(8, 26)
+                        ));
+                    }
                 }
             }
-            case SET -> setupDefaultMarkers(args, List.of(
-                    List.of(4, 12, 14), List.of(18, 19, 20, 21, 22, 23, 24, 25, 26)
-            ));
-            case ALL_IN -> setupDefaultMarkers(args, List.of(
-                    List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 45, 46, 47, 48, 49, 50, 51, 52, 53)
-            ));
+            case SET -> {
+                argumentSlots.add(13);
+                argumentSlots.addAll(IntStream.rangeClosed(27, 53).boxed().toList());
+                setupDefaultMarkers(args, List.of(
+                        List.of(4, 12, 14), List.of(18, 19, 20, 21, 22, 23, 24, 25, 26)
+                ));
+            }
+            case ALL_IN -> {
+                argumentSlots.addAll(IntStream.rangeClosed(9, 44).boxed().toList());
+                setupDefaultMarkers(args, List.of(
+                        List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 45, 46, 47, 48, 49, 50, 51, 52, 53)
+                ));
+            }
+
         }
+    }
+
+    public List<Integer> getArgumentSlots() {
+        return argumentSlots;
     }
 
     private void setupDefaultMarkers(List<ArgumentType> args, List<List<Integer>> positions) {
         for (int i = 0; i < args.size(); i++) {
             markers.put(args.get(i), positions.get(i));
         }
+        fillers.clear();
         fillers.addAll(getFillerSlots());
     }
 
     private List<Integer> getFillerSlots() {
         Set<Integer> filledSlots = markers.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
         List<Integer> allSlots = new ArrayList<>();
-        for (int i = 0; i < 54; i++) allSlots.add(i); // Для всех типов меню мы используем 54 слота (для ALL_IN)
+        System.out.println("ArgSlotsList=" + getArgumentSlots());
+        for (int i = 0; i < 54; i++) {
+            System.out.println("Slot #" + i + ", Contains=" + getArgumentSlots().contains(i));
+            if (!getArgumentSlots().contains(i)) allSlots.add(i);
+        }
         allSlots.removeAll(filledSlots);
         return allSlots;
     }
 
+    private void build (User user) {
+        this.inventory = Bukkit.createInventory(this, getSize(), Component.text(LocaleManages.getLocaleMessage(user.getLocale(), titlePath, false, "")));
+        setupTranslatedItems(user);
+    }
 
     public void open(Player player, User user) {
-        this.inventory = Bukkit.createInventory(this, getSize(), Component.text(LocaleManages.getLocaleMessage(user.getLocale(), titlePath, false, "")));
-
-        setupTranslatedItems(user);
+        build(user);
         player.openInventory(inventory);
     }
 
@@ -125,20 +177,9 @@ public class CodingMenu implements InventoryHolder {
         switches.forEach((slot, params) -> {
             if (slot >= inventory.getSize()) throw new IllegalArgumentException("Switch slot out of bounds");
 
-            SwitchItem switchItem = createSwitchItem(params);
+            SwitchItem switchItem = switches.get(slot);
             inventory.setItem(slot, switchItem.getLocalizedIcon(user));
         });
-    }
-
-    private SwitchItem createSwitchItem(List<Object> params) {
-        String name = (String) params.get(0);
-        String description = (String) params.get(1);
-        List<String> states = (List<String>) params.get(2);
-        String pathStart = (String) params.get(3);
-        List<Material> icons = (List<Material>) params.get(4);
-
-        SwitchItem switchItem = new SwitchItem(name, description, states, pathStart, icons);
-        return switchItem;
     }
 
     private ItemStack buildFiller() {
@@ -164,6 +205,11 @@ public class CodingMenu implements InventoryHolder {
 
     private int getSize() {
         return (menuType == MenuType.DEFAULT) ? 27 : 54;
+    }
+
+    public Inventory getInventory (User user) {
+        if (inventory == null) build(user);
+        return this.inventory;
     }
 
     @Override

@@ -40,29 +40,30 @@ public class LocaleManages {
             messagesC.add(Component.text(s.replace("&", "§")));
         }
 
+        if (messagesC.isEmpty()) messagesC.add(Component.text("Not found! " + messageCode));
+
         return messagesC;
     }
 
     public static List<String> getLocaleMessagesS(String locale, String messageCode, HashMap<Integer, String> localeChanges) {
-        // Получаем конфигурацию локализации
         FileConfiguration localizationFile = getLocaleConfig(locale);
-        List<String> messages = new ArrayList<>(localizationFile.getStringList(messageCode)); // Создаем копию, чтобы избежать изменений оригинала
+        List<String> messages = new ArrayList<>(localizationFile.getStringList(messageCode));
 
-        // Применяем изменения на основе localeChanges
         for (Map.Entry<Integer, String> entry : localeChanges.entrySet()) {
             Integer index = entry.getKey();
             String replacement = entry.getValue();
 
-            if (index >= 0 && index < messages.size()) { // Проверяем корректность индекса
+            if (index >= 0 && index < messages.size()) {
                 String originalMessage = messages.get(index);
                 messages.set(index, String.format(originalMessage, replacement));
             }
         }
 
-        // Заменяем символы "&" на "§" для всех сообщений
         for (int i = 0; i < messages.size(); i++) {
             messages.set(i, messages.get(i).replace("&", "§"));
         }
+
+        if (messages.isEmpty()) messages.add("Not found! " + messageCode);
 
         return messages;
     }

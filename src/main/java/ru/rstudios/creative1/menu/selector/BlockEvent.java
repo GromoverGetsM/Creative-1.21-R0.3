@@ -17,15 +17,14 @@ import java.util.Locale;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
-public class PlayerEvent extends CodingCategoriesMenu {
-
-    public PlayerEvent(User user) {
-        super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.player_event.name", false, ""), (byte) 6);
+public class BlockEvent extends CodingCategoriesMenu {
+    public BlockEvent(User user) {
+        super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.block_event.name", false, ""), (byte) 6);
     }
 
     @Override
     public void fillCategoryPage(User user) {
-        List<MenuCategory> categories = new LinkedList<>(StarterCategory.getMenusCategories(Development.BlockTypes.PLAYER_EVENT));
+        List<MenuCategory> categories = new LinkedList<>(StarterCategory.getMenusCategories(Development.BlockTypes.BLOCK_EVENT));
         List<Byte> slots = Arrays.asList((byte) 10, (byte) 13, (byte) 16, (byte) 37, (byte) 40, (byte) 43);
 
         for (int i = 0; i < Math.min(8, categories.size()); i++) {
@@ -35,7 +34,7 @@ public class PlayerEvent extends CodingCategoriesMenu {
 
     @Override
     public void fillItemsPage(User user) {
-        List<StarterCategory> starters = StarterCategory.getStartersByCategory(Development.BlockTypes.PLAYER_EVENT, this.selectedCategory);
+        List<StarterCategory> starters = StarterCategory.getStartersByCategory(Development.BlockTypes.BLOCK_EVENT, this.selectedCategory);
         List<Byte> slots = new LinkedList<>();
         addRange(slots, (byte) 10, (byte) 16);
         addRange(slots, (byte) 19, (byte) 25);

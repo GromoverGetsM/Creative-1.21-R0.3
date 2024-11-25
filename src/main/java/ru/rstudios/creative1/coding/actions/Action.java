@@ -3,10 +3,8 @@ package ru.rstudios.creative1.coding.actions;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 import ru.rstudios.creative1.coding.events.*;
 import ru.rstudios.creative1.coding.starters.Starter;
-import ru.rstudios.creative1.user.User;
 
 public abstract class Action {
 
@@ -17,10 +15,6 @@ public abstract class Action {
     public Action (Starter starter, Block actionBlock) {
         this.starter = starter;
         this.actionBlock = actionBlock;
-    }
-
-    public ItemStack getIcon(User user) {
-        return null;
     }
 
 
@@ -65,4 +59,5 @@ public abstract class Action {
     }
 
     public abstract void execute(GameEvent event) throws Exception;
+    public abstract ActionCategory getCategory();
 }

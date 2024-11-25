@@ -16,7 +16,8 @@ import java.util.function.Supplier;
 
 public enum StarterCategory {
 
-    PLAYER_JOIN(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, null, null, Material.OAK_DOOR);
+    PLAYER_JOIN(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, null, null, Material.OAK_DOOR),
+    BLOCK_EXPLODED(Development.BlockTypes.BLOCK_EVENT, MenuCategory.WORLD, null, null, Material.TNT);
 
     private Development.BlockTypes type;
     private MenuCategory category;

@@ -8,6 +8,7 @@ import ru.rstudios.creative1.utils.Development;
 import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 public enum MenuCategory {
 
@@ -42,7 +43,7 @@ public enum MenuCategory {
     }
 
     public ItemStack getItem(User user) {
-        String localeSubBuilder = "coding." + name();
+        String localeSubBuilder = "coding." + name().toLowerCase(Locale.ROOT);
         return ItemUtil.item(material, LocaleManages.getLocaleMessage(user.getLocale(), localeSubBuilder + ".name", false, ""), LocaleManages.getLocaleMessagesS(user.getLocale(), localeSubBuilder + ".lore", new LinkedHashMap<>()));
     }
 

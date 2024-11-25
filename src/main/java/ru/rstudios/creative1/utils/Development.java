@@ -22,7 +22,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.menu.ProtectedMenu;
+import ru.rstudios.creative1.menu.selector.BlockEvent;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
+import ru.rstudios.creative1.menu.selector.PlayerAction;
 import ru.rstudios.creative1.menu.selector.PlayerEvent;
 import ru.rstudios.creative1.plots.DevPlot;
 import ru.rstudios.creative1.plots.Plot;
@@ -42,8 +44,8 @@ public class Development {
     public enum BlockTypes {
 
         PLAYER_EVENT(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, PlayerEvent::new,true, false),
-        BLOCK_EVENT(Material.PRISMARINE_BRICKS, Material.PRISMARINE, null, true, false),
-        PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, null,false, false),
+        BLOCK_EVENT(Material.PRISMARINE_BRICKS, Material.PRISMARINE, BlockEvent::new, true, false),
+        PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, PlayerAction::new,false, false),
         ENTITY_ACTION(Material.MUD_BRICKS, Material.PACKED_MUD, null,false, false),
         ACTION_VAR(Material.IRON_BLOCK, Material.IRON_ORE, null,false, false),
         WORLD_ACTION(Material.RED_NETHER_BRICKS, Material.NETHERRACK, null,false, false),

@@ -1,10 +1,13 @@
 package ru.rstudios.creative1.handlers;
 
+import com.jeff_media.morepersistentdatatypes.DataType;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,16 +18,21 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
+import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
+import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
@@ -136,14 +144,30 @@ public class GlobalListener implements Listener {
         Plot p = user.getCurrentPlot();
 
         if (p.isUserInDev(user)) {
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.OAK_WALL_SIGN) {
-                event.setCancelled(true);
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
+                if (event.getClickedBlock().getType() == Material.OAK_WALL_SIGN) {
+                    event.setCancelled(true);
 
-                Development.BlockTypes type = Development.BlockTypes.getByMainBlock(event.getClickedBlock().getRelative(BlockFace.SOUTH));
-                if (type != null && type.hasConstructor()) {
-                    CodingCategoriesMenu menu = type.createMenuInstance(user);
-                    menu.open(user);
-                    menu.setSign(event.getClickedBlock());
+                    Development.BlockTypes type = Development.BlockTypes.getByMainBlock(event.getClickedBlock().getRelative(BlockFace.SOUTH));
+                    if (type != null && type.hasConstructor()) {
+                        CodingCategoriesMenu menu = type.createMenuInstance(user);
+                        menu.open(user);
+                        menu.setSign(event.getClickedBlock());
+                    }
+                } else if (event.getClickedBlock().getType() == Material.CHEST) {
+                    event.setCancelled(true);
+
+                    NamespacedKey inventory = new NamespacedKey(plugin, "inventory");
+
+                    Chest chest = (Chest) event.getClickedBlock().getState();
+
+                    ItemStack[] contents = chest.getPersistentDataContainer().get(inventory, DataType.ITEM_STACK_ARRAY);
+
+                    Sign sign = (Sign) event.getClickedBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.NORTH).getState();
+
+                    Inventory inv = Bukkit.createInventory(new CodingMenu().getInventory(user).getHolder(), contents.length, LocaleManages.getLocaleMessage(user.getLocale(), sign.getLine(2), false, ""));
+                    inv.setContents(contents);
+                    user.player().openInventory(inv);
                 }
             }
         }
