@@ -12,7 +12,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import ru.rstudios.creative1.coding.MenuCategory;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
-import ru.rstudios.creative1.coding.starters.StarterCategory;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
@@ -87,12 +86,8 @@ public class PlayerAction extends CodingCategoriesMenu {
                         CodingMenu menu = category.getCodingMenu();
 
                         NamespacedKey inventory = new NamespacedKey(plugin, "inventory");
-                        NamespacedKey argSlots = new NamespacedKey(plugin, "argSlots");
-
-                        int[] slotsArray = menu.getArgumentSlots().stream().mapToInt(Integer::intValue).toArray();
 
                         chest.getPersistentDataContainer().set(inventory, DataType.ITEM_STACK_ARRAY, menu.getInventory(user).getContents());
-                        chest.getPersistentDataContainer().set(argSlots, DataType.INTEGER_ARRAY, slotsArray);
                         chest.update();
 
                     }

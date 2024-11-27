@@ -2,11 +2,9 @@ package ru.rstudios.creative1.coding.actions;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
-import ru.rstudios.creative1.coding.starters.StarterCategory;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.user.LocaleManages;
@@ -19,11 +17,12 @@ import java.util.function.Supplier;
 
 public enum ActionCategory {
 
-    SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, null, Material.WRITABLE_BOOK, true, "coding.actions.send_message.name", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>());
+    SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, null, Material.WRITABLE_BOOK, true, "coding.actions.send_message.name", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,
+            new SwitchItem("menus.switches.actions.sm.name", "menus.switches.actions.sm.lore", List.of("Testing1", "Testing2"), "menus.switches.actions.sm.states.", List.of(Material.LIME_CONCRETE_POWDER, Material.ANDESITE)))));
 
     private Development.BlockTypes type;
     private MenuCategory category;
-    private final Supplier<Object> constructor;
+    private final Supplier<Action> constructor;
     private Material icon;
     private boolean hasChest;
     private String menuNamePath;
@@ -31,7 +30,7 @@ public enum ActionCategory {
     private List<CodingMenu.ArgumentType> args;
     private HashMap<Integer, SwitchItem> switches;
 
-    ActionCategory (Development.BlockTypes type, MenuCategory category, Supplier<Object> constructor, Material icon, boolean hasChest, String menuNamePath, CodingMenu.MenuType menuType, List<CodingMenu.ArgumentType> args, HashMap<Integer, SwitchItem> switches) {
+    ActionCategory (Development.BlockTypes type, MenuCategory category, Supplier<Action> constructor, Material icon, boolean hasChest, String menuNamePath, CodingMenu.MenuType menuType, List<CodingMenu.ArgumentType> args, HashMap<Integer, SwitchItem> switches) {
         this.category = category;
         this.type = type;
         this.constructor = constructor;
@@ -45,6 +44,10 @@ public enum ActionCategory {
 
     public boolean hasChest() {
         return hasChest;
+    }
+
+    public static ActionCategory byName (String name) {
+        return Arrays.stream(values()).filter(actionCategory -> actionCategory.name().equals(name.toUpperCase(Locale.ROOT))).findFirst().orElse(null);
     }
 
     public static Set<MenuCategory> getMenuCategories (Development.BlockTypes type) {
@@ -92,7 +95,7 @@ public enum ActionCategory {
         this.category = category;
     }
 
-    public Supplier<Object> getConstructor() {
+    public Supplier<Action> getConstructor() {
         return constructor;
     }
 

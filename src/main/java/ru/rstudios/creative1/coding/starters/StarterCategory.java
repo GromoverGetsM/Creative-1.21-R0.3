@@ -6,6 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
+import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
@@ -21,16 +22,20 @@ public enum StarterCategory {
 
     private Development.BlockTypes type;
     private MenuCategory category;
-    private final Supplier<Object> constructor;
+    private final Supplier<Starter> constructor;
     private Class<? extends Event> eClass;
     private Material icon;
 
-    StarterCategory (Development.BlockTypes type, MenuCategory category, Supplier<Object> constructor, Class<? extends Event> eClass, Material icon) {
+    StarterCategory (Development.BlockTypes type, MenuCategory category, Supplier<Starter> constructor, Class<? extends Event> eClass, Material icon) {
         this.type = type;
         this.category = category;
         this.constructor = constructor;
         this.eClass = eClass;
         this.icon = icon;
+    }
+
+    public static StarterCategory byName (String name) {
+        return Arrays.stream(values()).filter(starterCat -> starterCat.name().equals(name.toUpperCase(Locale.ROOT))).findFirst().orElse(null);
     }
 
     public static @Nullable StarterCategory getByMaterial (Material m) {
@@ -74,7 +79,7 @@ public enum StarterCategory {
         this.category = category;
     }
 
-    public Supplier<Object> getConstructor() {
+    public Supplier<Starter> getConstructor() {
         return constructor;
     }
 

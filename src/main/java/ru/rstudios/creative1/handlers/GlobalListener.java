@@ -15,24 +15,26 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.util.Vector;
+import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
-import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
@@ -60,6 +62,7 @@ public class GlobalListener implements Listener {
         if (user.isOnPlot()) {
             Plot p = user.getCurrentPlot();
             p.onPlayerLeft();
+            user.player().getOpenInventory().close();
             user.destroy();
         }
     }
@@ -161,16 +164,69 @@ public class GlobalListener implements Listener {
                     NamespacedKey inventory = new NamespacedKey(plugin, "inventory");
 
                     Chest chest = (Chest) event.getClickedBlock().getState();
-
                     ItemStack[] contents = chest.getPersistentDataContainer().get(inventory, DataType.ITEM_STACK_ARRAY);
-
                     Sign sign = (Sign) event.getClickedBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.NORTH).getState();
 
-                    Inventory inv = Bukkit.createInventory(new CodingMenu().getInventory(user).getHolder(), contents.length, LocaleManages.getLocaleMessage(user.getLocale(), sign.getLine(2), false, ""));
-                    inv.setContents(contents);
-                    user.player().openInventory(inv);
+                    ActionCategory category = ActionCategory.byName(sign.getLine(2).replace("coding.actions.", "").replace(".name", ""));
+                    if (category.hasChest()) {
+                        CodingMenu codingMenu = category.getCodingMenu();
+
+                        codingMenu.build(user);
+                        Inventory inv = codingMenu.getInventory(user);
+
+                        inv.setContents(contents);
+
+                        codingMenu.open(user);
+                        user.datastore().put("chestBlockActive", event.getClickedBlock());
+                    }
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClick (InventoryClickEvent event) {
+        User user = User.asUser(event.getWhoClicked());
+
+        if (event.getClickedInventory() != null && event.getClickedInventory().getHolder() instanceof CodingMenu menu) {
+            if (!menu.getArgumentSlots().contains(event.getSlot())) {
+                event.setCancelled(true);
+                if (menu.getSwitches().containsKey(event.getSlot())) {
+                    menu.getSwitches().get(event.getSlot()).onClick(user, event);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose (InventoryCloseEvent event) {
+        User user = User.asUser(event.getPlayer());
+        Inventory inv = event.getInventory();
+
+        System.out.println("invCloseTriggered");
+        if (inv.getHolder() instanceof CodingMenu) {
+            System.out.println("CodingMenuTriggered");
+            ItemStack[] contents = inv.getContents();
+
+            if (user.datastore().containsKey("chestBlockActive")) {
+                System.out.println("Contains activeblock: {" + user.datastore().get("chestBlockActive") + "}#");
+                Block block = (Block) user.datastore().get("chestBlockActive");
+                Chest ch = (Chest) block.getState();
+                NamespacedKey inventoryKey = new NamespacedKey(plugin, "inventory");
+
+                System.out.println("Contents: " + Arrays.toString(contents));
+
+                PersistentDataContainer container = ch.getPersistentDataContainer();
+                if (container.has(inventoryKey, DataType.ITEM_STACK_ARRAY)) container.remove(inventoryKey);
+
+                container.set(inventoryKey, DataType.ITEM_STACK_ARRAY, contents);
+                System.out.println(container.has(inventoryKey));
+                ch.update();
+
+                System.out.println(((Chest) block.getRelative(BlockFace.NORTH).getRelative(BlockFace.SOUTH).getState()).getPersistentDataContainer().has(inventoryKey));
+            }
+
+            user.datastore().remove("chestBlockActive");
         }
     }
 
