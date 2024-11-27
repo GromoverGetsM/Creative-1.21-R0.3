@@ -82,7 +82,6 @@ public class PlayerAction extends CodingCategoriesMenu {
                         Block chestBlock = this.sign.getRelative(BlockFace.SOUTH).getRelative(BlockFace.UP);
                         chestBlock.setType(Material.CHEST);
 
-                        System.out.println(chestBlock.getLocation());
 
                         Chest chest = (Chest) chestBlock.getState();
                         CodingMenu menu = category.getCodingMenu();
@@ -91,14 +90,11 @@ public class PlayerAction extends CodingCategoriesMenu {
                         NamespacedKey argSlots = new NamespacedKey(plugin, "argSlots");
 
                         int[] slotsArray = menu.getArgumentSlots().stream().mapToInt(Integer::intValue).toArray();
-                        System.out.println(Arrays.toString(menu.getInventory(user).getContents()));
 
                         chest.getPersistentDataContainer().set(inventory, DataType.ITEM_STACK_ARRAY, menu.getInventory(user).getContents());
                         chest.getPersistentDataContainer().set(argSlots, DataType.INTEGER_ARRAY, slotsArray);
-                        System.out.println("Before update: " + chest.getPersistentDataContainer().isEmpty());
                         chest.update();
 
-                        System.out.println("After update: " + chest.getPersistentDataContainer().isEmpty());
                     }
                 }
             }

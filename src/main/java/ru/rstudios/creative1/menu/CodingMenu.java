@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -57,6 +58,8 @@ public class CodingMenu implements InventoryHolder {
     private final List<Integer> fillers = new ArrayList<>();
     private final Map<ArgumentType, List<Integer>> markers = new LinkedHashMap<>();
     private final List<Integer> argumentSlots = new LinkedList<>();
+    private final HashSet<Player> viewers = new LinkedHashSet<>();
+    public final Map<Player, Inventory> localizedInventories = new HashMap<>();
 
     public CodingMenu() {
         this.titlePath = "";
@@ -149,38 +152,48 @@ public class CodingMenu implements InventoryHolder {
     private List<Integer> getFillerSlots() {
         Set<Integer> filledSlots = markers.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
         List<Integer> allSlots = new ArrayList<>();
-        System.out.println("ArgSlotsList=" + getArgumentSlots());
         for (int i = 0; i < 54; i++) {
-            System.out.println("Slot #" + i + ", Contains=" + getArgumentSlots().contains(i));
             if (!getArgumentSlots().contains(i)) allSlots.add(i);
         }
         allSlots.removeAll(filledSlots);
         return allSlots;
     }
 
-    private void build (User user) {
-        this.inventory = Bukkit.createInventory(this, getSize(), Component.text(LocaleManages.getLocaleMessage(user.getLocale(), titlePath, false, "")));
-        setupTranslatedItems(user);
+    private void build(User user) {
+        Inventory localizedInventory = Bukkit.createInventory(this, getSize(),
+                Component.text(LocaleManages.getLocaleMessage(user.getLocale(), titlePath, false, "")));
+
+        setupTranslatedItems(user, localizedInventory);
+        localizedInventories.put(user.player(), localizedInventory);
     }
 
-    public void open(Player player, User user) {
+
+    public void open(Player player) {
+        open(User.asUser(player));
+    }
+
+    public void open(User user) {
         build(user);
-        player.openInventory(inventory);
+        user.player().openInventory(localizedInventories.get(user.player()));
+        viewers.add(user.player());
     }
 
-    private void setupTranslatedItems(User user) {
+
+    private void setupTranslatedItems(User user, Inventory inventory) {
         fillers.forEach(slot -> inventory.setItem(slot, buildFiller()));
 
-        markers.forEach((type, slots) -> slots.forEach(slot ->
-                inventory.setItem(slot, buildMarker(type, user))));
+        markers.forEach((type, slots) ->
+                slots.forEach(slot -> inventory.setItem(slot, buildMarker(type, user))));
 
         switches.forEach((slot, params) -> {
-            if (slot >= inventory.getSize()) throw new IllegalArgumentException("Switch slot out of bounds");
+            if (slot >= inventory.getSize())
+                throw new IllegalArgumentException("Switch slot out of bounds");
 
             SwitchItem switchItem = switches.get(slot);
             inventory.setItem(slot, switchItem.getLocalizedIcon(user));
         });
     }
+
 
     private ItemStack buildFiller() {
         return createItem(Material.GRAY_STAINED_GLASS_PANE, " ", Collections.emptyList());
@@ -210,6 +223,24 @@ public class CodingMenu implements InventoryHolder {
     public Inventory getInventory (User user) {
         if (inventory == null) build(user);
         return this.inventory;
+    }
+
+    public void onClick (InventoryClickEvent event) {
+        int slot = event.getSlot();
+
+        if (switches.containsKey(slot)) {
+            event.setCancelled(true);
+            SwitchItem item = switches.get(slot);
+
+            if (event.isLeftClick()) item.nextState();
+            else item.previousState();
+
+            viewers.forEach(player -> {
+                Inventory inv = player.getOpenInventory().getTopInventory();
+                ItemStack icon = item.getLocalizedIcon(User.asUser(player));
+                inv.setItem(slot, icon);
+            });
+        }
     }
 
     @Override

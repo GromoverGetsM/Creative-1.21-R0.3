@@ -14,13 +14,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
@@ -32,7 +33,6 @@ import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
@@ -140,6 +140,7 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract (PlayerInteractEvent event) {
+
         User user = User.asUser(event.getPlayer());
         Plot p = user.getCurrentPlot();
 
