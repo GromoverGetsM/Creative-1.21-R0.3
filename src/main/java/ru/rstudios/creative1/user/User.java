@@ -68,6 +68,13 @@ public class User {
         player.sendMessage(message);
     }
 
+    public void sendTitle (String title, String subtitle, int fadeIn, int duration, int fadeOut, boolean isTitleCode, boolean isSubtitleCode) {
+        if (isTitleCode) title = LocaleManages.getLocaleMessage(getLocale(), title, false, "");
+        if (isSubtitleCode) subtitle = LocaleManages.getLocaleMessage(getLocale(), subtitle, false, "");
+
+        player().sendTitle(title, subtitle, fadeIn, duration, fadeOut);
+    }
+
     public String getLocale() {
         return LocaleManages.getLocale(player);
     }

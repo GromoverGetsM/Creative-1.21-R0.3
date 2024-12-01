@@ -128,20 +128,20 @@ public class ActionChest {
                         list.add(item.getI18NDisplayName());
                     }
                 }
-                /*case APPLE -> {
-                    Object o = CodingHandleUtils.parseGameValue(item);
-                    if (o instanceof StringValue) {
-                        list.add(((StringValue) o).get(event, entity));
-                    }
+            /*case APPLE -> {
+                Object o = CodingHandleUtils.parseGameValue(item);
+                if (o instanceof StringValue) {
+                    list.add(((StringValue) o).get(event, entity));
                 }
-                case MAGMA_CREAM -> {
-                    if (item.getItemMeta().hasDisplayName()) {
-                        String displayName = item.getItemMeta().getDisplayName();
-                        displayName = this.replacePlaceholders(displayName, event, entity);
+            }
+            case MAGMA_CREAM -> {
+                if (item.getItemMeta().hasDisplayName()) {
+                    String displayName = item.getItemMeta().getDisplayName();
+                    displayName = this.replacePlaceholders(displayName, event, entity);
 
-                        list.add(new DynamicVariable(ChatColor.stripColor(displayName)).getValue(event.getPlot()) == null ? "" : new DynamicVariable(ChatColor.stripColor(displayName)).getValue(event.getPlot()).toString());
-                    }
-                }*/
+                    list.add(new DynamicVariable(ChatColor.stripColor(displayName)).getValue(event.getPlot()) == null ? "" : new DynamicVariable(ChatColor.stripColor(displayName)).getValue(event.getPlot()).toString());
+                }
+            }*/
             }
         }
 

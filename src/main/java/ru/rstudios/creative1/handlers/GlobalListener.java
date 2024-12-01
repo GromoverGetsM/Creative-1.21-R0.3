@@ -19,6 +19,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.util.Vector;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
@@ -43,8 +44,20 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onWorldChanged (PlayerChangedWorldEvent event) {
         User user = User.asUser(event.getPlayer());
+        String from = event.getFrom().getName();
+        String destination = user.player().getWorld().getName();
 
-        if (user.isOnPlot() && user.isOnPlayingWorld()) {
+        if (from.endsWith("_dev") && !destination.endsWith("_dev")) {
+            boolean isMovingToLinkedCraftPlot = from.replace("_dev", "_CraftPlot").equalsIgnoreCase(destination);
+
+            boolean handlingPaper = user.datastore().containsKey("HandlingPaper");
+
+            if (!isMovingToLinkedCraftPlot || !handlingPaper) {
+                user.getCurrentPlot().handler.parseCodeBlocks();
+            }
+        }
+
+        if (user.isOnPlot() && user.isOnPlayingWorld() && !user.datastore().containsKey("HandlingPaper")) {
             user.getCurrentPlot().handler.sendStarter(new PlayerJoin.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_JOIN);
         }
     }
@@ -146,6 +159,60 @@ public class GlobalListener implements Listener {
             }
 
             user.datastore().remove("inputtingPlotName");
+        }
+
+        if (user.isInDev()) {
+            if (message.length() > 256) message = message.substring(0, 256);
+            if (message.contains("&")) message = message.replace("&", "§");
+
+            ItemStack activeItem = user.player().getInventory().getItemInMainHand();
+            ItemMeta meta = activeItem.getItemMeta();
+
+            if (activeItem.getType() != Material.AIR) {
+
+                switch (activeItem.getType()) {
+                    case BOOK, MAGMA_CREAM -> {
+                        event.setCancelled(true);
+                        user.player().playSound(user.player().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
+                        user.sendTitle("coding.tech.var-set", message, 10, 70, 20, true, false);
+
+                        meta = activeItem.getItemMeta();
+                        if (meta != null) {
+                            meta.setDisplayName(message);
+                        }
+                    }
+                    case SLIME_BALL -> {
+                        event.setCancelled(true);
+
+                        try {
+                            double d = Double.parseDouble(message);
+
+                            String displayValue;
+                            if (d == (long) d) {
+                                displayValue = String.valueOf((long) d);
+                            } else {
+                                displayValue = String.valueOf(d);
+                            }
+
+                            user.player().playSound(user.player().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
+                            user.sendTitle("coding.tech.var-set", displayValue, 10, 70, 20, true, false);
+
+                            meta = activeItem.getItemMeta();
+                            if (meta != null) {
+                                meta.setDisplayName(displayValue);
+                                activeItem.setItemMeta(meta);
+                            }
+                        } catch (NumberFormatException e) {
+                            user.player().playSound(user.player().getLocation(), Sound.BLOCK_ANVIL_PLACE, 1.0F, 1.0F);
+                            user.sendTitle("coding.tech.incorrect-value", "§6" + message, 10, 70, 20, true, false);
+                        }
+                    }
+
+                }
+
+                activeItem.setItemMeta(meta);
+                user.player().getInventory().setItemInMainHand(activeItem);
+            }
         }
     }
 

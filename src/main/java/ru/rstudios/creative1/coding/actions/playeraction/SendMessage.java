@@ -12,15 +12,16 @@ public class SendMessage extends Action {
     @Override
     public void execute(GameEvent event) throws Exception {
         ActionChest chest = getChest();
+        chest.initInventorySort();
 
         getStarter().getSelection().forEach(e -> {
             StringBuilder builder = new StringBuilder();
             List<String> texts = chest.getAsTexts(event, e);
 
             SwitchItem item = getCategory().getCodingMenu().getSwitches().get(49);
-            item.setCurrentState(item.getCurrentState(chest.getOriginalContents()[49]));
+            int currentState = item.getCurrentState(chest.getOriginalContents()[49]);
 
-            switch (item.getCurrentState()) {
+            switch (currentState) {
                 case 0 -> texts.forEach(builder::append);
                 case 1 -> texts.forEach(text -> builder.append(" ").append(text));
                 case 2 -> texts.forEach(text -> builder.append('\n').append(text));

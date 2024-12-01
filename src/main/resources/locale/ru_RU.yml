@@ -42,6 +42,14 @@ global-items:
       - "&f страницу "
 
 coding:
+  events:
+    player_join:
+      name: "Вход"
+
+  actions:
+    send_message:
+      name: "Отправить сообщение"
+
   player_event:
     name: "&b&lСобытие игрока"
   block_event:
@@ -82,6 +90,19 @@ coding:
         - "&7- динамическую переменную"
 
 menus:
+  switches:
+    actions:
+      sm:
+        name: "&3Separator"
+        lore:
+          - "&fSeparates parameters in a message"
+          - "&faccording to the specified settings"
+
+        states:
+          together: "No Separation"
+          space: "Separated by Space"
+          newline: "Separated by New Line"
+
   worlds-option:
     title: "Выберите опцию"
     items:

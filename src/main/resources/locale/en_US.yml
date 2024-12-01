@@ -43,6 +43,14 @@ global-items:
       - "&f page "
 
 coding:
+  events:
+    player_join:
+      name: "Player joined"
+
+  actions:
+    send_message:
+      name: "Send message"
+
   player_event:
     name: "&b&lPlayer Event"
   block_event:
