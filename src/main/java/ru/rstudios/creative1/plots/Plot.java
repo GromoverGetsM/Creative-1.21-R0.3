@@ -69,7 +69,6 @@ public class Plot {
 
         String plotName = "world_plot_" + id + "_CraftPlot";
         plots.putIfAbsent(plotName, this);
-        System.out.println(plots.get(plotName()));
 
         this.customId = "";
         this.icon = Material.BRICKS;
@@ -125,6 +124,9 @@ public class Plot {
             this.flags = config.getConfigurationSection("gameRules").getValues(false);
         } catch (IOException e) { throw new RuntimeException(e); }
 
+        dev.load();
+        handler.parseCodeBlocks();
+
         applyGameRules();
     }
 
@@ -148,7 +150,6 @@ public class Plot {
         this.handler = new CodeHandler(this);
 
         plots.putIfAbsent(plotName, this);
-        System.out.println(plots.get(plotName()));
 
         File file = new File(Bukkit.getWorldContainer() + File.separator + plotName + File.separator + "config.yml");
         if (file.exists()) {
@@ -161,6 +162,9 @@ public class Plot {
             assert flags != null : "Невозможно получить секцию правил!";
             this.flags = flags.getValues(false);
         }
+
+        dev.load();
+        handler.parseCodeBlocks();
 
         if (needToInitWorld) {
             initWorld();
@@ -361,7 +365,6 @@ public class Plot {
     }
 
     public World world() {
-        System.out.println(world);
         return world;
     }
 

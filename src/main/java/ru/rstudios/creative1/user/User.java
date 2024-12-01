@@ -138,6 +138,14 @@ public class User {
         return player.getWorld().getName().endsWith("_CraftPlot") || player.getWorld().getName().endsWith("_dev");
     }
 
+    public boolean isOnPlayingWorld() {
+        return isOnPlot() && player.getWorld().getName().endsWith("_CraftPlot");
+    }
+
+    public boolean isInDev() {
+        return isOnPlot() && player.getWorld().getName().endsWith("_dev");
+    }
+
     public void sendTranslatedSign(Location signLocation) {
         Block block = signLocation.getBlock();
 

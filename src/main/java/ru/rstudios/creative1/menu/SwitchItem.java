@@ -139,6 +139,10 @@ public class SwitchItem {
         return this.currentState;
     }
 
+    public int getCurrentState (ItemStack item) {
+        return this.icons.indexOf(item.getType());
+    }
+
     public static boolean isSwitchItem(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
 

@@ -12,6 +12,8 @@ public abstract class Action {
     private ActionChest chest;
     private Block actionBlock;
 
+    public Action () {}
+
     public Action (Starter starter, Block actionBlock) {
         this.starter = starter;
         this.actionBlock = actionBlock;

@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
+import ru.rstudios.creative1.coding.actions.playeraction.SendMessage;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.user.LocaleManages;
@@ -17,8 +18,8 @@ import java.util.function.Supplier;
 
 public enum ActionCategory {
 
-    SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, null, Material.WRITABLE_BOOK, true, "coding.actions.send_message.name", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,
-            new SwitchItem("menus.switches.actions.sm.name", "menus.switches.actions.sm.lore", List.of("Testing1", "Testing2"), "menus.switches.actions.sm.states.", List.of(Material.LIME_CONCRETE_POWDER, Material.ANDESITE)))));
+    SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendMessage::new, Material.WRITABLE_BOOK, true, "coding.actions.send_message.name", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,
+            new SwitchItem("menus.switches.actions.sm.name", "menus.switches.actions.sm.lore", List.of("together", "space", "newline"), "menus.switches.actions.sm.states.", List.of(Material.SLIME_BALL, Material.RABBIT_FOOT, Material.SHEARS)))));
 
     private Development.BlockTypes type;
     private MenuCategory category;

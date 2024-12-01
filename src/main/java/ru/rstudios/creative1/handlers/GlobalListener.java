@@ -16,15 +16,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.util.Vector;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
+import ru.rstudios.creative1.coding.starters.StarterCategory;
+import ru.rstudios.creative1.coding.starters.playerevent.PlayerJoin;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
 import ru.rstudios.creative1.plots.Plot;
@@ -40,6 +39,15 @@ import java.util.List;
 import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class GlobalListener implements Listener {
+
+    @EventHandler
+    public void onWorldChanged (PlayerChangedWorldEvent event) {
+        User user = User.asUser(event.getPlayer());
+
+        if (user.isOnPlot() && user.isOnPlayingWorld()) {
+            user.getCurrentPlot().handler.sendStarter(new PlayerJoin.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_JOIN);
+        }
+    }
 
     @EventHandler
     public void onPlayerJoin (PlayerJoinEvent event) {
@@ -203,27 +211,20 @@ public class GlobalListener implements Listener {
         User user = User.asUser(event.getPlayer());
         Inventory inv = event.getInventory();
 
-        System.out.println("invCloseTriggered");
         if (inv.getHolder() instanceof CodingMenu) {
-            System.out.println("CodingMenuTriggered");
             ItemStack[] contents = inv.getContents();
 
             if (user.datastore().containsKey("chestBlockActive")) {
-                System.out.println("Contains activeblock: {" + user.datastore().get("chestBlockActive") + "}#");
                 Block block = (Block) user.datastore().get("chestBlockActive");
                 Chest ch = (Chest) block.getState();
                 NamespacedKey inventoryKey = new NamespacedKey(plugin, "inventory");
-
-                System.out.println("Contents: " + Arrays.toString(contents));
 
                 PersistentDataContainer container = ch.getPersistentDataContainer();
                 if (container.has(inventoryKey, DataType.ITEM_STACK_ARRAY)) container.remove(inventoryKey);
 
                 container.set(inventoryKey, DataType.ITEM_STACK_ARRAY, contents);
-                System.out.println(container.has(inventoryKey));
                 ch.update();
 
-                System.out.println(((Chest) block.getRelative(BlockFace.NORTH).getRelative(BlockFace.SOUTH).getState()).getPersistentDataContainer().has(inventoryKey));
             }
 
             user.datastore().remove("chestBlockActive");

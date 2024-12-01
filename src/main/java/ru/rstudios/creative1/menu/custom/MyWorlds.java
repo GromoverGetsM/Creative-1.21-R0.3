@@ -34,7 +34,6 @@ public class MyWorlds extends ProtectedMultipages {
 
     @Override
     public List<ItemStack> getMenuElements() {
-        System.out.println(user.getPlotNames());
 
         return user.getPlotNames().stream()
                 .map(PlotManager.plots::get)

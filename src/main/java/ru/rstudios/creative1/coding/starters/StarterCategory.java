@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
+import ru.rstudios.creative1.coding.starters.playerevent.PlayerJoin;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
@@ -17,7 +18,7 @@ import java.util.function.Supplier;
 
 public enum StarterCategory {
 
-    PLAYER_JOIN(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, null, null, Material.OAK_DOOR),
+    PLAYER_JOIN(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerJoin::new, null, Material.OAK_DOOR),
     BLOCK_EXPLODED(Development.BlockTypes.BLOCK_EVENT, MenuCategory.WORLD, null, null, Material.TNT);
 
     private Development.BlockTypes type;

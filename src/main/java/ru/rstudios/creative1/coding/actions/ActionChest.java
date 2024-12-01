@@ -1,9 +1,10 @@
 package ru.rstudios.creative1.coding.actions;
 
+import com.jeff_media.morepersistentdatatypes.DataType;
 import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.ChatColor;
-import org.bukkit.GameEvent;
+import ru.rstudios.creative1.coding.events.GameEvent;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
@@ -12,6 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class ActionChest {
 
@@ -38,8 +41,8 @@ public class ActionChest {
     }
 
     public void initInventorySort() {
-        this.originalContents = this.chest.getInventory().getContents();
-        this.nonNullItems = Arrays.stream(this.chest.getInventory().getContents())
+        this.originalContents = this.chest.getPersistentDataContainer().get(new NamespacedKey(plugin, "inventory"), DataType.ITEM_STACK_ARRAY);
+        this.nonNullItems = Arrays.stream(this.originalContents)
                 .filter(item -> item != null && item.getType() != Material.AIR)
                 .toArray(ItemStack[]::new);
         this.texts = new ItemStack[0];

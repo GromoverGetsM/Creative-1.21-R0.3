@@ -11,9 +11,18 @@ public abstract class ActionIf extends ArrayAction {
     List<Action> inConditionalActions;
     private boolean isInverted;
 
+    public ActionIf() {
+        super(null, null, null);
+
+    }
+
     public ActionIf(Starter starter, Block actionBlock, List<Action> actions) {
         super(starter, actionBlock, actions);
         this.inConditionalActions = actions;
+    }
+
+    public void setInConditionalActions(List<Action> inConditionalActions) {
+        this.inConditionalActions = inConditionalActions;
     }
 
     public boolean isInverted() {
