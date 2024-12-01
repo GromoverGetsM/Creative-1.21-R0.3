@@ -509,7 +509,8 @@ public class Plot {
         newText = newText.replace("java.lang.","java.");
         newText = newText.replace("blocks.","");
         newText = newText.replace("net.minecraft.server.", "");
-        newText = newText.replace("io.papermc.paper", "");
+        newText = newText.replace("io.papermc.paper.", "");
+        newText = newText.replace("com.destroystokyo.paper.", "");
         return newText;
     }
 }
