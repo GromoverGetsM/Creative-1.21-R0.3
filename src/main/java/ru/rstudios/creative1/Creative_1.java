@@ -2,6 +2,7 @@ package ru.rstudios.creative1;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.rstudios.creative1.commands.*;
+import ru.rstudios.creative1.commands.admin.startparse;
 import ru.rstudios.creative1.commands.modes.buildCommand;
 import ru.rstudios.creative1.commands.modes.devCommand;
 import ru.rstudios.creative1.commands.modes.playCommand;
@@ -56,6 +57,7 @@ public final class Creative_1 extends JavaPlugin {
         Objects.requireNonNull(getCommand("play")).setExecutor(new playCommand());
         Objects.requireNonNull(getCommand("build")).setExecutor(new buildCommand());
         Objects.requireNonNull(getCommand("dev")).setExecutor(new devCommand());
+        Objects.requireNonNull(getCommand("startparse")).setExecutor(new startparse());
     }
 
     @Override

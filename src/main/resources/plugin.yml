@@ -27,3 +27,5 @@ commands:
     usage: /play
   dev:
     usage: /dev
+  startparse:
+    usage: /startparse
