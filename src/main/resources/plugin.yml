@@ -27,3 +27,5 @@ commands:
     usage: /play
   dev:
     usage: /dev
+  troubleshooter:
+    usage: /troubleshooter

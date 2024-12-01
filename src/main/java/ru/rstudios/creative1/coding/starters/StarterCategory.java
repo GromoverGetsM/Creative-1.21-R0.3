@@ -6,8 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
-import ru.rstudios.creative1.coding.actions.ActionCategory;
-import ru.rstudios.creative1.coding.starters.playerevent.PlayerJoin;
+import ru.rstudios.creative1.coding.starters.playerevent.*;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
@@ -18,7 +17,12 @@ import java.util.function.Supplier;
 
 public enum StarterCategory {
 
-    PLAYER_JOIN(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerJoin::new, null, Material.OAK_DOOR),
+    PLAYER_JOIN(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerJoin::new, PlayerJoin.Event.class, Material.OAK_DOOR),
+    PLAYER_QUIT(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerQuit::new, PlayerQuit.Event.class, Material.IRON_DOOR),
+    PLAYER_BLOCK_PLACE(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerBlockPlace::new, PlayerBlockPlace.Event.class, Material.STONE),
+    PLAYER_BREAK_BLOCK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerBlockBreak::new, PlayerBlockBreak.Event.class, Material.COBBLESTONE),
+    PLAYER_DAMAGED_BLOCK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerBlockDamaged::new, PlayerBlockDamaged.Event.class, Material.GRAVEL),
+    PLAYER_DAMAGE_ABORTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerDamageAborted::new, PlayerDamageAborted.Event.class, Material.ANDESITE),
     BLOCK_EXPLODED(Development.BlockTypes.BLOCK_EVENT, MenuCategory.WORLD, null, null, Material.TNT);
 
     private Development.BlockTypes type;

@@ -43,9 +43,106 @@ global-items:
       - "&f page "
 
 coding:
+  categories:
+    fighting:
+      name: "&eCombat"
+      lore:
+        - "&7Events or actions"
+        - "&7related to dealing damage"
+    interaction:
+      name: "&ePlayer Interaction"
+      lore:
+        - "&7Events or actions"
+        - "&7related to interactions"
+        - "&7between the player and the world"
+    inventory:
+      name: "&eInventory"
+      lore:
+        - "&7Events or actions"
+        - "&7related to the inventory"
+    movement:
+      name: "&eMovement"
+      lore:
+        - "&7Events or actions"
+        - "&7related to player movement"
+        - "&7through space"
+    blocks:
+      name: "&eBlocks"
+      lore:
+        - "&7Events or actions"
+        - "&7related to blocks in the world"
+    world:
+      name: "&eWorld"
+      lore:
+        - "&7Events or actions"
+        - "&7related to the game world"
+    entity:
+      name: "&eEntities"
+      lore:
+        - "&7Events or actions"
+        - "&7related to entities"
+    communication:
+      name: "&eCommunication"
+      lore:
+        - "&7Events or actions"
+        - "&7related to displaying"
+        - "&7information on the screen"
+    state:
+      name: "&eStates"
+      lore:
+        - "&7Events or actions"
+        - "&7related to the states"
+        - "&7of players, blocks, or entities"
+    lines:
+      name: "&eCode Lines"
+      lore:
+        - "&7Events or actions"
+        - "&7related to executing"
+        - "&7code"
+    appearance:
+      name: "&eAppearance"
+      lore:
+        - "&7Events or actions"
+        - "&7related to the display"
+        - "&7of something for the player"
+    events:
+      name: "&eEvent Management"
+      lore:
+        - "&7Actions related to"
+        - "&7managing events"
+    params:
+      name: "&eParameters"
+      lore:
+        - "&7Events or actions"
+        - "&7related to the attributes"
+        - "&7of players or entities"
+    other:
+      name: "&eOther"
+      lore:
+        - "&7Events or actions"
+        - "&7that don't fit into other"
+        - "&7categories"
+
+
+
+  tech:
+    var-set: "&aValue Set"
+    incorrect-value: "&cIncorrect Value"
+
+
   events:
     player_join:
       name: "Player joined"
+    player_quit:
+      name: "Player quit"
+    player_block_place:
+      name: "Placed Block"
+    player_break_block:
+      name: "Broke Block"
+    player_damaged_block:
+      name: "Damaging Block"
+    player_damage_aborted:
+      name: "Stopped Damaging"
 
   actions:
     send_message:
@@ -92,6 +189,62 @@ coding:
 
 
 menus:
+  switches:
+    actions:
+      sm:
+        name: "&3Separator"
+        lore:
+          - "&fSeparates parameters in a message"
+          - "&faccording to the specified settings"
+
+        states:
+          together: "No Separation"
+          space: "Separated by Space"
+          newline: "Separated by New Line"
+
+  coding:
+    player_event:
+      player_join:
+        name: "&eJoin"
+        lore:
+          - "&7Triggered when"
+          - "&7a player enters the game world"
+      player_quit:
+        name: "&eQuit"
+        lore:
+          - "&7Triggered when"
+          - "&7a player exits the game world"
+      player_block_place:
+        name: "&ePlaced Block"
+        lore:
+          - "&7Triggered when"
+          - "&7a player places a block"
+      player_break_block:
+        name: "&eBroke Block"
+        lore:
+          - "&7Triggered when"
+          - "&7a player breaks a block"
+      player_damaged_block:
+        name: "&eDamaging Block"
+        lore:
+          - "&7Triggered when"
+          - "&7a player starts breaking a block"
+      player_damage_aborted:
+        name: "&eStopped Damaging"
+        lore:
+          - "&7Triggered when"
+          - "&7a player stops breaking a block"
+
+    actions:
+      send_message:
+        name: "&eSend Message"
+        lore:
+          - "&7Sends a message to the player"
+          - "&7"
+          - "&7Arguments (37):"
+          - "&7- &bText: &7Message to send &e(1)"
+          - "&7- &6Toggle: &7Text separator &e(1)"
+
   worlds-option:
     title: "Choose an Option"
     items:

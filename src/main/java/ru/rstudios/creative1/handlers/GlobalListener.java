@@ -11,9 +11,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
@@ -24,7 +22,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.util.Vector;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
-import ru.rstudios.creative1.coding.starters.playerevent.PlayerJoin;
+import ru.rstudios.creative1.coding.starters.playerevent.*;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
 import ru.rstudios.creative1.plots.Plot;
@@ -34,7 +32,6 @@ import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
@@ -59,6 +56,10 @@ public class GlobalListener implements Listener {
 
         if (user.isOnPlot() && user.isOnPlayingWorld() && !user.datastore().containsKey("HandlingPaper")) {
             user.getCurrentPlot().handler.sendStarter(new PlayerJoin.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_JOIN);
+        }
+
+        if (PlotManager.byWorld(event.getFrom()) != null) {
+            PlotManager.byWorld(event.getFrom()).handler.sendStarter(new PlayerQuit.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_QUIT);
         }
     }
 
@@ -94,43 +95,49 @@ public class GlobalListener implements Listener {
         Plot plot = user.getCurrentPlot();
 
         if (plot != null && plot.isUserInDev(user)) {
-            Player player = user.player();
-            Location eyeLocation = player.getEyeLocation();
-            Vector direction = eyeLocation.getDirection();
+            long lastChecked = user.datastore().containsKey("lastSignTranslate") ? (long) user.datastore().get("lastSignTranslate") : 0;
+            long current = System.currentTimeMillis();
 
-            double viewAngle = Math.toRadians(60);
-            int viewDistance = 10;
+            if (current - lastChecked > 1000) {
+                Player player = user.player();
+                Location eyeLocation = player.getEyeLocation();
+                Vector direction = eyeLocation.getDirection();
 
-            int targetY = -59;
+                double viewAngle = Math.toRadians(60);
+                int viewDistance = 10;
 
-            World world = player.getWorld();
+                int targetY = -59;
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                List<Block> visibleSigns = new ArrayList<>();
+                World world = player.getWorld();
 
-                int minX = eyeLocation.getBlockX() - viewDistance;
-                int maxX = eyeLocation.getBlockX() + viewDistance;
-                int minZ = eyeLocation.getBlockZ() - viewDistance;
-                int maxZ = eyeLocation.getBlockZ() + viewDistance;
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                    List<Block> visibleSigns = new ArrayList<>();
 
-                for (int x = minX; x <= maxX; x++) {
-                    for (int z = minZ; z <= maxZ; z++) {
-                        Block block = world.getBlockAt(x, targetY, z);
-                        if (block.getType() == Material.OAK_WALL_SIGN) {
-                            Vector toBlock = block.getLocation().toVector().subtract(eyeLocation.toVector());
-                            if (direction.angle(toBlock) <= viewAngle) {
-                                visibleSigns.add(block);
+                    int minX = eyeLocation.getBlockX() - viewDistance;
+                    int maxX = eyeLocation.getBlockX() + viewDistance;
+                    int minZ = eyeLocation.getBlockZ() - viewDistance;
+                    int maxZ = eyeLocation.getBlockZ() + viewDistance;
+
+                    for (int x = minX; x <= maxX; x++) {
+                        for (int z = minZ; z <= maxZ; z++) {
+                            Block block = world.getBlockAt(x, targetY, z);
+                            if (block.getType() == Material.OAK_WALL_SIGN) {
+                                Vector toBlock = block.getLocation().toVector().subtract(eyeLocation.toVector());
+                                if (direction.angle(toBlock) <= viewAngle) {
+                                    visibleSigns.add(block);
+                                }
                             }
                         }
                     }
-                }
 
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    for (Block signBlock : visibleSigns) {
-                        user.sendTranslatedSign(signBlock.getLocation());
-                    }
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        for (Block signBlock : visibleSigns) {
+                            user.sendTranslatedSign(signBlock.getLocation());
+                        }
+                    });
                 });
-            });
+                user.datastore().put("lastSignTranslate", System.currentTimeMillis());
+            }
         }
     }
 
@@ -306,6 +313,10 @@ public class GlobalListener implements Listener {
         if (p != null && p.isUserInDev(user)) {
             Development.setCodingBlock(event);
         }
+
+        if (user.isOnPlayingWorld()) {
+            user.getCurrentPlot().handler.sendStarter(new PlayerBlockPlace.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_BLOCK_PLACE);
+        }
     }
 
     @EventHandler
@@ -315,6 +326,28 @@ public class GlobalListener implements Listener {
 
         if (p != null && p.isUserInDev(user)) {
             Development.breakCodingBlock(event);
+        }
+
+        if (user.isOnPlayingWorld()) {
+            user.getCurrentPlot().handler.sendStarter(new PlayerBlockBreak.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_BREAK_BLOCK);
+        }
+    }
+
+    @EventHandler
+    public void onBlockDamaged (BlockDamageEvent event) {
+        User user = User.asUser(event.getPlayer());
+
+        if (user.isOnPlayingWorld()) {
+            user.getCurrentPlot().handler.sendStarter(new PlayerBlockDamaged.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_DAMAGED_BLOCK);
+        }
+    }
+
+    @EventHandler
+    public void onDamageAborted (BlockDamageAbortEvent event) {
+        User user = User.asUser(event.getPlayer());
+
+        if (user.isOnPlayingWorld()) {
+            user.getCurrentPlot().handler.sendStarter(new PlayerDamageAborted.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_DAMAGE_ABORTED);
         }
     }
 

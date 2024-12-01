@@ -101,10 +101,9 @@ public class CodeHandler {
                     }
 
                     ((ActionIf) action).setInConditionalActions(inConditionalActions);
-                    actions.add(action);
                     dx = lastPiston.getX();
-                    continue;
-                } else actions.add(action);
+                }
+                actions.add(action);
             }
 
             starter.setActions(actions);
@@ -119,12 +118,7 @@ public class CodeHandler {
             for (Starter starter : this.starters) {
                 if (starter.getCategory() == sct) {
                     starter.setSelection(Collections.singletonList(event.getDefaultEntity()));
-                    try {
-                        starter.execute(event);
-                    } catch (Exception e) {
-                        // TODO: sender oshibok
-                        e.printStackTrace();
-                    }
+                    starter.execute(event);
                 }
             }
 

@@ -43,7 +43,7 @@ public enum MenuCategory {
     }
 
     public ItemStack getItem(User user) {
-        String localeSubBuilder = "coding." + name().toLowerCase(Locale.ROOT);
+        String localeSubBuilder = "coding.categories." + name().toLowerCase(Locale.ROOT);
         return ItemUtil.item(material, LocaleManages.getLocaleMessage(user.getLocale(), localeSubBuilder + ".name", false, ""), LocaleManages.getLocaleMessagesS(user.getLocale(), localeSubBuilder + ".lore", new LinkedHashMap<>()));
     }
 

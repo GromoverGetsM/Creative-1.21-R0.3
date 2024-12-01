@@ -60,6 +60,6 @@ public abstract class Action {
         this.actionBlock = actionBlock;
     }
 
-    public abstract void execute(GameEvent event) throws Exception;
+    public abstract void execute(GameEvent event);
     public abstract ActionCategory getCategory();
 }

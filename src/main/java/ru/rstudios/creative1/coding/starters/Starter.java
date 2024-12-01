@@ -32,7 +32,7 @@ public abstract class Starter {
         this.selection = selection;
     }
 
-    public void execute(GameEvent event) throws Exception {
+    public void execute(GameEvent event) {
         for (Action action : actions) {
             action.execute(event);
         }

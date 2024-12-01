@@ -119,8 +119,10 @@ public class Development {
                 int distance = type.isCondition ? 4 : 2;
 
                 if (!type.isEvent) {
-                    event.setCancelled(!moveBlocks(additional.getLocation(), last, BlockFace.WEST, distance));
-                    if (event.isCancelled()) return;
+                    if (getLastBlockInString(block) != additional) {
+                        event.setCancelled(!moveBlocks(additional.getLocation(), last, BlockFace.WEST, distance));
+                        if (event.isCancelled()) return;
+                    }
                 }
             }
 
@@ -186,7 +188,7 @@ public class Development {
                     if (lastInString != null) {
                         int distance = (int) block.getLocation().distance(loc);
 
-                        moveBlocks(closingBracket.getRelative(BlockFace.WEST).getLocation(), lastInString.getLocation(), BlockFace.EAST, distance + 1);
+                        moveBlocks(closingBracket.getRelative(BlockFace.WEST).getLocation(), lastInString.getLocation().add(0, 1, -1), BlockFace.EAST, distance + 1);
                     }
                 }
             } else {

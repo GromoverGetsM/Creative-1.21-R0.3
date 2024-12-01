@@ -153,7 +153,7 @@ public class CodingMenu implements InventoryHolder {
     private List<Integer> getFillerSlots() {
         Set<Integer> filledSlots = markers.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
         List<Integer> allSlots = new ArrayList<>();
-        for (int i = 0; i < 54; i++) {
+        for (int i = 0; i < getSize(); i++) {
             if (!getArgumentSlots().contains(i)) allSlots.add(i);
         }
         allSlots.removeAll(filledSlots);

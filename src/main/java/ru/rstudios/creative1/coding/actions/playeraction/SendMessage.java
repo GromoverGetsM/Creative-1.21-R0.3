@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SendMessage extends Action {
     @Override
-    public void execute(GameEvent event) throws Exception {
+    public void execute(GameEvent event) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 

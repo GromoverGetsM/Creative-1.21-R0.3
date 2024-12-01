@@ -6,12 +6,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.world.WorldLoadEvent;
+import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class PlotManager implements Listener {
 
@@ -61,6 +63,15 @@ public class PlotManager implements Listener {
                 if (name.equalsIgnoreCase(world)) p.teleportToPlot(user);
             }
         }
+    }
+
+    public static @Nullable Plot byWorld (World world) {
+        Plot plot1 = null;
+        for (Plot plot : plots.values()) {
+            if (Objects.equals(plot.world(), world)) plot1 = plot;
+        }
+
+        return plot1;
     }
 
 }

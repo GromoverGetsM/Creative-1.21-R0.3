@@ -1,5 +1,8 @@
 package ru.rstudios.creative1.plots;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,6 +16,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.rstudios.creative1.coding.CodeHandler;
+import ru.rstudios.creative1.coding.actions.Action;
+import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.FileUtil;
@@ -454,5 +459,57 @@ public class Plot {
 
     public void setPaidPlayers(List<String> paidPlayers) {
         this.paidPlayers = paidPlayers;
+    }
+
+    public void throwException (Action action, Exception e) {
+        for (Player player : online()) {
+            if (owner.equalsIgnoreCase(player.getName()) || allowedDevs.contains(player.getName())) {
+                User user = User.asUser(player);
+                user.datastore().put("ActionLoc", action.getActionBlock().getLocation());
+
+                String translatedStarter = LocaleManages.getLocaleMessage(user.getLocale(), "coding.events." + action.getStarter().getCategory().name().toLowerCase(Locale.ROOT) + ".name", false, "");
+                String translatedAction = LocaleManages.getLocaleMessage(user.getLocale(), "coding.actions." + action.getCategory().name().toLowerCase(Locale.ROOT) + ".name", false, "");
+
+                Component filler = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit-filler", false, ""));
+                Component main = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit", false, translatedStarter, translatedAction));
+                Component hover = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit-hover", false, "")).hoverEvent(HoverEvent.showText(Component.text(parseException(e))));
+                Component teleport = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit-teleport", false, "")).clickEvent(ClickEvent.runCommand("/troubleshooter"));
+
+                user.sendComponent(filler);
+                user.sendComponent(main);
+                user.sendComponent(hover);
+                user.sendComponent(teleport);
+                user.sendComponent(filler);
+            }
+        }
+    }
+
+    private String parseException (Exception e) {
+        Set<String> lastStacks = new HashSet<>();
+        byte i = 0;
+        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+            String stack = stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName() + ":" + stackTraceElement.getLineNumber();
+            stack = cutClassesName(stack);
+            lastStacks.add("§c" + stack);
+            i++;
+            if (i == 15) {
+                break;
+            }
+        }
+
+        return "§4" + e.getClass().getSimpleName() + ": " + cutClassesName(e.getMessage()) + "\n \n" + String.join("\n", lastStacks);
+
+    }
+
+    private static String cutClassesName(String text) {
+        String newText = text == null ? "null" : text;
+        newText = newText.replace("ru.rstudios.creative1.coding.","");
+        newText = newText.replace("ru.rstudios.creative1.","");
+        newText = newText.replace("org.bukkit.","");
+        newText = newText.replace("java.lang.","java.");
+        newText = newText.replace("blocks.","");
+        newText = newText.replace("net.minecraft.server.", "");
+        newText = newText.replace("io.papermc.paper", "");
+        return newText;
     }
 }

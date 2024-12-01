@@ -148,6 +148,18 @@ public class ActionChest {
         return list;
     }
 
+    public List<Double> getAsNumerics() {
+        List<Double> numerics = new LinkedList<>();
+
+        for (ItemStack item : this.numbers) {
+            if (item.getType() == Material.SLIME_BALL) {
+                numerics.add(item.getItemMeta().hasDisplayName() ? Double.parseDouble(item.getItemMeta().getDisplayName()) : 0.0);
+            }
+        }
+
+        return numerics;
+    }
+
     public Action getLinkedAction() {
         return linkedAction;
     }
