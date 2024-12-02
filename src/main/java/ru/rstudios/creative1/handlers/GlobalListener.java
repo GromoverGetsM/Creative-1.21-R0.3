@@ -249,7 +249,7 @@ public class GlobalListener implements Listener {
                     ItemStack[] contents = chest.getPersistentDataContainer().get(inventory, DataType.ITEM_STACK_ARRAY);
                     Sign sign = (Sign) event.getClickedBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.NORTH).getState();
 
-                    ActionCategory category = ActionCategory.byName(sign.getLine(2).replace("coding.actions.", "").replace(".name", ""));
+                    ActionCategory category = ActionCategory.byName(sign.getLine(2).replace("coding.actions.", ""));
                     if (category.hasChest()) {
                         CodingMenu codingMenu = category.getCodingMenu();
 

@@ -43,7 +43,7 @@ public class CodeHandler {
             if (type == null || !type.isEvent()) continue;
 
             Sign sign = (Sign) loc.getBlock().getRelative(BlockFace.NORTH).getState();
-            StarterCategory stc = StarterCategory.byName(sign.getLine(2).replace("coding.events.", "").replace(".name", ""));
+            StarterCategory stc = StarterCategory.byName(sign.getLine(2).replace("coding.events.", ""));
 
             if (stc == null || stc.getConstructor() == null) continue;
 
@@ -57,7 +57,7 @@ public class CodeHandler {
 
                 if (actionType == null) continue;
                 Sign actionsSign = (Sign) actionBlock.getRelative(BlockFace.NORTH).getState();
-                ActionCategory acc = ActionCategory.byName(actionsSign.getLine(2).replace("coding.actions.", "").replace(".name", ""));
+                ActionCategory acc = ActionCategory.byName(actionsSign.getLine(2).replace("coding.actions.", ""));
 
                 if (acc == null || acc.getConstructor() == null) continue;
 
@@ -82,7 +82,7 @@ public class CodeHandler {
 
                         if (insideType == null || insideType.isEvent()) continue;
                         Sign insideSign = (Sign) insideBlock.getRelative(BlockFace.NORTH).getState();
-                        String actName = insideSign.getLine(2).replace("coding.actions.", "").replace(".name", "");
+                        String actName = insideSign.getLine(2).replace("coding.actions.", "");
 
                         ActionCategory insideCategory = ActionCategory.byName(actName);
                         if (insideCategory == null || insideCategory.getConstructor() == null) continue;

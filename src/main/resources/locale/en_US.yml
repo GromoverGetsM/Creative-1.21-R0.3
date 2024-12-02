@@ -20,6 +20,10 @@ errors:
   plot-displayname-too-long: "The text is too long! (&6%s/40 chars&f)"
   plot-not-in-play-mode: "The plot is not in &6play mode"
   plot-not-in-build-mode: "The plot is not in &6build mode"
+  plot-crit: "\n&c&lERROR!&r\n\n&7Action &e%s &7-> &e%s&7\n&cwas executed incorrectly!&r\n"
+  plot-crit-hover: "&a&l[Hover to view error details]&r"
+  plot-crit-teleport: "&e&l[Click to teleport to the problematic block]&r"
+  plot-crit-filler: "&8==============================================="
 
 global-items:
   menu-not-filled:
@@ -131,39 +135,26 @@ coding:
 
 
   events:
-    player_join:
-      name: "Player joined"
-    player_quit:
-      name: "Player quit"
-    player_block_place:
-      name: "Placed Block"
-    player_break_block:
-      name: "Broke Block"
-    player_damaged_block:
-      name: "Damaging Block"
-    player_damage_aborted:
-      name: "Stopped Damaging"
+    player_join: "Player joined"
+    player_quit: "Player quit"
+    player_block_place: "Placed Block"
+    player_break_block: "Broke Block"
+    player_damaged_block: "Damaging Block"
+    player_damage_aborted: "Stopped Damaging"
 
   actions:
-    send_message:
-      name: "Send message"
+    send_message: "Send message"
+    send_title: "Show title"
+    show_win_screen: "Show victory screen"
 
-  player_event:
-    name: "&b&lPlayer Event"
-  block_event:
-    name: "&3&lBlock Event"
-  player_action:
-    name: "&7&lPlayer Action"
-  entity_action:
-    name: "&6&lEntity Action"
-  action_var:
-    name: "&f&lVariables"
-  world_action:
-    name: "&c&lWorld Action"
-  if_player:
-    name: "&6&lIf Player"
-  if_variable:
-    name: "&5&lIf Variable"
+  player_event: "&b&lPlayer Event"
+  block_event: "&3&lBlock Event"
+  player_action: "&7&lPlayer Action"
+  entity_action: "&6&lEntity Action"
+  action_var: "&f&lVariables"
+  world_action: "&c&lWorld Action"
+  if_player: "&6&lIf Player"
+  if_variable: "&5&lIf Variable"
 
   var-types:
     text:
@@ -244,6 +235,23 @@ menus:
           - "&7Arguments (37):"
           - "&7- &bText: &7Message to send &e(1)"
           - "&7- &6Toggle: &7Text separator &e(1)"
+      send_title:
+        name: "&eShow Title"
+        lore:
+          - "&7Displays a title to the player on their screen"
+          - "&7"
+          - "&7Arguments (5):"
+          - "&7- &bText: &7Title to display &e(1)"
+          - "&7- &bText: &7Subtitle to display &e(1)"
+          - "&7- &cNumber: &7Fade-in time on screen &e(1)"
+          - "&7- &cNumber: &7Display time on screen &e(1)"
+          - "&7- &cNumber: &7Fade-out time &e(1)"
+      show_win_screen:
+        name: "&eShow Victory Screen"
+        lore:
+          - "&7Displays a victory screen to the player"
+          - "&7"
+          - "&aNo arguments required"
 
   worlds-option:
     title: "Choose an Option"

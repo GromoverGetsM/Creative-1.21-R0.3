@@ -19,10 +19,10 @@ errors:
   plot-displayname-too-long: "Слишком длинный текст! (&6%s/40 симв.&f)"
   plot-not-in-play-mode: "Плот не находится в режиме &6игры"
   plot-not-in-build-mode: "Плот не находится в режиме &6строительства"
-  plot-crit: "\nПРОИЗОШЛА ОШИБКА\n\nДействие %s -> %s\nвыполнилось некорректно!\n"
-  plot-crit-hover: "&a[Наведись для отображения ошибки]"
-  plot-crit-teleport: "&e[Нажми для телепортации к блоку]"
-  plot-crit-filler: "==================================================="
+  plot-crit: "\n&c&lОШИБКА!&r\n\n&7Действие &e%s &7-> &e%s&7\n&cбыло выполнено некорректно!&r\n"
+  plot-crit-hover: "&a&l[Наведите курсор, чтобы увидеть описание ошибки]&r"
+  plot-crit-teleport: "&e&l[Щелкните, чтобы телепортироваться к проблемному блоку]&r"
+  plot-crit-filler: "&8==============================================="
 
 global-items:
   menu-not-filled:
@@ -131,39 +131,26 @@ coding:
     incorrect-value: "&cНекорректное значение"
 
   events:
-    player_join:
-      name: "Вход"
-    player_quit:
-      name: "Выход"
-    player_block_place:
-      name: "Поставил блок"
-    player_break_block:
-      name: "Сломал блок"
-    player_damaged_block:
-      name: "Дамажит блок"
-    player_damage_aborted:
-      name: "Перестал дамажить"
+    player_join: "Вход"
+    player_quit: "Выход"
+    player_block_place: "Поставил блок"
+    player_break_block: "Сломал блок"
+    player_damaged_block: "Дамажит блок"
+    player_damage_aborted: "Перестал дамажить"
 
   actions:
-    send_message:
-      name: "Отправить сообщение"
+    send_message: "Отправить сообщение"
+    send_title: "Показать титл"
+    show_win_screen: "Показать экран победы"
 
-  player_event:
-    name: "&b&lСобытие игрока"
-  block_event:
-    name: "&3&lСобытие блока"
-  player_action:
-    name: "&7&lДействие игрока"
-  entity_action:
-    name: "&6&lДействие сущности"
-  action_var:
-    name: "&f&lПеременные"
-  world_action:
-    name: "&c&lИгровое действие"
-  if_player:
-    name: "&6&lЕсли игрок"
-  if_variable:
-    name: "&5&lЕсли переменная"
+  player_event: "&b&lСобытие игрока"
+  block_event: "&3&lСобытие блока"
+  player_action: "&7&lДействие игрока"
+  entity_action: "&6&lДействие сущности"
+  action_var: "&f&lПеременные"
+  world_action: "&c&lИгровое действие"
+  if_player: "&6&lЕсли игрок"
+  if_variable: "&5&lЕсли переменная"
 
   var-types:
     text:
@@ -243,6 +230,23 @@ menus:
           - "&7Аргументы (37):"
           - "&7- &bТекст: &7Сообщение для отправки &e(1)"
           - "&7- &6Переключатель: &7Разделитель текста &e(1)"
+      send_title:
+        name: "&eПоказать титл"
+        lore:
+          - "&7Выводит титл игроку на экран"
+          - "&7"
+          - "&7Аргументы (5):"
+          - "&7- &bТекст: &7Титл для показа &e(1)"
+          - "&7- &bТекст: &7Суб-титл для показа &e(1)"
+          - "&7- &cЧисло: &7Время появления на экране &e(1)"
+          - "&7- &cЧисло: &7Время показа на экране &e(1)"
+          - "&7- &cЧисло: &7Время затухания &e(1)"
+      show_win_screen:
+        name: "&eПоказать экран победы"
+        lore:
+          - "&7Показывает экран победы игроку"
+          - "&7"
+          - "&aНе требует аргументов"
 
   worlds-option:
     title: "Выберите опцию"

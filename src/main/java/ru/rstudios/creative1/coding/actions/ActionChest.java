@@ -2,6 +2,8 @@ package ru.rstudios.creative1.coding.actions;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
 import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.ChatColor;
+import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -9,10 +11,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+import ru.rstudios.creative1.coding.starters.Starter;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
@@ -29,6 +33,8 @@ public class ActionChest {
     private ItemStack[] locations;
     private ItemStack[] dynamicVariables;
     private ItemStack[] itemStackGameValues;
+
+    public static final Pattern NUMBER = Pattern.compile("-?[0-9]+\\.?[0-9]*");
 
     public ActionChest (Action linkedAction, Block chestBlock) {
         this.linkedAction = linkedAction;
@@ -54,9 +60,7 @@ public class ActionChest {
     }
 
     private void sort() {
-        for (int i = 0; i < this.nonNullItems.length; i++) {
-            ItemStack item = this.nonNullItems[i];
-
+        for (ItemStack item : this.nonNullItems) {
             if (!isNullOrAir(item)) {
                 switch (item.getType()) {
                     case BOOK -> this.texts = ArrayUtils.add(this.texts, item);
@@ -121,13 +125,7 @@ public class ActionChest {
 
         for (ItemStack item : this.texts) {
             switch (item.getType()) {
-                case BOOK -> {
-                    if (item.getItemMeta().hasDisplayName()) {
-                        list.add(item.getItemMeta().getDisplayName());
-                    } else {
-                        list.add(item.getI18NDisplayName());
-                    }
-                }
+                case BOOK -> parseText(item);
             /*case APPLE -> {
                 Object o = CodingHandleUtils.parseGameValue(item);
                 if (o instanceof StringValue) {
@@ -152,12 +150,35 @@ public class ActionChest {
         List<Double> numerics = new LinkedList<>();
 
         for (ItemStack item : this.numbers) {
-            if (item.getType() == Material.SLIME_BALL) {
-                numerics.add(item.getItemMeta().hasDisplayName() ? Double.parseDouble(item.getItemMeta().getDisplayName()) : 0.0);
-            }
+            numerics.add(parseNumber(item));
         }
 
         return numerics;
+    }
+
+    public static Object parseItem (ItemStack item, @Nullable GameEvent event, @Nullable Entity entity, @Nullable Starter starter) {
+        if (item == null) {
+            return null;
+        }
+
+        switch (item.getType()) {
+            case BOOK -> {
+                return parseText(item);
+            }
+            case SLIME_BALL -> {
+                return parseNumber(item);
+            }
+            /*case PAPER -> {
+                return parseLocation(item, null, event);
+            }
+            case APPLE -> {
+                return parseGameValue(item, event);
+            }
+            case MAGMA_CREAM -> {
+                return parseDynamicVariable(item, "", true, event, starter);
+            }*/
+        }
+        return null;
     }
 
     public Action getLinkedAction() {
@@ -182,5 +203,57 @@ public class ActionChest {
 
     public void setChest(Chest chest) {
         this.chest = chest;
+    }
+
+    public static String parseText (ItemStack item) {
+        return parseText(item, "");
+    }
+
+    public static String parseText (ItemStack item, String defaultText) {
+        return parseText(item, defaultText, true);
+    }
+
+    public static String parseText (ItemStack item, String defaultText, boolean checkTypeMatches) {
+        if (item == null) {
+            return defaultText;
+        }
+        if (checkTypeMatches && item.getType() != Material.BOOK) {
+            return defaultText;
+        } else {
+            if (item.getItemMeta().hasDisplayName()) {
+                String text = item.getItemMeta().getDisplayName();
+                if (text.length() > 256) {
+                    text = text.substring(0, 1024);
+                }
+                return text;
+            } else {
+                return defaultText;
+            }
+        }
+    }
+
+    public static double parseNumber (ItemStack item) {
+        return parseNumber(item, 0.0);
+    }
+
+    public static double parseNumber (ItemStack item, double defaultNum) {
+        return parseNumber(item, defaultNum, true);
+    }
+
+    public static double parseNumber (ItemStack item, double defaultNum, boolean checkTypeMatches) {
+        if (item == null) {
+            return defaultNum;
+        }
+
+        if (checkTypeMatches && item.getType() != Material.SLIME_BALL) {
+            return defaultNum;
+        } else {
+            if (item.getItemMeta().hasDisplayName()) {
+                String num = ChatColor.stripColor(item.getItemMeta().getDisplayName()).trim();
+                return NUMBER.matcher(num).matches() ? Double.parseDouble(num) : defaultNum;
+            } else {
+                return defaultNum;
+            }
+        }
     }
 }

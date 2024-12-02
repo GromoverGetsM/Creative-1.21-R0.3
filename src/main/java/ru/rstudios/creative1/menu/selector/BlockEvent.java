@@ -19,7 +19,7 @@ import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class BlockEvent extends CodingCategoriesMenu {
     public BlockEvent(User user) {
-        super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.block_event.name", false, ""), (byte) 6);
+        super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.block_event", false, ""), (byte) 6);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BlockEvent extends CodingCategoriesMenu {
                 if (category != null) {
                     user.player().closeInventory();
                     Sign sign = (Sign) this.sign.getState();
-                    sign.setLine(2, "coding.events." + category.name().toLowerCase(Locale.ROOT) + ".name");
+                    sign.setLine(2, "coding.events." + category.name().toLowerCase(Locale.ROOT));
                     sign.update();
                     user.sendTranslatedSign(this.sign.getLocation());
 

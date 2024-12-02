@@ -9,8 +9,6 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
-import com.sk89q.worldedit.world.block.BlockTypes;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,7 +19,6 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.Nullable;
-import ru.rstudios.creative1.menu.ProtectedMenu;
 import ru.rstudios.creative1.menu.selector.BlockEvent;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
 import ru.rstudios.creative1.menu.selector.PlayerAction;
@@ -141,7 +138,7 @@ public class Development {
             signBlock.setType(Material.OAK_WALL_SIGN);
 
             if (signBlock.getState() instanceof Sign sign) {
-                sign.setLine(1, "coding." + type.name().toLowerCase(Locale.ROOT) + ".name");
+                sign.setLine(1, "coding." + type.name().toLowerCase(Locale.ROOT));
                 sign.update();
             }
 

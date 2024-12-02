@@ -7,6 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
 import ru.rstudios.creative1.coding.actions.playeraction.SendMessage;
 import ru.rstudios.creative1.coding.actions.playeraction.SendTitle;
+import ru.rstudios.creative1.coding.actions.playeraction.ShowWinScreen;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.user.LocaleManages;
@@ -19,10 +20,11 @@ import java.util.function.Supplier;
 
 public enum ActionCategory {
 
-    SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendMessage::new, Material.WRITABLE_BOOK, true, "coding.actions.send_message.name", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,
+    SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendMessage::new, Material.WRITABLE_BOOK, true, "coding.actions.send_message", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,
             new SwitchItem("menus.switches.actions.sm.name", "menus.switches.actions.sm.lore", List.of("together", "space", "newline"), "menus.switches.actions.sm.states.", List.of(Material.SLIME_BALL, Material.RABBIT_FOOT, Material.SHEARS))))),
-    SEND_TITLE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendTitle::new, Material.ARMS_UP_POTTERY_SHERD, true, "coding.actions.send_title.name", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC),
-            new LinkedHashMap<>());
+    SEND_TITLE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendTitle::new, Material.ARMS_UP_POTTERY_SHERD, true, "coding.actions.send_title", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC),
+            new LinkedHashMap<>()),
+    SHOW_WIN_SCREEN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowWinScreen::new, Material.GOLD_INGOT, false, "coding.actions.show_win_screen", CodingMenu.MenuType.DEFAULT, Collections.singletonList(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>());
 
     private Development.BlockTypes type;
     private MenuCategory category;

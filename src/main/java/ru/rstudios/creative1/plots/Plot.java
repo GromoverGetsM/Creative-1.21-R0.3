@@ -467,8 +467,8 @@ public class Plot {
                 User user = User.asUser(player);
                 user.datastore().put("ActionLoc", action.getActionBlock().getLocation());
 
-                String translatedStarter = LocaleManages.getLocaleMessage(user.getLocale(), "coding.events." + action.getStarter().getCategory().name().toLowerCase(Locale.ROOT) + ".name", false, "");
-                String translatedAction = LocaleManages.getLocaleMessage(user.getLocale(), "coding.actions." + action.getCategory().name().toLowerCase(Locale.ROOT) + ".name", false, "");
+                String translatedStarter = LocaleManages.getLocaleMessage(user.getLocale(), "coding.events." + action.getStarter().getCategory().name().toLowerCase(Locale.ROOT), false, "");
+                String translatedAction = LocaleManages.getLocaleMessage(user.getLocale(), "coding.actions." + action.getCategory().name().toLowerCase(Locale.ROOT), false, "");
 
                 Component filler = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit-filler", false, ""));
                 Component main = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit", false, translatedStarter, translatedAction));

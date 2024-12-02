@@ -26,7 +26,7 @@ import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class PlayerAction extends CodingCategoriesMenu {
     public PlayerAction(User user) {
-        super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.player_action.name", false, ""), (byte) 6);
+        super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.player_action", false, ""), (byte) 6);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class PlayerAction extends CodingCategoriesMenu {
                 if (category != null) {
                     user.player().closeInventory();
                     Sign sign = (Sign) this.sign.getState();
-                    sign.setLine(2, "coding.actions." + category.name().toLowerCase(Locale.ROOT) + ".name");
+                    sign.setLine(2, "coding.actions." + category.name().toLowerCase(Locale.ROOT));
                     sign.update();
                     user.sendTranslatedSign(this.sign.getLocation());
 

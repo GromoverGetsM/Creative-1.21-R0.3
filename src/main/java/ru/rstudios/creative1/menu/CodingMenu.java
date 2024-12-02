@@ -3,7 +3,6 @@ package ru.rstudios.creative1.menu;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -55,7 +54,7 @@ public class CodingMenu implements InventoryHolder {
     private final Map<Integer, SwitchItem> switches;
     private Inventory inventory;
     private final List<Integer> fillers = new ArrayList<>();
-    private final Map<ArgumentType, List<Integer>> markers = new LinkedHashMap<>();
+    private final Map<List<Integer>, ArgumentType> markers = new LinkedHashMap<>();
     private final List<Integer> argumentSlots = new LinkedList<>();
 
     public CodingMenu() {
@@ -144,14 +143,14 @@ public class CodingMenu implements InventoryHolder {
 
     private void setupDefaultMarkers(List<ArgumentType> args, List<List<Integer>> positions) {
         for (int i = 0; i < args.size(); i++) {
-            markers.put(args.get(i), positions.get(i));
+            markers.put(positions.get(i), args.get(i));
         }
         fillers.clear();
         fillers.addAll(getFillerSlots());
     }
 
     private List<Integer> getFillerSlots() {
-        Set<Integer> filledSlots = markers.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+        Set<Integer> filledSlots = markers.keySet().stream().flatMap(Collection::stream).collect(Collectors.toSet());
         List<Integer> allSlots = new ArrayList<>();
         for (int i = 0; i < getSize(); i++) {
             if (!getArgumentSlots().contains(i)) allSlots.add(i);
@@ -173,7 +172,7 @@ public class CodingMenu implements InventoryHolder {
     private void setupTranslatedItems(User user) {
         fillers.forEach(slot -> inventory.setItem(slot, buildFiller()));
 
-        markers.forEach((type, slots) -> slots.forEach(slot ->
+        markers.forEach((slots, type) -> slots.forEach(slot ->
                 inventory.setItem(slot, buildMarker(type, user))));
 
         switches.forEach((slot, params) -> {
