@@ -1,4 +1,4 @@
-package ru.rstudios.creative1.coding.actions.playeraction;
+package ru.rstudios.creative1.coding.actions.playeraction.communication;
 
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
@@ -27,7 +27,7 @@ public class SendMessage extends Action {
                 case 2 -> texts.forEach(text -> builder.append('\n').append(text));
             }
 
-            String itog = this.replacePlaceholders(builder.toString().trim(), event, e);
+            String itog = replacePlaceholders(builder.toString().trim(), event, e);
             e.sendMessage(itog);
         });
     }

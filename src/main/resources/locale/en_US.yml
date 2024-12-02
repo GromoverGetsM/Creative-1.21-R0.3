@@ -145,7 +145,12 @@ coding:
   actions:
     send_message: "Send message"
     send_title: "Show title"
+    send_dialogue: "Send Dialogue"
+    send_actionbar: "Send Actionbar"
+    clear_chat: "Clear Chat"
     show_win_screen: "Show victory screen"
+    show_demo_screen: "Show Demo"
+    show_elder_guardian: "Show Elder Guardian"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -235,6 +240,15 @@ menus:
           - "&7Arguments (37):"
           - "&7- &bText: &7Message to send &e(1)"
           - "&7- &6Toggle: &7Text separator &e(1)"
+      send_dialogue:
+        name: "&eSend Dialogue"
+        lore:
+          - "&7Sends messages to the player"
+          - "&7at a specified interval"
+          - "&7"
+          - "&7Arguments (28):"
+          - "&7- &cNumber: &7Interval between messages &a[ticks] &e(1)"
+          - "&7- &bText: &7Messages to send &e(27)"
       send_title:
         name: "&eShow Title"
         lore:
@@ -246,10 +260,35 @@ menus:
           - "&7- &cNumber: &7Fade-in time on screen &e(1)"
           - "&7- &cNumber: &7Display time on screen &e(1)"
           - "&7- &cNumber: &7Fade-out time &e(1)"
+      send_actionbar:
+        name: "&eSend Actionbar"
+        lore:
+          - "&7Sends a message to the player's action bar"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Message to send &e(1)"
+      clear_chat:
+        name: "&eClear Chat"
+        lore:
+          - "&7Clears the player's chat"
+          - "&7"
+          - "&aNo arguments required"
       show_win_screen:
         name: "&eShow Victory Screen"
         lore:
           - "&7Displays a victory screen to the player"
+          - "&7"
+          - "&aNo arguments required"
+      show_demo_screen:
+        name: "&eShow Demo Screen"
+        lore:
+          - "&7Displays the demo screen to the player"
+          - "&7"
+          - "&aNo arguments required"
+      show_elder_guardian:
+        name: "&eShow Elder Guardian"
+        lore:
+          - "&7Displays the Elder Guardian jump scare to the player"
           - "&7"
           - "&aNo arguments required"
 

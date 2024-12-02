@@ -20,7 +20,7 @@ public abstract class Action {
     }
 
 
-    public String replacePlaceholders (String s, GameEvent event, Entity entity) {
+    public static String replacePlaceholders (String s, GameEvent event, Entity entity) {
         if (s == null || s.isEmpty()) {
             return null;
         } else {

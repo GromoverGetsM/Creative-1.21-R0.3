@@ -5,9 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
-import ru.rstudios.creative1.coding.actions.playeraction.SendMessage;
-import ru.rstudios.creative1.coding.actions.playeraction.SendTitle;
-import ru.rstudios.creative1.coding.actions.playeraction.ShowWinScreen;
+import ru.rstudios.creative1.coding.actions.playeraction.communication.*;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.user.LocaleManages;
@@ -22,9 +20,14 @@ public enum ActionCategory {
 
     SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendMessage::new, Material.WRITABLE_BOOK, true, "coding.actions.send_message", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,
             new SwitchItem("menus.switches.actions.sm.name", "menus.switches.actions.sm.lore", List.of("together", "space", "newline"), "menus.switches.actions.sm.states.", List.of(Material.SLIME_BALL, Material.RABBIT_FOOT, Material.SHEARS))))),
+    SEND_DIALOGUE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendDialogue::new, Material.PAPER, true, "coding.actions.send_dialogue", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     SEND_TITLE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendTitle::new, Material.ARMS_UP_POTTERY_SHERD, true, "coding.actions.send_title", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC),
             new LinkedHashMap<>()),
-    SHOW_WIN_SCREEN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowWinScreen::new, Material.GOLD_INGOT, false, "coding.actions.show_win_screen", CodingMenu.MenuType.DEFAULT, Collections.singletonList(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>());
+    SEND_ACTIONBAR(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendActionBar::new, Material.BOOK, true, "coding.actions.send_actionbar", CodingMenu.MenuType.DEFAULT, Collections.singletonList(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    CLEAR_CHAT(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ClearChat::new, Material.GLASS, false, null, null, null, null),
+    SHOW_WIN_SCREEN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowWinScreen::new, Material.GOLD_INGOT, false, null, null, null, null),
+    SHOW_DEMO_SCREEN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowDemoScreen::new, Material.ITEM_FRAME, false, null, null, null, null),
+    SHOW_ELDER_GUARDIAN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowElderGuardian::new, Material.ELDER_GUARDIAN_SPAWN_EGG, false, null, null, null, null);
 
     private Development.BlockTypes type;
     private MenuCategory category;

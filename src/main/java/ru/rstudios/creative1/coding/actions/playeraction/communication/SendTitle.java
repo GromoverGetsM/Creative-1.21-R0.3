@@ -1,12 +1,10 @@
-package ru.rstudios.creative1.coding.actions.playeraction;
+package ru.rstudios.creative1.coding.actions.playeraction.communication;
 
 import org.bukkit.entity.Player;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.events.GameEvent;
-
-import java.util.List;
 
 public class SendTitle extends Action {
     @Override

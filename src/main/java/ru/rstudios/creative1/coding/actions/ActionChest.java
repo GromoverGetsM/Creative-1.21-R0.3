@@ -125,7 +125,9 @@ public class ActionChest {
 
         for (ItemStack item : this.texts) {
             switch (item.getType()) {
-                case BOOK -> parseText(item);
+                case BOOK -> {
+                    list.add(parseText(item));
+                }
             /*case APPLE -> {
                 Object o = CodingHandleUtils.parseGameValue(item);
                 if (o instanceof StringValue) {
