@@ -263,6 +263,38 @@ public class GlobalListener implements Listener {
                     }
                 }
             }
+            if (event.getAction() == Action.LEFT_CLICK_AIR && event.getItem() != null && event.getItem().getType() == Material.PAPER) {
+                user.datastore().put("HandlingPaper", true);
+                user.player().teleport(user.getCurrentPlot().world().getSpawnLocation());
+            }
+        } else if (user.isOnPlayingWorld()) {
+            ItemStack item = event.getItem();
+
+            if (user.datastore().containsKey("HandlingPaper") && item != null && item.getType() == Material.PAPER) {
+
+                switch (event.getAction()) {
+                    case LEFT_CLICK_AIR -> {
+                        user.datastore().remove("HandlingPaper");
+                        user.player().teleport(user.getCurrentPlot().dev().world().getSpawnLocation());
+                    }
+
+                    case RIGHT_CLICK_BLOCK, RIGHT_CLICK_AIR -> {
+                        Block b = event.getClickedBlock();
+                        Location loc = b == null ? user.player().getLocation() : b.getLocation();
+                        ItemMeta meta = item.getItemMeta();
+
+                        String value = loc.getX() + " " +
+                                loc.getY() + " " +
+                                loc.getZ() + " " +
+                                loc.getYaw() + " " +
+                                loc.getPitch();
+                        meta.setDisplayName(value);
+                        item.setItemMeta(meta);
+                        user.sendTitle("coding.tech.var-set", value, 10, 70, 20, true, false);
+                    }
+
+                }
+            }
         }
     }
 
