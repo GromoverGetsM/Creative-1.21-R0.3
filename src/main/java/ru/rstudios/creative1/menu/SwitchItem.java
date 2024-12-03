@@ -158,4 +158,8 @@ public class SwitchItem {
     public String getCurrentValue() {
         return statesKeys.get(getCurrentState());
     }
+
+    public List<Material> getIcons() {
+        return icons;
+    }
 }

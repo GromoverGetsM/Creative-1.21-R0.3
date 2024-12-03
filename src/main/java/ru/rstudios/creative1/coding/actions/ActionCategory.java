@@ -24,6 +24,8 @@ public enum ActionCategory {
     SEND_TITLE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendTitle::new, Material.ARMS_UP_POTTERY_SHERD, true, "coding.actions.send_title", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC),
             new LinkedHashMap<>()),
     SEND_ACTIONBAR(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendActionBar::new, Material.BOOK, true, "coding.actions.send_actionbar", CodingMenu.MenuType.DEFAULT, Collections.singletonList(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    SEND_ADVANCEMENT_TOAST(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendAdvancementToast::new, Material.EMERALD, true, "coding.actions.send_advancement_toast", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>(Map.of(22,
+            new SwitchItem("menus.switches.actions.sat.name", "menus.switches.actions.sat.lore", List.of("task", "goal", "challenge"), "menus.switches.actions.sat.states.", List.of(Material.WHITE_WOOL, Material.YELLOW_WOOL, Material.PURPLE_WOOL))))),
     CLEAR_CHAT(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ClearChat::new, Material.GLASS, false, null, null, null, null),
     SHOW_WIN_SCREEN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowWinScreen::new, Material.GOLD_INGOT, false, null, null, null, null),
     SHOW_DEMO_SCREEN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowDemoScreen::new, Material.ITEM_FRAME, false, null, null, null, null),

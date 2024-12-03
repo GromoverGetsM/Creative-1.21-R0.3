@@ -23,7 +23,8 @@ public class CodingMenu implements InventoryHolder {
         TEXT("coding.var-types.text.name", "coding.var-types.text.lore", Material.LIGHT_BLUE_STAINED_GLASS_PANE),
         NUMERIC("coding.var-types.numeric.name", "coding.var-types.numeric.lore", Material.RED_STAINED_GLASS_PANE),
         LOCATION("coding.var-types.location.name", "coding.var-types.location.lore", Material.WHITE_STAINED_GLASS_PANE),
-        DYNAMIC_VAR("coding.var-types.dynamic.name", "coding.var-types.dynamic.lore", Material.ORANGE_STAINED_GLASS_PANE);
+        DYNAMIC_VAR("coding.var-types.dynamic.name", "coding.var-types.dynamic.lore", Material.ORANGE_STAINED_GLASS_PANE),
+        ITEMSTACK("coding.var-types.itemstack.name", "coding.var-types.itemstack.lore", Material.YELLOW_STAINED_GLASS_PANE);
 
         private final String namePath;
         private final String lorePath;

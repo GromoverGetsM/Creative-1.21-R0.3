@@ -17,7 +17,7 @@ public class SendDialogue extends Action {
         int cooldown = (int) ActionChest.parseNumber(chest.getOriginalContents()[13]);
 
         if (cooldown < 0) {
-            event.getPlot().throwException(this, new IllegalStateException("Некорректный аргумент, слот 13 (задержка между сообщениями должна быть больше или равна 0!)"));
+            event.getPlot().throwException(this, new IllegalArgumentException("Некорректный аргумент, слот 13 (задержка между сообщениями должна быть больше или равна 0!)"));
             return;
         }
 

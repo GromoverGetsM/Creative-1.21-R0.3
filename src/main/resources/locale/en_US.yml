@@ -182,6 +182,11 @@ coding:
       lore:
         - "&7Place magma cream here -"
         - "&7- dynamic variable"
+    itemstack:
+      name: "&eItem"
+      lore:
+        - "&7Place the desired"
+        - "&7item here"
 
 
 menus:
