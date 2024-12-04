@@ -17,15 +17,32 @@ commands:
     permission: creative.world
   plot:
     usage: /plot
+    aliases:
+      - здще
   join:
     usage: /join <id>
+    aliases:
+      - ощшт
   locale:
     usage: /locale
+    aliases:
+      - дщсфду
   build:
     usage: /build
+    aliases:
+      - игшдв
   play:
     usage: /play
+    aliases:
+      - здфн
+      - кгт
+      - run
   dev:
     usage: /dev
+    aliases:
+      - вум
   troubleshooter:
     usage: /troubleshooter
+  vars:
+    aliases:
+      - мфкы

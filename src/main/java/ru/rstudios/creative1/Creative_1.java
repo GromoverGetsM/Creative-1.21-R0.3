@@ -57,6 +57,7 @@ public final class Creative_1 extends JavaPlugin {
         Objects.requireNonNull(getCommand("build")).setExecutor(new buildCommand());
         Objects.requireNonNull(getCommand("dev")).setExecutor(new devCommand());
         Objects.requireNonNull(getCommand("troubleshooter")).setExecutor(new troubleshooterCommand());
+        Objects.requireNonNull(getCommand("vars")).setExecutor(new varsCommand());
     }
 
     @Override

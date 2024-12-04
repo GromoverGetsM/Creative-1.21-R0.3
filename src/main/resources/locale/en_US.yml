@@ -132,6 +132,7 @@ coding:
   tech:
     var-set: "&aValue Set"
     incorrect-value: "&cIncorrect Value"
+    vars: "Variables"
 
 
   events:
@@ -166,22 +167,36 @@ coding:
       name: "&bText"
       lore:
         - "&7Place a book here -"
-        - "&7- text variable"
+        - "&7- a text variable"
+      itemlore:
+        - "&7Holds a text value"
+        - "&7with color code support."
+        - "&7Up to 1024 characters"
     numeric:
       name: "&cNumber"
       lore:
         - "&7Place slime here -"
-        - "&7- numeric variable"
+        - "&7- a numeric variable"
+      itemlore:
+        - "&7Accepts an integer or"
+        - "&7a decimal number"
     location:
       name: "&fLocation"
       lore:
         - "&7Place a paper here -"
-        - "&7- location variable"
+        - "&7- a location variable"
+      itemlore:
+        - "&7Sequentially stores coordinates:"
+        - "&6X Y Z Yaw Pitch"
     dynamic:
       name: "&6Dynamic Variable"
       lore:
         - "&7Place magma cream here -"
-        - "&7- dynamic variable"
+        - "&7- a dynamic variable"
+      itemlore:
+        - "&7Holds any value"
+        - "&7and changes to the given parameter"
+        - "&7when specified"
     itemstack:
       name: "&eItem"
       lore:

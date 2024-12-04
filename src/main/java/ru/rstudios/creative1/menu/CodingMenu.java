@@ -20,20 +20,22 @@ public class CodingMenu implements InventoryHolder {
     public enum MenuType { DEFAULT, SET, ALL_IN }
 
     public enum ArgumentType {
-        TEXT("coding.var-types.text.name", "coding.var-types.text.lore", Material.LIGHT_BLUE_STAINED_GLASS_PANE),
-        NUMERIC("coding.var-types.numeric.name", "coding.var-types.numeric.lore", Material.RED_STAINED_GLASS_PANE),
-        LOCATION("coding.var-types.location.name", "coding.var-types.location.lore", Material.WHITE_STAINED_GLASS_PANE),
-        DYNAMIC_VAR("coding.var-types.dynamic.name", "coding.var-types.dynamic.lore", Material.ORANGE_STAINED_GLASS_PANE),
-        ITEMSTACK("coding.var-types.itemstack.name", "coding.var-types.itemstack.lore", Material.YELLOW_STAINED_GLASS_PANE);
+        TEXT("coding.var-types.text.name", "coding.var-types.text.lore", Material.LIGHT_BLUE_STAINED_GLASS_PANE, Material.BOOK),
+        NUMERIC("coding.var-types.numeric.name", "coding.var-types.numeric.lore", Material.RED_STAINED_GLASS_PANE, Material.SLIME_BALL),
+        LOCATION("coding.var-types.location.name", "coding.var-types.location.lore", Material.WHITE_STAINED_GLASS_PANE, Material.PAPER),
+        DYNAMIC_VAR("coding.var-types.dynamic.name", "coding.var-types.dynamic.lore", Material.ORANGE_STAINED_GLASS_PANE, Material.MAGMA_CREAM),
+        ITEMSTACK("coding.var-types.itemstack.name", "coding.var-types.itemstack.lore", Material.YELLOW_STAINED_GLASS_PANE, null);
 
         private final String namePath;
         private final String lorePath;
         private final Material marker;
+        private final Material asVariable;
 
-        ArgumentType(String namePath, String lorePath, Material marker) {
+        ArgumentType(String namePath, String lorePath, Material marker, Material asVariable) {
             this.namePath = namePath;
             this.lorePath = lorePath;
             this.marker = marker;
+            this.asVariable = asVariable;
         }
 
         public String getNamePath() {
@@ -46,6 +48,10 @@ public class CodingMenu implements InventoryHolder {
 
         public Material getMarker() {
             return marker;
+        }
+
+        public Material getAsVariable() {
+            return asVariable;
         }
     }
 
