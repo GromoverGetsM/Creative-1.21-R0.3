@@ -148,10 +148,19 @@ coding:
     send_title: "Show title"
     send_dialogue: "Send Dialogue"
     send_actionbar: "Send Actionbar"
+    send_advancement_toast: "Show Advancement"
     clear_chat: "Clear Chat"
+    play_sound: "Play Sound"
+    stop_sound: "Stop Sound"
+    show_book: "Show Book"
     show_win_screen: "Show victory screen"
     show_demo_screen: "Show Demo"
     show_elder_guardian: "Show Elder Guardian"
+
+    give_items: "Give Items"
+    set_items: "Set Items"
+    clear_inventory: "Clear Inventory"
+    close_inventory: "Close Inventory"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -217,6 +226,49 @@ menus:
           together: "No Separation"
           space: "Separated by Space"
           newline: "Separated by New Line"
+      sat:
+        name: "&3Achievement Type"
+        lore:
+          - "§fThere are three types of achievements in Minecraft. Depending"
+          - "§fon the type, the sound played and the frame appearance"
+          - "§fof the achievement differ."
+          - "§fBy clicking on the item, select the"
+          - "§fdesired achievement type."
+        states:
+          task: "Task"
+          goal: "Goal"
+          challenge: "Challenge"
+      ps:
+        name: "&3Sound Category"
+        lore:
+          - "§fThe sound can be played in"
+          - "§fdifferent categories for the player,"
+          - "§fin case any of the categories"
+          - "§fare muted."
+          - "§f"
+          - "§fBy clicking on the item,"
+          - "§fchoose the desired category"
+        states:
+          master: "Master Volume"
+          voice: "Voice/Speech"
+          weather: "Weather"
+          hostile: "Hostile Creatures"
+          players: "Players"
+          records: "Music Discs"
+          music: "Music"
+          blocks: "Blocks"
+          neutral: "Neutral Creatures"
+          ambient: "Ambient"
+      si:
+        name: "&3Account for Empty Slots"
+        lore:
+          - "&fIf enabled, empty slots in"
+          - "&fs chests will be transferred to the player"
+          - "&fwith the item in the current slot replaced"
+        states:
+          true: "Enabled"
+          false: "Disabled"
+
 
   coding:
     player_event:
@@ -287,12 +339,50 @@ menus:
           - "&7"
           - "&7Arguments (1):"
           - "&7- &bText: &7Message to send &e(1)"
+      send_advancement_toast:
+        name: "&eShow Advancement"
+        lore:
+          - "&7Displays an advancement on the player's screen"
+          - "&7"
+          - "&7Arguments (3):"
+          - "&7- &bText: &7Achievement title &e(1)"
+          - "&7- &eItem: &7Achievement icon &e(1)"
+          - "&7- &6Toggle: &7Achievement type &e(1)"
       clear_chat:
         name: "&eClear Chat"
         lore:
           - "&7Clears the player's chat"
           - "&7"
           - "&aNo arguments required"
+      play_sound:
+        name: "&ePlay Sound"
+        lore:
+          - "&7Plays a sound to the player"
+          - "&7"
+          - "&7Arguments (5):"
+          - "&7- &bText: &7Sound name &e(1)"
+          - "&7- &cNumber: &7Sound volume &e(1)"
+          - "&7- &cNumber: &7Sound pitch &e(1)"
+          - "&7- &fLocation: &7The location the sound"
+          - "&7  originates from &e(1)"
+          - "&7- &6Toggle: &7Sound category &e(1)"
+      stop_sound:
+        name: "&eStop Sound"
+        lore:
+          - "&7Stops the playback of the specified"
+          - "&7sounds"
+          - "&7"
+          - "&7Arguments (27):"
+          - "&7- &bText: &7Sound name &e(27)"
+      show_book:
+        name: "&eShow Book"
+        lore:
+          - "&7Displays a book to the player on the screen"
+          - "&7"
+          - "&7Arguments (27):"
+          - "&7- &bText: &7Book pages&c* &e(27)"
+          - "&7"
+          - "&c&o*&f&oEach text is a separate page"
       show_win_screen:
         name: "&eShow Victory Screen"
         lore:
@@ -311,6 +401,41 @@ menus:
           - "&7Displays the Elder Guardian jump scare to the player"
           - "&7"
           - "&aNo arguments required"
+
+      give_items:
+        name: "&eGive Items"
+        lore:
+          - "&7Gives items in the specified order."
+          - "&7Does not save the slot when transferring."
+          - "&7"
+          - "&7Arguments (27):"
+          - "&7- &eItem: &7The item to give &e(27)"
+      set_items:
+        name: "&eSet Items"
+        lore:
+          - "&7Sets items in specific slots."
+          - "&7Slots in the inventory are converted as the player would see them:"
+          - "&7"
+          - "&7- &6Bottom row: &7Hotbar slots"
+          - "&7- &63 rows from the top: &7Inventory when"
+          - "&7  &7the player presses &eE"
+          - "&7"
+          - "&7Arguments (37):"
+          - "&7- &eItem: &7The item to set in the slot &e(36)"
+          - "&7- &6Switch: &7Account for empty slots &e(1)"
+      clear_inventory:
+        name: "&eClear Inventory"
+        lore:
+          - "&7Clears the player's inventory"
+          - "&7"
+          - "&aNo arguments required"
+      close_inventory:
+        name: "&eClose Inventory"
+        lore:
+          - "&7Closes the currently open inventory for the player"
+          - "&7"
+          - "&aNo arguments required"
+
 
   worlds-option:
     title: "Choose an Option"

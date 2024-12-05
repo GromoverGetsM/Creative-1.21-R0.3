@@ -21,9 +21,9 @@ public class CreateWorldMenu extends ProtectedMenu {
 
     public CreateWorldMenu(User user) {
         super(LocaleManages.getLocaleMessage(user.getLocale(), "menus.create-world.title", false, ""), (byte) 3);
-        this.environment = new SwitchItem("menus.create-world.items.environment-parameter.name", "menus.create-world.items.environment-parameter.lore", Arrays.asList("normal", "nether", "the_end"), "menus.create-world.items.environment-parameter.states.", Arrays.asList(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
-        this.generation = new SwitchItem("menus.create-world.items.generation-parameter.name", "menus.create-world.items.generation-parameter.lore", Arrays.asList("normal", "flat", "large_biomes", "amplified"), "menus.create-world.items.generation-parameter.states.", Arrays.asList(Material.GRASS_BLOCK, Material.MOSSY_COBBLESTONE, Material.OAK_SAPLING, Material.DRIPSTONE_BLOCK));
-        this.genStructures = new SwitchItem("menus.create-world.items.generate-structures.name", "menus.create-world.items.generate-structures.lore", Arrays.asList("true", "false"), "menus.create-world.items.generate-structures.states.", Arrays.asList(Material.LIME_TERRACOTTA, Material.RED_TERRACOTTA));
+        this.environment = new SwitchItem(Arrays.asList("normal", "nether", "the_end"), "menus.create-world.items.environment-parameter.", Arrays.asList(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
+        this.generation = new SwitchItem(Arrays.asList("normal", "flat", "large_biomes", "amplified"), "menus.create-world.items.generation-parameter.", Arrays.asList(Material.GRASS_BLOCK, Material.MOSSY_COBBLESTONE, Material.OAK_SAPLING, Material.DRIPSTONE_BLOCK));
+        this.genStructures = new SwitchItem(Arrays.asList("true", "false"), "menus.create-world.items.generate-structures.", Arrays.asList(Material.LIME_TERRACOTTA, Material.RED_TERRACOTTA));
     }
 
     @Override

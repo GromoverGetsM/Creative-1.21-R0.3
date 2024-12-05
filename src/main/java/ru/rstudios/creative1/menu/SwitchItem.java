@@ -18,16 +18,12 @@ import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class SwitchItem {
 
-    private final String nameKey;
-    private final String descriptionKey;
     private final List<String> statesKeys;
     private final String pathStart;
     private final List<Material> icons;
     private int currentState;
 
-    public SwitchItem(String nameKey, String descriptionKey, List<String> statesKeys, String pathStart, List<Material> icons) {
-        this.nameKey = nameKey;
-        this.descriptionKey = descriptionKey;
+    public SwitchItem(List<String> statesKeys, String pathStart, List<Material> icons) {
         this.statesKeys = statesKeys;
         this.pathStart = pathStart;
         this.icons = icons;
@@ -69,8 +65,8 @@ public class SwitchItem {
         ItemMeta meta = item.getItemMeta();
 
         if (meta != null) {
-            String localizedName = LocaleManages.getLocaleMessage(user.getLocale(), nameKey, false, "");
-            List<String> localizedDescription = LocaleManages.getLocaleMessagesS(user.getLocale(), descriptionKey, new LinkedHashMap<>());
+            String localizedName = LocaleManages.getLocaleMessage(user.getLocale(), pathStart + ".name", false, "");
+            List<String> localizedDescription = LocaleManages.getLocaleMessagesS(user.getLocale(), pathStart + ".lore", new LinkedHashMap<>());
 
             meta.displayName(Component.text("§3" + localizedName));
 
@@ -124,7 +120,7 @@ public class SwitchItem {
     }
 
     private String translateState(User user, String stateKey) {
-        return LocaleManages.getLocaleMessage(user.getLocale(), pathStart + stateKey, false, "");
+        return LocaleManages.getLocaleMessage(user.getLocale(), pathStart + ".states." + stateKey, false, "");
     }
 
     public void setCurrentState(int currentState) {

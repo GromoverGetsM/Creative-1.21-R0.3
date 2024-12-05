@@ -22,7 +22,7 @@ public abstract class ProtectedMenu implements InventoryHolder {
 
     private String title;
     private byte rows;
-    private Map<Byte, ItemStack> items = new LinkedHashMap<>();
+    protected Map<Byte, ItemStack> items = new LinkedHashMap<>();
     protected Inventory inventory;
 
     protected final static ItemStack AIR = new ItemStack(Material.AIR, 0);

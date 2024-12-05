@@ -18,7 +18,7 @@ public class plotCommand implements CommandExecutor {
             if (user.isOnPlot()) {
                 Plot plot = user.getCurrentPlot();
 
-                if (plot.owner().equalsIgnoreCase(user.name())) {
+                if (plot.owner().equalsIgnoreCase(user.name()) || user.player().hasPermission("creative.ignore-closed")) {
                     new PlotMenu(user).open(user);
                 }
             }

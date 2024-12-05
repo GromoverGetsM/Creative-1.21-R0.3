@@ -19,13 +19,13 @@ public class GamerulesControlMenu extends ProtectedMenu {
 
     public GamerulesControlMenu(User user) {
         super(LocaleManages.getLocaleMessage(user.getLocale(), "menus.gamerule-management.title", false, ""), (byte) 3);
-        this.doTraderSpawning = new SwitchItem("menus.gamerule-management.items.doTraderSpawning.name", "menus.gamerule-management.items.doTraderSpawning.lore", List.of("true", "false"), "menus.gamerule-management.states.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.doTraderSpawning = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.doTraderSpawning.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doTraderSpawning")));
-        this.doWardenSpawning = new SwitchItem("menus.gamerule-management.items.doWardenSpawning.name", "menus.gamerule-management.items.doWardenSpawning.lore", List.of("true", "false"), "menus.gamerule-management.states.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.doWardenSpawning = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.doWardenSpawning.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doWardenSpawning")));
-        this.doPatrolSpawning = new SwitchItem("menus.gamerule-management.items.doPatrolSpawning.name", "menus.gamerule-management.items.doPatrolSpawning.lore", List.of("true", "false"), "menus.gamerule-management.states.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.doPatrolSpawning = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.doPatrolSpawning.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doPatrolSpawning")));
-        this.doImmediateRespawn = new SwitchItem("menus.gamerule-management.items.doImmediateRespawn.name", "menus.gamerule-management.items.doImmediateRespawn.lore", List.of("true", "false"), "menus.gamerule-management.states.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.doImmediateRespawn = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.doImmediateRespawn.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doImmediateRespawn")));
     }
 

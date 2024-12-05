@@ -20,6 +20,7 @@ import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
+import ru.rstudios.creative1.utils.Development;
 import ru.rstudios.creative1.utils.FileUtil;
 import ru.rstudios.creative1.utils.WorldUtil;
 
@@ -297,6 +298,15 @@ public class Plot {
             user.clear();
             user.player().setGameMode(GameMode.CREATIVE);
             user.player().teleport(dev().world().getSpawnLocation());
+
+            for (Development.BlockTypes type : Development.BlockTypes.values()) {
+                ItemStack item = new ItemStack(type.getMainBlock());
+                ItemMeta meta = item.getItemMeta();
+
+                meta.setDisplayName(LocaleManages.getLocaleMessage(user.getLocale(), "coding." + type.name().toLowerCase(Locale.ROOT), false, ""));
+                item.setItemMeta(meta);
+                user.player().getInventory().addItem(item);
+            }
         }
     }
 

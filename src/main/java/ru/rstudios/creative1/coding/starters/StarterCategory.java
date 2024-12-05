@@ -3,6 +3,7 @@ package ru.rstudios.creative1.coding.starters;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
@@ -103,6 +104,8 @@ public enum StarterCategory {
         if (meta != null) {
             meta.displayName(Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "menus.coding." + type.name().toLowerCase(Locale.ROOT) + "." + name().toLowerCase(Locale.ROOT) + ".name", false, "")));
             meta.lore(LocaleManages.getLocaleMessages(user.getLocale(), "menus.coding." + type.name().toLowerCase(Locale.ROOT) + "." + name().toLowerCase(Locale.ROOT) + ".lore", new LinkedHashMap<>()));
+
+            meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP, ItemFlag.HIDE_ARMOR_TRIM, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_STORED_ENCHANTS, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_DYE, ItemFlag.HIDE_UNBREAKABLE);
 
             icon.setItemMeta(meta);
         }

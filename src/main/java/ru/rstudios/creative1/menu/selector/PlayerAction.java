@@ -62,7 +62,7 @@ public class PlayerAction extends CodingCategoriesMenu {
             if (selectedCategory == null) {
                 selectedCategory = MenuCategory.getByMaterial(event.getCurrentItem().getType());
                 isCategorySelected = true;
-                this.getItems().clear();
+                this.items.clear();
                 user.player().closeInventory();
                 open(user);
             } else {
@@ -77,8 +77,9 @@ public class PlayerAction extends CodingCategoriesMenu {
 
                     this.sign.setMetadata("selectedAction", new FixedMetadataValue(plugin, category.name()));
 
+                    Block chestBlock = this.sign.getRelative(BlockFace.SOUTH).getRelative(BlockFace.UP);
+
                     if (category.hasChest()) {
-                        Block chestBlock = this.sign.getRelative(BlockFace.SOUTH).getRelative(BlockFace.UP);
                         chestBlock.setType(Material.CHEST);
 
 
@@ -90,7 +91,7 @@ public class PlayerAction extends CodingCategoriesMenu {
                         chest.getPersistentDataContainer().set(inventory, DataType.ITEM_STACK_ARRAY, menu.getInventory(user).getContents());
                         chest.update();
 
-                    }
+                    } else chestBlock.setType(Material.AIR);
                 }
             }
         }

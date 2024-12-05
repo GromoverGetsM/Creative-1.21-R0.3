@@ -2,16 +2,15 @@ package ru.rstudios.creative1.coding.actions;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
 import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.ChatColor;
+import org.bukkit.*;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.coding.events.GameEvent;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import ru.rstudios.creative1.coding.starters.Starter;
+import ru.rstudios.creative1.plots.PlotManager;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -170,10 +169,10 @@ public class ActionChest {
             case SLIME_BALL -> {
                 return parseNumber(item);
             }
-            /*case PAPER -> {
-                return parseLocation(item, null, event);
+            case PAPER -> {
+                return parseLocation(item, event.getPlot().world().getSpawnLocation());
             }
-            case APPLE -> {
+            /*case APPLE -> {
                 return parseGameValue(item, event);
             }
             case MAGMA_CREAM -> {
@@ -256,6 +255,78 @@ public class ActionChest {
             } else {
                 return defaultNum;
             }
+        }
+    }
+
+    public static Location parseLocation(ItemStack itemStack, Location def) {
+        return parseLocation(itemStack, def, true);
+    }
+
+    public static Location parseLocation(ItemStack itemStack, Location def, boolean checkType) {
+        if (!isNullOrAir(itemStack)) {
+            if (checkType && itemStack.getType() != Material.PAPER) {
+                return def;
+            } else {
+                String text = ChatColor.stripColor(parseText(itemStack, "", false));
+                Location parsedLoc = toLocation(text);
+                if (parsedLoc != null) {
+                    return parsedLoc;
+                } else {
+                    String[] split = text.split(" ");
+                    double[] numbers = new double[split.length];
+
+                    for(int i = 0; i < split.length; ++i) {
+                        if (!NUMBER.matcher(split[i]).matches()) {
+                            return def;
+                        }
+
+                        numbers[i] = Double.parseDouble(split[i]);
+                    }
+
+                    return new Location(PlotManager.byWorld(def.getWorld()).world(), numbers[0], numbers[1], numbers[2], (float)numbers[3], (float)numbers[4]);
+                }
+            }
+        } else {
+            return def;
+        }
+    }
+
+    public static Location fixNan(Location loc) {
+        if (Double.isNaN(loc.getX())) {
+            loc.setX(0.0);
+        }
+
+        if (Double.isNaN(loc.getY())) {
+            loc.setY(0.0);
+        }
+
+        if (Double.isNaN(loc.getZ())) {
+            loc.setZ(0.0);
+        }
+
+        if (Float.isNaN(loc.getYaw())) {
+            loc.setYaw(0.0F);
+        }
+
+        if (Float.isNaN(loc.getPitch())) {
+            loc.setPitch(0.0F);
+        }
+
+        return loc;
+    }
+
+    public static Location toLocation(String code) {
+        if (code != null && !code.isEmpty()) {
+            String[] loc = code.split(":");
+            if (loc.length == 3) {
+                return fixNan(new Location(Bukkit.getWorlds().get(0), Double.parseDouble(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2])));
+            } else if (loc.length == 4) {
+                return fixNan(new Location(Bukkit.getWorld(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2]), Double.parseDouble(loc[3])));
+            } else {
+                return loc.length == 6 ? fixNan(new Location(Bukkit.getWorld(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2]), Double.parseDouble(loc[3]), Float.parseFloat(loc[4]), Float.parseFloat(loc[5]))) : null;
+            }
+        } else {
+            return null;
         }
     }
 }

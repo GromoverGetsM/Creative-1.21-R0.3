@@ -55,7 +55,7 @@ public class BlockEvent extends CodingCategoriesMenu {
             if (selectedCategory == null) {
                 selectedCategory = MenuCategory.getByMaterial(event.getCurrentItem().getType());
                 isCategorySelected = true;
-                this.getItems().clear();
+                this.items.clear();
                 user.player().closeInventory();
                 open(user);
             } else {
