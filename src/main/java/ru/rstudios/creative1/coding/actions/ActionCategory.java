@@ -29,6 +29,10 @@ public enum ActionCategory {
     CLEAR_INVENTORY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, ClearInventory::new, Material.GLASS, false, null, null, null, null),
     CLOSE_INVENTORY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, CloseInventory::new, Material.STRUCTURE_VOID, false, null, null, null, null),
     SET_ITEM_DELAY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, SetItemDelay::new, Material.CLOCK, true, "coding.actions.set_item_delay", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.ITEMSTACK, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    OPEN_INTERFACE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, OpenInterface::new, Material.BROWN_SHULKER_BOX, true, "coding.actions.open_interface", CodingMenu.MenuType.DEFAULT, new LinkedList<>(),
+            new LinkedHashMap<>(Map.of(13, new SwitchItem(List.of("workbench", "enchanting", "anvil", "cartography", "grindstone", "loom", "smith", "stonecutter"), "menus.switches.actions.oi.", List.of(
+                    Material.CRAFTING_TABLE, Material.ENCHANTING_TABLE, Material.ANVIL, Material.CARTOGRAPHY_TABLE, Material.GRINDSTONE, Material.LOOM, Material.SMITHING_TABLE, Material.STONECUTTER
+            ))))),
 
     // Коммуникация с игроком вся
     SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendMessage::new, Material.WRITABLE_BOOK, true, "coding.actions.send_message", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,

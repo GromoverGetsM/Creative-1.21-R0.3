@@ -87,6 +87,7 @@ public class CodingMenu implements InventoryHolder {
         switch (type) {
             case DEFAULT -> {
                 switch (args.size()) {
+                    case 0 -> setupDefaultMarkers(args, List.of(new LinkedList<>()));
                     case 1 -> {
                         argumentSlots.add(13);
                         setupDefaultMarkers(args, List.of(List.of(4, 12, 14, 22)));

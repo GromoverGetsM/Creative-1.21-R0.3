@@ -15,8 +15,8 @@ public class SetArmor extends Action {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
-        SwitchItem switchItem = getCategory().getCodingMenu().getSwitches().get(49);
-        switchItem.setCurrentState(switchItem.getCurrentState(chest.getOriginalContents()[49]));
+        SwitchItem switchItem = getCategory().getCodingMenu().getSwitches().get(22);
+        switchItem.setCurrentState(switchItem.getCurrentState(chest.getOriginalContents()[22]));
 
         boolean placeAirToo = Boolean.parseBoolean(switchItem.getCurrentValue());
 

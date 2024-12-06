@@ -161,6 +161,9 @@ coding:
     set_items: "Set Items"
     clear_inventory: "Clear Inventory"
     close_inventory: "Close Inventory"
+    set_armor: "Set Armor"
+    set_item_delay: "Set Item Delay"
+    open_interface: "Open Interface"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -268,6 +271,21 @@ menus:
         states:
           true: "Enabled"
           false: "Disabled"
+      oi:
+        name: "&3Interface Type"
+        lore:
+          - "&fChoose which in-game"
+          - "&finterface to open"
+        states:
+          workbench: "Crafting Table"
+          enchanting: "Enchanting Table"
+          anvil: "Anvil"
+          cartography: "Cartography Table"
+          grindstone: "Grindstone"
+          loom: "Loom"
+          smith: "Smithing Table"
+          stonecutter: "Stonecutter"
+
 
 
   coding:
@@ -435,7 +453,33 @@ menus:
           - "&7Closes the currently open inventory for the player"
           - "&7"
           - "&aNo arguments required"
-
+      set_armor:
+        name: "&eSet Armor"
+        lore:
+          - "&7Equips armor to the corresponding player slots."
+          - "&7"
+          - "&7Arguments (5):"
+          - "&7- &eItem: &7Helmet to equip &e(1)"
+          - "&7- &eItem: &7Chestplate to equip &e(1)"
+          - "&7- &eItem: &7Leggings to equip &e(1)"
+          - "&7- &eItem: &7Boots to equip &e(1)"
+          - "&7- &6Toggle: &7Consider empty slots &e(1)"
+      set_item_delay:
+        name: "&eSet Item Delay"
+        lore:
+          - "&7Sets a delay for all items of the specified type"
+          - "&7in the player's inventory."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &eItem: &7Item for setting the delay &e(1)"
+          - "&7- &cNumber: &7Delay length (in ticks) &e(1)"
+      open_interface:
+        name: "&eOpen Interface"
+        lore:
+          - "&7Opens one of the game interfaces for the player."
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &6Toggle: &7Type of interface &e(1)"
 
   worlds-option:
     title: "Choose an Option"
