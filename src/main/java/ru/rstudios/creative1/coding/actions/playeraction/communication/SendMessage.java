@@ -1,11 +1,14 @@
 package ru.rstudios.creative1.coding.actions.playeraction.communication;
 
+import org.bukkit.entity.Entity;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.menu.SwitchItem;
+import ru.rstudios.creative1.utils.Development;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class SendMessage extends Action {
@@ -14,7 +17,14 @@ public class SendMessage extends Action {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
-        getStarter().getSelection().forEach(e -> {
+        Iterator<Entity> iterator = getStarter().getSelection().iterator();
+        while (iterator.hasNext()) {
+            Entity e = iterator.next();
+            if (!Development.checkPlot(e, event.getPlot())) {
+                iterator.remove();
+                continue;
+            }
+
             StringBuilder builder = new StringBuilder();
             List<String> texts = chest.getAsTexts(event, e);
 
@@ -29,7 +39,8 @@ public class SendMessage extends Action {
 
             String itog = replacePlaceholders(builder.toString().trim(), event, e);
             e.sendMessage(itog);
-        });
+        }
+
     }
 
     @Override

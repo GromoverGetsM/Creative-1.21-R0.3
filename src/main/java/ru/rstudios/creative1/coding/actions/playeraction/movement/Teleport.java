@@ -1,11 +1,15 @@
 package ru.rstudios.creative1.coding.actions.playeraction.movement;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.menu.SwitchItem;
+import ru.rstudios.creative1.utils.Development;
+
+import java.util.Iterator;
 
 public class Teleport extends Action {
     @Override
@@ -18,19 +22,27 @@ public class Teleport extends Action {
         SwitchItem item = getCategory().getCodingMenu().getSwitches().get(22);
         item.setCurrentState(item.getCurrentState(chest.getOriginalContents()[22]));
 
-        getStarter().getSelection().forEach(e -> {
+        Iterator<Entity> iterator = getStarter().getSelection().iterator();
+        while (iterator.hasNext()) {
+            Entity e = iterator.next();
+
+            if (!Development.checkPlot(e, event.getPlot())) {
+                iterator.remove();
+                continue;
+            }
+
             Location parseChanges = toTp.clone();
             switch (item.getCurrentValue()) {
                 case "coords" -> {
                     parseChanges.setYaw(0.0F);
                     parseChanges.setPitch(0.0F);
-
                 }
                 case "eyedir" -> parseChanges.set(e.getX(), e.getY(), e.getZ());
             }
 
             e.teleport(parseChanges);
-        });
+        }
+
     }
 
     @Override

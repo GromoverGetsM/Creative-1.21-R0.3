@@ -5,13 +5,16 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.menu.SwitchItem;
+import ru.rstudios.creative1.utils.Development;
 
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -23,7 +26,13 @@ public class SendAdvancementToast extends Action {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
-        getStarter().getSelection().forEach(e -> {
+        Iterator<Entity> iterator = getStarter().getSelection().iterator();
+        while (iterator.hasNext()) {
+            Entity e = iterator.next();
+            if (!Development.checkPlot(e, event.getPlot())) {
+                iterator.remove();
+                continue;
+            }
             if (e instanceof Player player) {
                 NamespacedKey key = new NamespacedKey(plugin, "advancementToast" + UUID.randomUUID());
 
@@ -53,7 +62,6 @@ public class SendAdvancementToast extends Action {
                         + "}"
                         + "}";
 
-
                 Bukkit.getUnsafe().removeAdvancement(key);
                 Advancement advancement = Bukkit.getUnsafe().loadAdvancement(key, advancementJSON);
 
@@ -65,7 +73,8 @@ public class SendAdvancementToast extends Action {
                     Bukkit.getScheduler().runTaskLater(plugin, () -> Bukkit.getUnsafe().removeAdvancement(key), 2L);
                 }
             }
-        });
+        }
+
     }
 
     @Override

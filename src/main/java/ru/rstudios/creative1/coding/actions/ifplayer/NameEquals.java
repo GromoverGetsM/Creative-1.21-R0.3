@@ -1,23 +1,19 @@
-package ru.rstudios.creative1.coding.actions.playeraction.inventory;
+package ru.rstudios.creative1.coding.actions.ifplayer;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.InventoryHolder;
-import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
+import ru.rstudios.creative1.coding.actions.ActionIf;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.Iterator;
-import java.util.Random;
 
-public class GiveRandomItem extends Action {
+public class NameEquals extends ActionIf {
     @Override
-    public void execute(GameEvent event) {
+    public boolean conditionExpression(GameEvent event) {
         ActionChest chest = getChest();
         chest.initInventorySort();
-
-        Random random = new Random();
 
         Iterator<Entity> iterator = getStarter().getSelection().iterator();
         while (iterator.hasNext()) {
@@ -26,20 +22,24 @@ public class GiveRandomItem extends Action {
                 iterator.remove();
                 continue;
             }
-            if (e instanceof InventoryHolder holder) {
-                int number;
-                do {
-                    number = random.nextInt(9, 44);
-                } while (chest.getOriginalContents()[number] == null);
 
-                holder.getInventory().addItem(chest.getOriginalContents()[number]);
+            for (String s : chest.getAsTexts(event, e)) {
+                if (s.equalsIgnoreCase(e.getName())) return true;
             }
         }
 
+        return false;
+    }
+
+    @Override
+    public void execute(GameEvent event) {
+        if (this.checkCondition(event)) {
+            this.executeConditional(event);
+        }
     }
 
     @Override
     public ActionCategory getCategory() {
-        return ActionCategory.GIVE_RANDOM_ITEM;
+        return ActionCategory.NAME_EQUALS;
     }
 }

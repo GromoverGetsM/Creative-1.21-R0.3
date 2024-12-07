@@ -1,11 +1,15 @@
 package ru.rstudios.creative1.coding.actions.playeraction.inventory;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.menu.SwitchItem;
+import ru.rstudios.creative1.utils.Development;
+
+import java.util.Iterator;
 
 public class OpenInterface extends Action {
     @Override
@@ -16,7 +20,13 @@ public class OpenInterface extends Action {
         SwitchItem item = getCategory().getCodingMenu().getSwitches().get(13);
         item.setCurrentState(item.getCurrentState(chest.getOriginalContents()[13]));
 
-        getStarter().getSelection().forEach(e -> {
+        Iterator<Entity> iterator = getStarter().getSelection().iterator();
+        while (iterator.hasNext()) {
+            Entity e = iterator.next();
+            if (!Development.checkPlot(e, event.getPlot())) {
+                iterator.remove();
+                continue;
+            }
             if (e instanceof HumanEntity entity) {
                 switch (item.getCurrentValue()) {
                     case "workbench" -> entity.openWorkbench(null, true);
@@ -29,7 +39,8 @@ public class OpenInterface extends Action {
                     case "stonecutter" -> entity.openStonecutter(null, true);
                 }
             }
-        });
+        }
+
     }
 
     @Override

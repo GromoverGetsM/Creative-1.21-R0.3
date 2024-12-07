@@ -16,13 +16,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.Nullable;
-import ru.rstudios.creative1.menu.selector.BlockEvent;
-import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
-import ru.rstudios.creative1.menu.selector.PlayerAction;
-import ru.rstudios.creative1.menu.selector.PlayerEvent;
+import ru.rstudios.creative1.menu.selector.*;
 import ru.rstudios.creative1.plots.DevPlot;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
@@ -43,11 +41,11 @@ public class Development {
         PLAYER_EVENT(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, PlayerEvent::new,true, false),
         BLOCK_EVENT(Material.PRISMARINE_BRICKS, Material.PRISMARINE, BlockEvent::new, true, false),
         PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, PlayerAction::new,false, false),
-        ENTITY_ACTION(Material.MUD_BRICKS, Material.PACKED_MUD, null,false, false),
-        ACTION_VAR(Material.IRON_BLOCK, Material.IRON_ORE, null,false, false),
-        WORLD_ACTION(Material.RED_NETHER_BRICKS, Material.NETHERRACK, null,false, false),
-        IF_PLAYER(Material.OAK_PLANKS, Material.PISTON, null,false, true),
-        IF_VARIABLE(Material.OBSIDIAN, Material.PISTON, null,false, true);
+        ENTITY_ACTION(Material.MUD_BRICKS, Material.PACKED_MUD, EntityAction::new,false, false),
+        ACTION_VAR(Material.IRON_BLOCK, Material.IRON_ORE, ActionVar::new,false, false),
+        WORLD_ACTION(Material.RED_NETHER_BRICKS, Material.NETHERRACK, WorldAction::new,false, false),
+        IF_PLAYER(Material.OAK_PLANKS, Material.PISTON, IfPlayer::new,false, true),
+        IF_VARIABLE(Material.OBSIDIAN, Material.PISTON, IfVariable::new,false, true);
 
 
         private Material mainBlock;
@@ -326,6 +324,10 @@ public class Development {
         } catch (MaxChangedBlocksException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean checkPlot (Entity entity, Plot plot) {
+        return entity.getWorld() == plot.world();
     }
 
 }

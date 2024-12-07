@@ -24,14 +24,14 @@ import java.util.Locale;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
-public class PlayerAction extends CodingCategoriesMenu {
-    public PlayerAction(User user) {
-        super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.player_action", false, ""), (byte) 6);
+public class IfPlayer extends CodingCategoriesMenu {
+    public IfPlayer(User user) {
+        super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.if_player", false, ""), (byte) 6);
     }
 
     @Override
     public void fillCategoryPage(User user) {
-        List<MenuCategory> categories = new LinkedList<>(ActionCategory.getMenuCategories(Development.BlockTypes.PLAYER_ACTION));
+        List<MenuCategory> categories = new LinkedList<>(ActionCategory.getMenuCategories(Development.BlockTypes.IF_PLAYER));
         List<Byte> slots = Arrays.asList((byte) 10, (byte) 13, (byte) 16, (byte) 37, (byte) 40, (byte) 43);
 
         for (int i = 0; i < Math.min(8, categories.size()); i++) {
@@ -41,7 +41,7 @@ public class PlayerAction extends CodingCategoriesMenu {
 
     @Override
     public void fillItemsPage(User user) {
-        List<ActionCategory> actions = ActionCategory.getActionsByCategory(Development.BlockTypes.PLAYER_ACTION, this.selectedCategory);
+        List<ActionCategory> actions = ActionCategory.getActionsByCategory(Development.BlockTypes.IF_PLAYER, this.selectedCategory);
         List<Byte> slots = new LinkedList<>();
         addRange(slots, (byte) 10, (byte) 16);
         addRange(slots, (byte) 19, (byte) 25);
@@ -66,7 +66,7 @@ public class PlayerAction extends CodingCategoriesMenu {
                 user.player().closeInventory();
                 open(user);
             } else {
-                ActionCategory category = ActionCategory.get(event.getCurrentItem().getType(), Development.BlockTypes.PLAYER_ACTION, selectedCategory);
+                ActionCategory category = ActionCategory.get(event.getCurrentItem().getType(), Development.BlockTypes.IF_PLAYER, selectedCategory);
 
                 if (category != null) {
                     user.player().closeInventory();

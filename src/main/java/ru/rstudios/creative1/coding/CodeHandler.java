@@ -69,7 +69,7 @@ public class CodeHandler {
                     action.setChest(actionChest);
                 }
 
-                if (type.isCondition()) {
+                if (actionType.isCondition()) {
                     Block lastPiston = Development.getClosingPiston(actionBlock);
 
                     if (lastPiston == null) continue;
@@ -101,7 +101,7 @@ public class CodeHandler {
                     }
 
                     ((ActionIf) action).setInConditionalActions(inConditionalActions);
-                    dx = lastPiston.getX();
+                    dx = lastPiston.getX() + 1;
                 }
                 actions.add(action);
             }

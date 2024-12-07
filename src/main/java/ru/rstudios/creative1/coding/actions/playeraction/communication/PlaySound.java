@@ -3,13 +3,16 @@ package ru.rstudios.creative1.coding.actions.playeraction.communication;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.menu.SwitchItem;
+import ru.rstudios.creative1.utils.Development;
 
+import java.util.Iterator;
 import java.util.Locale;
 
 public class PlaySound extends Action {
@@ -35,12 +38,18 @@ public class PlaySound extends Action {
         float pitch = (float) Math.min(2.0, Math.max(0.5, (Double) ActionChest.parseItem(chest.getNumbers()[1], event, null, this.getStarter())));
 
 
-        getStarter().getSelection().forEach(e -> {
+        Iterator<Entity> iterator = getStarter().getSelection().iterator();
+        while (iterator.hasNext()) {
+            Entity e = iterator.next();
+            if (!Development.checkPlot(e, event.getPlot())) {
+                iterator.remove();
+                continue;
+            }
             if (e instanceof Player player) {
                 player.playSound(loc, sound, category, volume, pitch);
-
             }
-        });
+        }
+
     }
 
     @Override

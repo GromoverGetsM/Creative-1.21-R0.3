@@ -1,6 +1,7 @@
 package ru.rstudios.creative1.coding.actions.playeraction.inventory;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -9,6 +10,9 @@ import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.menu.SwitchItem;
+import ru.rstudios.creative1.utils.Development;
+
+import java.util.Iterator;
 
 public class SetItems extends Action {
     @Override
@@ -22,7 +26,13 @@ public class SetItems extends Action {
         boolean placeAirToo = Boolean.parseBoolean(switchItem.getCurrentValue());
         Inventory transformed = transformInventory(chest.getOriginalContents());
 
-        getStarter().getSelection().forEach(e -> {
+        Iterator<Entity> iterator = getStarter().getSelection().iterator();
+        while (iterator.hasNext()) {
+            Entity e = iterator.next();
+            if (!Development.checkPlot(e, event.getPlot())) {
+                iterator.remove();
+                continue;
+            }
             if (e instanceof Player player) {
                 if (placeAirToo) {
                     for (int i = 0; i < transformed.getContents().length; i++) {
@@ -34,7 +44,8 @@ public class SetItems extends Action {
                     player.getInventory().setContents(transformed.getContents());
                 }
             }
-        });
+        }
+
     }
 
     @Override

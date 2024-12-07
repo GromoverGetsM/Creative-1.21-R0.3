@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
+import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.starters.playerevent.*;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
@@ -46,6 +47,10 @@ public enum StarterCategory {
 
     public static @Nullable StarterCategory getByMaterial (Material m) {
         return Arrays.stream(values()).filter(cat -> cat.icon == m).findFirst().orElse(null);
+    }
+
+    public static @Nullable StarterCategory get(Material m, Development.BlockTypes type, MenuCategory category) {
+        return Arrays.stream(values()).filter(cat -> cat.icon == m && cat.type == type && cat.category == category).findFirst().orElse(null);
     }
 
     public static Set<MenuCategory> getMenusCategories(Development.BlockTypes type) {
