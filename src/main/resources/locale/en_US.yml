@@ -164,6 +164,9 @@ coding:
     set_armor: "Set Armor"
     set_item_delay: "Set Item Delay"
     open_interface: "Open Interface"
+    give_random_item: "Random Item"
+
+    teleport: "Teleport"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -285,8 +288,14 @@ menus:
           loom: "Loom"
           smith: "Smithing Table"
           stonecutter: "Stonecutter"
-
-
+      teleport:
+        name: "&3Teleport Type"
+        lore:
+          - "&fChoose what to consider from the location."
+        states:
+          all: "Consider everything"
+          coords: "Consider coordinates only"
+          eyedir: "Consider view direction only"
 
   coding:
     player_event:
@@ -390,15 +399,15 @@ menus:
           - "&7Stops the playback of the specified"
           - "&7sounds"
           - "&7"
-          - "&7Arguments (27):"
-          - "&7- &bText: &7Sound name &e(27)"
+          - "&7Arguments (36):"
+          - "&7- &bText: &7Sound name &e(36)"
       show_book:
         name: "&eShow Book"
         lore:
           - "&7Displays a book to the player on the screen"
           - "&7"
-          - "&7Arguments (27):"
-          - "&7- &bText: &7Book pages&c* &e(27)"
+          - "&7Arguments (36):"
+          - "&7- &bText: &7Book pages&c* &e(36)"
           - "&7"
           - "&c&o*&f&oEach text is a separate page"
       show_win_screen:
@@ -426,8 +435,8 @@ menus:
           - "&7Gives items in the specified order."
           - "&7Does not save the slot when transferring."
           - "&7"
-          - "&7Arguments (27):"
-          - "&7- &eItem: &7The item to give &e(27)"
+          - "&7Arguments (36):"
+          - "&7- &eItem: &7The item to give &e(36)"
       set_items:
         name: "&eSet Items"
         lore:
@@ -480,6 +489,24 @@ menus:
           - "&7"
           - "&7Arguments (1):"
           - "&7- &6Toggle: &7Type of interface &e(1)"
+      give_random_item:
+        name: "&eGive Random Item"
+        lore:
+          - "&7Gives a random item from the list."
+          - "&7Each entity in the selection receives"
+          - "&7a different item."
+          - "&7"
+          - "&7Arguments (36):"
+          - "&7- &eItem: &7Item for possible selection"
+
+      teleport:
+        name: "&eTeleport"
+        lore:
+          - "&7Teleports the player to the specified location."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &fLocation: &7Where to teleport"
+          - "&7- &6Toggle: &7Type of teleportation"
 
   worlds-option:
     title: "Choose an Option"

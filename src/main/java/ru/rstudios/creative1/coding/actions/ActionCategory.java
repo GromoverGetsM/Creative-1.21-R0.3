@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
 import ru.rstudios.creative1.coding.actions.playeraction.communication.*;
 import ru.rstudios.creative1.coding.actions.playeraction.inventory.*;
+import ru.rstudios.creative1.coding.actions.playeraction.movement.Teleport;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.user.LocaleManages;
@@ -29,12 +30,13 @@ public enum ActionCategory {
     CLEAR_INVENTORY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, ClearInventory::new, Material.GLASS, false, null, null, null, null),
     CLOSE_INVENTORY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, CloseInventory::new, Material.STRUCTURE_VOID, false, null, null, null, null),
     SET_ITEM_DELAY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, SetItemDelay::new, Material.CLOCK, true, "coding.actions.set_item_delay", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.ITEMSTACK, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    GIVE_RANDOM_ITEM(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, GiveRandomItem::new, Material.BLUE_SHULKER_BOX, true, "coding.actions.give_random_item", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
     OPEN_INTERFACE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, OpenInterface::new, Material.BROWN_SHULKER_BOX, true, "coding.actions.open_interface", CodingMenu.MenuType.DEFAULT, new LinkedList<>(),
             new LinkedHashMap<>(Map.of(13, new SwitchItem(List.of("workbench", "enchanting", "anvil", "cartography", "grindstone", "loom", "smith", "stonecutter"), "menus.switches.actions.oi.", List.of(
                     Material.CRAFTING_TABLE, Material.ENCHANTING_TABLE, Material.ANVIL, Material.CARTOGRAPHY_TABLE, Material.GRINDSTONE, Material.LOOM, Material.SMITHING_TABLE, Material.STONECUTTER
             ))))),
 
-    // Коммуникация с игроком вся
+    // Коммуникация с игроком
     SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendMessage::new, Material.WRITABLE_BOOK, true, "coding.actions.send_message", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,
             new SwitchItem(List.of("together", "space", "newline"), "menus.switches.actions.sm.", List.of(Material.SLIME_BALL, Material.RABBIT_FOOT, Material.SHEARS))))),
     SEND_DIALOGUE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendDialogue::new, Material.PAPER, true, "coding.actions.send_dialogue", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
@@ -53,7 +55,11 @@ public enum ActionCategory {
             new LinkedHashMap<>()),
     SHOW_WIN_SCREEN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowWinScreen::new, Material.GOLD_INGOT, false, null, null, null, null),
     SHOW_DEMO_SCREEN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowDemoScreen::new, Material.ITEM_FRAME, false, null, null, null, null),
-    SHOW_ELDER_GUARDIAN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowElderGuardian::new, Material.ELDER_GUARDIAN_SPAWN_EGG, false, null, null, null, null);
+    SHOW_ELDER_GUARDIAN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowElderGuardian::new, Material.ELDER_GUARDIAN_SPAWN_EGG, false, null, null, null, null),
+
+    // Перемещение игрока
+    TELEPORT(Development.BlockTypes.PLAYER_ACTION, MenuCategory.MOVEMENT, Teleport::new, Material.ENDER_EYE, true, "coding.actions.teleport", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>(Map.of(22,
+            new SwitchItem(List.of("all", "coords", "eyedir"), "menus.switches.actions.teleport", List.of(Material.PAPER, Material.COMPASS, Material.ENDER_EYE)))));
 
     private Development.BlockTypes type;
     private MenuCategory category;
