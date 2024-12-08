@@ -272,9 +272,12 @@ public class Plot {
 
         if (canJoin) {
             if (this.world == null) {
+                if (!awaitTeleport.containsKey(user)) {
+                    awaitTeleport.put(user, plotName());
+                }
                 initWorld();
-                awaitTeleport.put(user, plotName());
             } else {
+                awaitTeleport.remove(user);
                 user.clear();
                 user.player().teleport(this.world.getSpawnLocation());
 
@@ -284,8 +287,6 @@ public class Plot {
                     } else {
                         user.player().setGameMode(GameMode.ADVENTURE);
                     }
-                } else if (this.plotMode == PlotMode.PLAY) {
-                    // TODO: code.execute();
                 }
             }
         } else {
@@ -341,18 +342,49 @@ public class Plot {
         DatabaseUtil.updateValue("plots", "openedState", isOpened, "plot_name", plotName());
         DatabaseUtil.updateValue("plots", "custom_id", customId(), "plot_name", plotName());
 
-        World world = this.world();
-        for (Player player : online()) {
-            player.teleport(new Location(Bukkit.getWorld("world"), 28, 64, -4));
-            User.asUser(player).sendMessage("info.plot-offline", true, "");
+        File file = new File(Bukkit.getWorldContainer() + File.separator + plotName() + File.separator + "config.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+        config.set("allowedDevs", allowedDevs);
+        config.set("allowedBuilders", allowedBuilders);
+        config.set("paidPlayers", paidPlayers);
+
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.getLocalizedMessage();
         }
 
-        Bukkit.unloadWorld(world.getName(), needSave);
-        if (Bukkit.getWorld(plotName().replace("_CraftPlot", "_dev")) != null) Bukkit.unloadWorld(plotName().replace("_CraftPlot", "_dev"), needSave);
-        this.world = null;
+        String[] worldNames = {
+                plotName(),
+                plotName().replace("_CraftPlot", "_dev")
+        };
 
-        if (!onlyWorld) plots.remove(plotName());
+        for (String worldName : worldNames) {
+            World world = Bukkit.getWorld(worldName);
+            if (world != null) {
+                if (worldName.equals(plotName())) {
+                    for (Player player : online()) {
+                        player.teleport(new Location(Bukkit.getWorld("world"), 28, 64, -4));
+                        User.asUser(player).sendMessage("info.plot-offline", true, "");
+                    }
+                }
+
+
+                needSave = worldName.endsWith("_dev") || needSave;
+                Bukkit.unloadWorld(world, needSave);
+
+                if (worldName.equals(plotName())) {
+                    this.world = null;
+                }
+            }
+        }
+
+        if (!onlyWorld) {
+            plots.remove(plotName());
+        }
     }
+
 
     public List<Player> online() {
         List<Player> players = new LinkedList<>();

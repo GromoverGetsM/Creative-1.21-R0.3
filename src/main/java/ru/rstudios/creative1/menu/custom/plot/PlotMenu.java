@@ -76,6 +76,12 @@ public class PlotMenu extends ProtectedMenu {
         setItem((byte) 12, ItemUtil.item(Material.ENDER_PEARL,
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.set-spawnpoint.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.set-spawnpoint.lore", new LinkedHashMap<>())));
+        setItem((byte) 14, ItemUtil.head("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzU5NTI2MGRiMmIyOGRlYTcyYzJiNDI1MmExODZkNDFkNjk0YjBkN2M4NTliMmFhN2I4OTFjMzFmNTk4OWRiOCJ9fX0=",
+                LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.devs-control.name", false, ""),
+                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.devs-control.lore", new LinkedHashMap<>())));
+        setItem((byte) 15, ItemUtil.head("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzg1NDNjOTYxY2M1MzFiOTA2Y2U0ZmE0NWMzYzRmY2VhNzJkNzAyOTFkNTE3ZTAxZjE0ZDQ5MDVhNjg2MTM5YiJ9fX0=",
+                LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.builders-control.name", false, ""),
+                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.builders-control.lore", new LinkedHashMap<>())));
     }
 
     @Override
@@ -121,6 +127,8 @@ public class PlotMenu extends ProtectedMenu {
                     }
                 }
             }
+            case 14 -> new DevsManagement(user, event.isLeftClick()).open(user);
+            case 15 -> new BuildersManagement(user, event.isLeftClick()).open(user);
         }
     }
 

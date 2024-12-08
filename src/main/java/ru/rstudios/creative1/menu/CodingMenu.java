@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 
 public class CodingMenu implements InventoryHolder {
 
-    public enum MenuType { DEFAULT, SET, ALL_IN }
+    public enum MenuType { DEFAULT, SET, DUO_SET, ALL_IN }
 
     public enum ArgumentType {
         TEXT("coding.var-types.text.name", "coding.var-types.text.lore", Material.LIGHT_BLUE_STAINED_GLASS_PANE, Material.BOOK),
@@ -134,6 +134,12 @@ public class CodingMenu implements InventoryHolder {
                 setupDefaultMarkers(args, List.of(
                         List.of(4, 12, 14), List.of(18, 19, 20, 21, 22, 23, 24, 25, 26)
                 ));
+            }
+            case DUO_SET -> {
+                argumentSlots.add(12);
+                argumentSlots.add(14);
+                argumentSlots.addAll(IntStream.rangeClosed(27, 53).boxed().toList());
+                setupDefaultMarkers(args, List.of(List.of(3), List.of(5), List.of(18, 19, 20, 21, 22, 23, 24, 25, 26)));
             }
             case ALL_IN -> {
                 argumentSlots.addAll(IntStream.rangeClosed(9, 44).boxed().toList());

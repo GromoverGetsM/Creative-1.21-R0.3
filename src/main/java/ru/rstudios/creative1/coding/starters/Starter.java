@@ -47,10 +47,9 @@ public abstract class Starter {
     }
 
     private void executeNextAction(GameEvent event) {
-        System.out.println(actions);
         if (currentIndex >= actions.size()) {
             isExecuting = false;
-            currentIndex = 0; // Сбрасываем индекс для возможности повторного вызова
+            currentIndex = 0;
             return;
         }
 

@@ -10,8 +10,10 @@ import ru.rstudios.creative1.coding.actions.ifplayer.NameEquals;
 import ru.rstudios.creative1.coding.actions.playeraction.communication.*;
 import ru.rstudios.creative1.coding.actions.playeraction.inventory.*;
 import ru.rstudios.creative1.coding.actions.playeraction.movement.Teleport;
+import ru.rstudios.creative1.coding.actions.playeraction.movement.ToOtherPlot;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.CancelEvent;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.Wait;
+import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldName;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.user.LocaleManages;
@@ -24,7 +26,7 @@ import java.util.function.Supplier;
 
 public enum ActionCategory {
 
-    // Работа с инвентарём
+    // Действие игрока - Работа с инвентарём
     GIVE_ITEMS(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, GiveItems::new, Material.CHEST, true, "coding.actions.give_items", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
     SET_ITEMS(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, SetItems::new, Material.ENDER_CHEST, true, "coding.actions.set_items", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>(Map.of(49,
             new SwitchItem(List.of("true", "false"), "menus.switches.actions.si.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
@@ -39,10 +41,10 @@ public enum ActionCategory {
                     Material.CRAFTING_TABLE, Material.ENCHANTING_TABLE, Material.ANVIL, Material.CARTOGRAPHY_TABLE, Material.GRINDSTONE, Material.LOOM, Material.SMITHING_TABLE, Material.STONECUTTER
             ))))),
 
-    // Коммуникация с игроком
+    // Действие игрока - Коммуникация с игроком
     SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendMessage::new, Material.WRITABLE_BOOK, true, "coding.actions.send_message", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,
             new SwitchItem(List.of("together", "space", "newline"), "menus.switches.actions.sm.", List.of(Material.SLIME_BALL, Material.RABBIT_FOOT, Material.SHEARS))))),
-    SEND_DIALOGUE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendDialogue::new, Material.PAPER, true, "coding.actions.send_dialogue", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    SEND_DIALOGUE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendDialogue::new, Material.PAPER, true, "coding.actions.send_dialogue", CodingMenu.MenuType.DUO_SET, List.of(CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     SEND_TITLE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendTitle::new, Material.ARMS_UP_POTTERY_SHERD, true, "coding.actions.send_title", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC),
             new LinkedHashMap<>()),
     SEND_ACTIONBAR(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendActionBar::new, Material.BOOK, true, "coding.actions.send_actionbar", CodingMenu.MenuType.DEFAULT, Collections.singletonList(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
@@ -60,14 +62,18 @@ public enum ActionCategory {
     SHOW_DEMO_SCREEN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowDemoScreen::new, Material.ITEM_FRAME, false, null, null, null, null),
     SHOW_ELDER_GUARDIAN(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, ShowElderGuardian::new, Material.ELDER_GUARDIAN_SPAWN_EGG, false, null, null, null, null),
 
-    // Перемещение игрока
-    TELEPORT(Development.BlockTypes.PLAYER_ACTION, MenuCategory.MOVEMENT, Teleport::new, Material.ENDER_EYE, true, "coding.actions.teleport", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>(Map.of(22,
+    // Действие игрока - Перемещение игрока
+    TELEPORT(Development.BlockTypes.PLAYER_ACTION, MenuCategory.MOVEMENT, Teleport::new, Material.ENDER_PEARL, true, "coding.actions.teleport", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>(Map.of(22,
             new SwitchItem(List.of("all", "coords", "eyedir"), "menus.switches.actions.teleport", List.of(Material.PAPER, Material.COMPASS, Material.ENDER_EYE))))),
+    TO_OTHER_PLOT(Development.BlockTypes.PLAYER_ACTION, MenuCategory.MOVEMENT, ToOtherPlot::new, Material.DARK_OAK_DOOR, true, "coding.actions.to_other_plot", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
-    // Действия мира
+    // Действия мира - Линии
     CANCEL_EVENT(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, CancelEvent::new, Material.BARRIER, false, null, null, null, null),
     WAIT(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, Wait::new, Material.CLOCK, true, "coding.actions.wait", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>(Map.of(22,
             new SwitchItem(List.of("ticks", "seconds", "minutes"), "menus.switches.actions.wait", List.of(Material.GOLDEN_BOOTS, Material.SNOWBALL, Material.CLOCK))))),
+
+    // Действия мира - Мир
+    SET_WORLD_NAME(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldName::new, Material.NAME_TAG, true, "coding.actions.set_world_name", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
     // Если игрок
     NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, "coding.actions.if_player", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>());

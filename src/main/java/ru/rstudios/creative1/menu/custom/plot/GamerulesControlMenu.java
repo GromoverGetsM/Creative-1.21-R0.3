@@ -19,13 +19,13 @@ public class GamerulesControlMenu extends ProtectedMenu {
 
     public GamerulesControlMenu(User user) {
         super(LocaleManages.getLocaleMessage(user.getLocale(), "menus.gamerule-management.title", false, ""), (byte) 3);
-        this.doTraderSpawning = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.doTraderSpawning = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.items.doTraderSpawning", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.doTraderSpawning.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doTraderSpawning")));
-        this.doWardenSpawning = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.doWardenSpawning = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.items.doWardenSpawning", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.doWardenSpawning.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doWardenSpawning")));
-        this.doPatrolSpawning = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.doPatrolSpawning = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.items.doPatrolSpawning", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.doPatrolSpawning.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doPatrolSpawning")));
-        this.doImmediateRespawn = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.doImmediateRespawn = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.items.doImmediateRespawn", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.doImmediateRespawn.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doImmediateRespawn")));
     }
 

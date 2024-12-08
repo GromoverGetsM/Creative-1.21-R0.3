@@ -9,6 +9,7 @@ import ru.rstudios.creative1.utils.Development;
 import java.util.Iterator;
 
 public class ClearChat extends Action {
+
     @Override
     public void execute(GameEvent event) {
         StringBuilder sb = new StringBuilder();

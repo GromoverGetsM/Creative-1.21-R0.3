@@ -113,15 +113,17 @@ public class CodeHandler {
     }
 
     public void sendStarter (GameEvent event, StarterCategory sct) {
-        if (this.starters != null && !this.starters.isEmpty()) {
+        if (plot.plotMode == Plot.PlotMode.PLAY) {
+            if (this.starters != null && !this.starters.isEmpty()) {
 
-            for (Starter starter : this.starters) {
-                if (starter.getCategory() == sct) {
-                    starter.setSelection(Collections.singletonList(event.getDefaultEntity()));
-                    starter.execute(event);
+                for (Starter starter : this.starters) {
+                    if (starter.getCategory() == sct) {
+                        starter.setSelection(Collections.singletonList(event.getDefaultEntity()));
+                        starter.execute(event);
+                    }
                 }
-            }
 
+            }
         }
     }
 

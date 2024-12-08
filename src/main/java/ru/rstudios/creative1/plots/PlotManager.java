@@ -4,21 +4,23 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 
 import java.io.File;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class PlotManager implements Listener {
 
-    public static Map<String, Plot> plots = new LinkedHashMap<>();
-    public static Map<User, String> awaitTeleport = new LinkedHashMap<>();
+    public static Map<String, Plot> plots = new ConcurrentHashMap<>();
+    public static Map<User, String> awaitTeleport = new ConcurrentHashMap<>();
 
     public static void loadPlots() {
         for (File file : Bukkit.getWorldContainer().listFiles()) {
@@ -58,12 +60,23 @@ public class PlotManager implements Listener {
 
         if (p != null) {
             p.onPlotLoad();
-            for (User user : awaitTeleport.keySet()) {
-                String world = awaitTeleport.get(user);
-                if (name.equalsIgnoreCase(world)) p.teleportToPlot(user);
-            }
+
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                Iterator<Map.Entry<User, String>> iterator = awaitTeleport.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry<User, String> entry = iterator.next();
+                    User user = entry.getKey();
+                    String world = entry.getValue();
+
+                    if (name.equalsIgnoreCase(world)) {
+                        p.teleportToPlot(user);
+                        iterator.remove();
+                    }
+                }
+            }, 20L);
         }
     }
+
 
     public static @Nullable Plot byWorld (World world) {
         Plot plot1 = null;

@@ -241,6 +241,11 @@ public class User {
         users.remove(this);
     }
 
+    @Override
+    public String toString() {
+        return "User{Player=" + player() + ", datastore=" + datastore() + "}";
+    }
+
 
 
 

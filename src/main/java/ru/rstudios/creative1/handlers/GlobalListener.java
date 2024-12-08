@@ -229,70 +229,72 @@ public class GlobalListener implements Listener {
         User user = User.asUser(event.getPlayer());
         Plot p = user.getCurrentPlot();
 
-        if (p.isUserInDev(user)) {
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
-                if (event.getClickedBlock().getType() == Material.OAK_WALL_SIGN) {
-                    event.setCancelled(true);
+        if (p != null) {
+            if (p.isUserInDev(user)) {
+                if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
+                    if (event.getClickedBlock().getType() == Material.OAK_WALL_SIGN) {
+                        event.setCancelled(true);
 
-                    Development.BlockTypes type = Development.BlockTypes.getByMainBlock(event.getClickedBlock().getRelative(BlockFace.SOUTH));
-                    if (type != null && type.hasConstructor()) {
-                        CodingCategoriesMenu menu = type.createMenuInstance(user);
-                        menu.open(user);
-                        menu.setSign(event.getClickedBlock());
-                    }
-                } else if (event.getClickedBlock().getType() == Material.CHEST) {
-                    event.setCancelled(true);
+                        Development.BlockTypes type = Development.BlockTypes.getByMainBlock(event.getClickedBlock().getRelative(BlockFace.SOUTH));
+                        if (type != null && type.hasConstructor()) {
+                            CodingCategoriesMenu menu = type.createMenuInstance(user);
+                            menu.open(user);
+                            menu.setSign(event.getClickedBlock());
+                        }
+                    } else if (event.getClickedBlock().getType() == Material.CHEST) {
+                        event.setCancelled(true);
 
-                    NamespacedKey inventory = new NamespacedKey(plugin, "inventory");
+                        NamespacedKey inventory = new NamespacedKey(plugin, "inventory");
 
-                    Chest chest = (Chest) event.getClickedBlock().getState();
-                    ItemStack[] contents = chest.getPersistentDataContainer().get(inventory, DataType.ITEM_STACK_ARRAY);
-                    Sign sign = (Sign) event.getClickedBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.NORTH).getState();
+                        Chest chest = (Chest) event.getClickedBlock().getState();
+                        ItemStack[] contents = chest.getPersistentDataContainer().get(inventory, DataType.ITEM_STACK_ARRAY);
+                        Sign sign = (Sign) event.getClickedBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.NORTH).getState();
 
-                    ActionCategory category = ActionCategory.byName(sign.getLine(2).replace("coding.actions.", ""));
-                    if (category.hasChest()) {
-                        CodingMenu codingMenu = category.getCodingMenu();
+                        ActionCategory category = ActionCategory.byName(sign.getLine(2).replace("coding.actions.", ""));
+                        if (category.hasChest()) {
+                            CodingMenu codingMenu = category.getCodingMenu();
 
-                        codingMenu.build(user);
-                        Inventory inv = codingMenu.getInventory(user);
+                            codingMenu.build(user);
+                            Inventory inv = codingMenu.getInventory(user);
 
-                        inv.setContents(contents);
+                            inv.setContents(contents);
 
-                        codingMenu.open(user);
-                        user.datastore().put("chestBlockActive", event.getClickedBlock());
+                            codingMenu.open(user);
+                            user.datastore().put("chestBlockActive", event.getClickedBlock());
+                        }
                     }
                 }
-            }
-            if (event.getAction() == Action.LEFT_CLICK_AIR && event.getItem() != null && event.getItem().getType() == Material.PAPER) {
-                user.datastore().put("HandlingPaper", true);
-                user.player().teleport(user.getCurrentPlot().world().getSpawnLocation());
-            }
-        } else if (user.isOnPlayingWorld()) {
-            ItemStack item = event.getItem();
+                if (event.getAction() == Action.LEFT_CLICK_AIR && event.getItem() != null && event.getItem().getType() == Material.PAPER) {
+                    user.datastore().put("HandlingPaper", true);
+                    user.player().teleport(user.getCurrentPlot().world().getSpawnLocation());
+                }
+            } else if (user.isOnPlayingWorld()) {
+                ItemStack item = event.getItem();
 
-            if (user.datastore().containsKey("HandlingPaper") && item != null && item.getType() == Material.PAPER) {
+                if (user.datastore().containsKey("HandlingPaper") && item != null && item.getType() == Material.PAPER) {
 
-                switch (event.getAction()) {
-                    case LEFT_CLICK_AIR -> {
-                        user.datastore().remove("HandlingPaper");
-                        user.player().teleport(user.getCurrentPlot().dev().world().getSpawnLocation());
+                    switch (event.getAction()) {
+                        case LEFT_CLICK_AIR -> {
+                            user.datastore().remove("HandlingPaper");
+                            user.player().teleport(user.getCurrentPlot().dev().world().getSpawnLocation());
+                        }
+
+                        case RIGHT_CLICK_BLOCK, RIGHT_CLICK_AIR -> {
+                            Block b = event.getClickedBlock();
+                            Location loc = b == null ? user.player().getLocation() : b.getLocation();
+                            ItemMeta meta = item.getItemMeta();
+
+                            String value = loc.getX() + " " +
+                                    loc.getY() + " " +
+                                    loc.getZ() + " " +
+                                    loc.getYaw() + " " +
+                                    loc.getPitch();
+                            meta.setDisplayName(value);
+                            item.setItemMeta(meta);
+                            user.sendTitle("coding.tech.var-set", value, 10, 70, 20, true, false);
+                        }
+
                     }
-
-                    case RIGHT_CLICK_BLOCK, RIGHT_CLICK_AIR -> {
-                        Block b = event.getClickedBlock();
-                        Location loc = b == null ? user.player().getLocation() : b.getLocation();
-                        ItemMeta meta = item.getItemMeta();
-
-                        String value = loc.getX() + " " +
-                                loc.getY() + " " +
-                                loc.getZ() + " " +
-                                loc.getYaw() + " " +
-                                loc.getPitch();
-                        meta.setDisplayName(value);
-                        item.setItemMeta(meta);
-                        user.sendTitle("coding.tech.var-set", value, 10, 70, 20, true, false);
-                    }
-
                 }
             }
         }

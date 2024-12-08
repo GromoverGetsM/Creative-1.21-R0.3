@@ -167,6 +167,11 @@ coding:
     give_random_item: "Random Item"
 
     teleport: "Teleport"
+    to_other_plot: "To Another Plot"
+
+    cancel_event: "Cancel Event"
+    wait: "Wait"
+    set_world_name: "Set World Name"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -296,6 +301,14 @@ menus:
           all: "Consider everything"
           coords: "Consider coordinates only"
           eyedir: "Consider view direction only"
+      wait:
+        name: "&3Time Unit"
+        lore:
+          - "&fChoose the units to measure the delay"
+        states:
+          ticks: "Ticks"
+          seconds: "Seconds"
+          minutes: "Minutes"
 
   coding:
     player_event:
@@ -345,9 +358,12 @@ menus:
           - "&7Sends messages to the player"
           - "&7at a specified interval"
           - "&7"
-          - "&7Arguments (28):"
+          - "&7Arguments (29):"
           - "&7- &cNumber: &7Interval between messages &a[ticks] &e(1)"
+          - "&7- &bText: &7Sound to play&f* &e(1)"
           - "&7- &bText: &7Messages to send &e(27)"
+          - "&7"
+          - "&f*Optional"
       send_title:
         name: "&eShow Title"
         lore:
@@ -507,6 +523,40 @@ menus:
           - "&7Arguments (2):"
           - "&7- &fLocation: &7Where to teleport"
           - "&7- &6Toggle: &7Type of teleportation"
+      to_other_plot:
+        name: "&eMove to Another Plot"
+        lore:
+          - "&7Moves the player to a specified plot if"
+          - "&7the destination belongs to the same owner"
+          - "&7or if the owner is an authorized developer"
+          - "&7of the target plot."
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &cNumber: &7Plot ID &e(1)"
+
+      cancel_event:
+        name: "&eCancel Event"
+        lore:
+          - "&7Cancels the triggered event if possible"
+          - "&7"
+          - "&aNo arguments required"
+      wait:
+        name: "&eWait"
+        lore:
+          - "&7Pauses code execution for a specified amount of"
+          - "&7time"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &cNumber: &7Amount of delay time units"
+          - "&7- &6Toggle: &7Time unit"
+      set_world_name:
+        name: "&eSet World Name"
+        lore:
+          - "&7Sets a specified name for the world, limited to"
+          - "&740 characters"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7New world name"
 
   worlds-option:
     title: "Choose an Option"
@@ -628,10 +678,25 @@ menus:
           - "&7location"
           - "&eRMB &7- Set spawn point at zero"
           - "&7coordinates"
-
+      devs-control:
+        name: "&eDevelopers Control"
+        lore:
+          - "&7Menu for granting/removing developer rights"
+          - "&7to players"
+          - "&7"
+          - "&eLeft-click: &7Click to add a developer"
+          - "&eRight-click: &7Click to remove a developer"
+        tech:
+          add-dev: "&eLeft-click: &7Click to grant developer rights"
+          rem-dev: "&eLeft-click: &7Click to remove developer rights"
 
   world-browser:
     title: "Worlds browser"
+
+  devscontrol:
+    title: "Developers Management"
+  builderscontrol:
+    title: "Builders Management"
 
   locale-menu:
     title: "Localization Selection"
@@ -651,33 +716,43 @@ menus:
 
   gamerule-management:
     title: "Game Rule Management"
-    states:
-      true: "Enabled"
-      false: "Disabled"
     items:
       doTraderSpawning:
         name: "&eWandering Trader Spawning"
         lore:
-          - "&7Controls the appearance of the wandering"
-          - "&7trader in the world. If disabled, the trader"
-          - "&7does not spawn"
+          - "&7Controls the spawning of wandering"
+          - "&7traders in the world. If disabled, traders"
+          - "&7will not spawn"
+        states:
+          true: "Enabled"
+          false: "Disabled"
       doWardenSpawning:
         name: "&eWarden Spawning"
         lore:
-          - "&7Controls the appearance of wardens through"
-          - "&7natural sculk sensors. If disabled,"
-          - "&7wardens do not spawn"
+          - "&7Controls the spawning of wardens through"
+          - "&7natural sculk sensors. If disabled, wardens"
+          - "&7will not spawn"
+        states:
+          true: "Enabled"
+          false: "Disabled"
       doPatrolSpawning:
         name: "&ePillager Patrol Spawning"
         lore:
-          - "&7Controls the appearance of pillager patrols"
-          - "&7in the world. If disabled, patrols do not"
+          - "&7Controls the spawning of pillager patrols"
+          - "&7in the world. If disabled, patrols will not"
           - "&7spawn"
+        states:
+          true: "Enabled"
+          false: "Disabled"
       doImmediateRespawn:
-        name: "&eImmediate Respawn"
+        name: "&eInstant Respawn"
         lore:
-          - "&7If disabled, players need to press a button"
-          - "&7to respawn. Otherwise, they immediately"
-          - "&7respawn at the spawn point"
+          - "&7If disabled, players must press a button"
+          - "&7to respawn. If enabled, they will respawn"
+          - "&7instantly at the spawn point"
+        states:
+          true: "Enabled"
+          false: "Disabled"
+
 
 

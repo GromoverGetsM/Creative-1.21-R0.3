@@ -17,7 +17,7 @@ public class buildCommand implements CommandExecutor {
             if (user.isOnPlot()) {
                 Plot p = user.getCurrentPlot();
 
-                if (p.plotMode == Plot.PlotMode.PLAY && !user.name().equalsIgnoreCase(p.owner()) && !p.allowedBuilders().contains(user.name())) {
+                if (p.plotMode == Plot.PlotMode.PLAY && !user.name().equalsIgnoreCase(p.owner()) && !p.allowedBuilders.contains(user.player().getName())) {
                     user.sendMessage("errors.plot-not-in-build-mode", true, "");
                     return true;
                 }

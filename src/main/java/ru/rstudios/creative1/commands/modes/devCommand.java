@@ -17,7 +17,7 @@ public class devCommand implements CommandExecutor {
             if (user.isOnPlot()) {
                 Plot p = user.getCurrentPlot();
 
-                if (p.owner().equalsIgnoreCase(user.name()) || p.allowedDevs().contains(user.name())) {
+                if (p.owner().equalsIgnoreCase(user.name()) || p.allowedDevs.contains(user.player().getName())) {
                     p.teleportToDev(user);
                     user.datastore().put("isCoding", true);
                 }
