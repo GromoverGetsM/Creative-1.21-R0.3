@@ -4,7 +4,6 @@ import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.events.GameEvent;
-import ru.rstudios.creative1.utils.DatabaseUtil;
 
 public class SetWorldName extends Action {
     @Override
@@ -17,6 +16,7 @@ public class SetWorldName extends Action {
         if (!name.isEmpty()) {
             if (name.length() > 40) {
                 event.getPlot().throwException(this, new IllegalArgumentException("Имя не должно быть больше 40 символов! Цвета учитываются в названии. Указана длина: " + name.length() + " симв."));
+                return;
             }
             event.getPlot().setIconName(name);
         } else {

@@ -6,8 +6,11 @@ info:
   plot-offline: "The plot you were on has been shut down."
   plot-undefined: "The identifier &6%s &fdoes not exist or was entered incorrectly!"
   plot-displayname-set: "Name set: &r%s"
-  plot-displayname-set-disclaimer: "The plot name must be up to &640 characters&f long! (Colors are not counted)"
-  plot-displayname-await: "Enter a name according to the specified criteria (up to &640 characters&f, colors and line breaks &6\\n&f)"
+  plot-displayname-await: "Enter a name according to the criteria (up to &640 characters&f including color codes)"
+  plot-lore-set: "World description set."
+  plot-lore-await: "Enter the world description following the given criteria (up to &6255 characters&f including color codes. Use &6\\n &fto add a new line)"
+  plot-customid-set: "ID set: &r%s"
+  plot-customid-await: "Enter an ID according to the criteria (up to &616 characters&f, no colors allowed)"
   plot-set-mode-play: "The plot is now in &6play mode"
   plot-set-mode-build: "The plot is now in &6build mode"
   user-issued-play: "You have entered &6play mode"
@@ -18,6 +21,8 @@ errors:
   plot-is-locked: "The owner has closed the game for visitors, try again later! :c"
   plot-undefined: "The identifier &6%s &fdoes not exist or was entered incorrectly!"
   plot-displayname-too-long: "The text is too long! (&6%s/40 chars&f)"
+  plot-customid-too-long: "Text too long! (&6%s/16 chars&f)"
+  customid-already-taken: "Setting is not possible - this identifier is already in use. Ask player &6%s&f if they are willing to remove the identifier from their world."
   plot-not-in-play-mode: "The plot is not in &6play mode"
   plot-not-in-build-mode: "The plot is not in &6build mode"
   plot-crit: "\n&c&lERROR!&r\n\n&7Action &e%s &7-> &e%s&7\n&cwas executed incorrectly!&r\n"
@@ -547,8 +552,8 @@ menus:
           - "&7time"
           - "&7"
           - "&7Arguments (2):"
-          - "&7- &cNumber: &7Amount of delay time units"
-          - "&7- &6Toggle: &7Time unit"
+          - "&7- &cNumber: &7Amount of delay time units &e(1)"
+          - "&7- &6Toggle: &7Time unit &e(1)"
       set_world_name:
         name: "&eSet World Name"
         lore:
@@ -556,7 +561,7 @@ menus:
           - "&740 characters"
           - "&7"
           - "&7Arguments (1):"
-          - "&7- &bText: &7New world name"
+          - "&7- &bText: &7New world name &e(1)"
 
   worlds-option:
     title: "Choose an Option"
@@ -635,10 +640,28 @@ menus:
       set-name:
         name: "&eSet Name"
         lore:
-          - "&7Click here to change the plot's name."
-          - "&7The name will be set to the chat message."
-          - "&7Supports &1c&2o&3l&4o&5r&6s &7and line breaks"
-          - "&7using &6\\n"
+          - "&7Click here to change the plot name."
+          - "&7The name will be set to your chat message."
+          - "&7Color codes are supported. The name limit"
+          - "&7is 40 characters, including color codes."
+      set-custom-id:
+        name: "&eSet Custom Identifier"
+        lore:
+          - "&7Click here to set a custom identifier."
+          - "&7You can use either a numeric or a custom"
+          - "&7identifier to join the world. The identifier"
+          - "&7must be unique - there cannot be two worlds"
+          - "&7with the same identifier. The identifier length"
+          - "&7must not exceed 16 characters."
+          - "&7"
+          - "&eLeft-Click: &7Set identifier"
+          - "&eRight-Click: &7Remove identifier"
+      set-lore:
+        name: "&eSet World Description"
+        lore:
+          - "&7Click here to set the world description."
+          - "&7The description must be no longer than 255 characters,"
+          - "&7including color codes. Use &e\\n &7to add a new line."
       dangerzone-filler:
         name: "&cDanger Zone"
         lore:
@@ -687,8 +710,10 @@ menus:
           - "&eLeft-click: &7Click to add a developer"
           - "&eRight-click: &7Click to remove a developer"
         tech:
-          add-dev: "&eLeft-click: &7Click to grant developer rights"
-          rem-dev: "&eLeft-click: &7Click to remove developer rights"
+          add-dev:
+            - "&eLeft-click: &7Click to grant developer rights"
+          rem-dev:
+            - "&eLeft-click: &7Click to remove developer rights"
 
   world-browser:
     title: "Worlds browser"

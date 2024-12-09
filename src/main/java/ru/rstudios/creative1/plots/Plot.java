@@ -428,7 +428,7 @@ public class Plot {
         lore.add("§f");
         lore.addAll(this.iconLore);
         lore.add("§f");
-        lore.add("§7ID: §e" + this.id);
+        lore.add("§7ID: §e" + (this.customId.isEmpty() ? this.id : this.customId));
         lore.add("§7Онлайн: §e" + online().size());
         lore.add("§f");
         lore.add("§e» Клик, чтобы зайти");
@@ -481,6 +481,7 @@ public class Plot {
 
     public void setCustomId(String customId) {
         this.customId = customId;
+        DatabaseUtil.updateValue("plots", "custom_id", customId(), "plot_name", plotName());
     }
 
     public void setDev(DevPlot dev) {

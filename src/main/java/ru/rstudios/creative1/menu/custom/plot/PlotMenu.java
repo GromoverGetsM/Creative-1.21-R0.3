@@ -70,7 +70,7 @@ public class PlotMenu extends ProtectedMenu {
         setItem((byte) 11, ItemUtil.item(Material.NAME_TAG,
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.set-name.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.set-name.lore", new LinkedHashMap<>())));
-        setItem((byte) 19, ItemUtil.item(Material.CHISELED_BOOKSHELF,
+        setItem((byte) 21, ItemUtil.item(Material.CHISELED_BOOKSHELF,
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.gamerule-management.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.gamerule-management.lore", new LinkedHashMap<>())));
         setItem((byte) 12, ItemUtil.item(Material.ENDER_PEARL,
@@ -82,6 +82,12 @@ public class PlotMenu extends ProtectedMenu {
         setItem((byte) 15, ItemUtil.head("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzg1NDNjOTYxY2M1MzFiOTA2Y2U0ZmE0NWMzYzRmY2VhNzJkNzAyOTFkNTE3ZTAxZjE0ZDQ5MDVhNjg2MTM5YiJ9fX0=",
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.builders-control.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.builders-control.lore", new LinkedHashMap<>())));
+        setItem((byte) 20, ItemUtil.item(Material.SPYGLASS,
+                LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.set-custom-id.name", false, ""),
+                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.set-custom-id.lore", new LinkedHashMap<>())));
+        setItem((byte) 19, ItemUtil.item(Material.WRITABLE_BOOK,
+                LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.set-lore.name", false, ""),
+                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.set-lore.lore", new LinkedHashMap<>())));
     }
 
     @Override
@@ -115,7 +121,22 @@ public class PlotMenu extends ProtectedMenu {
                 user.datastore().put("inputtingPlotName", user.getCurrentPlot().plotName());
                 user.sendMessage("info.plot-displayname-await", true, "");
             }
-            case 19 -> new GamerulesControlMenu(user).open(user);
+            case 19 -> {
+                user.player().closeInventory();
+                user.datastore().put("inputtingLore", user.getCurrentPlot().plotName());
+                user.sendMessage("info.plot-lore-await", true, "");
+            }
+            case 20 -> {
+                if (event.isLeftClick()) {
+                    user.player().closeInventory();
+                    user.datastore().put("inputtingCustomId", user.getCurrentPlot().plotName());
+                    user.sendMessage("info.plot-customid-await", true, "");
+                } else {
+                    user.player().closeInventory();
+                    user.getCurrentPlot().setCustomId("");
+                }
+            }
+            case 21 -> new GamerulesControlMenu(user).open(user);
             case 12 -> {
                 Plot p = user.getCurrentPlot();
                 if (!p.isUserInDev(user)) {

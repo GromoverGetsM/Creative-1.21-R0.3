@@ -32,6 +32,7 @@ import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
@@ -154,18 +155,53 @@ public class GlobalListener implements Listener {
             Plot plot = PlotManager.plots.get(plotName);
 
             if (plot != null && plot.owner().equalsIgnoreCase(user.name())) {
-                String rawMessage = ChatColor.stripColor(plotName);
-
-                if (rawMessage.length() <= 40) {
-                    message = message.replace("\\n", "\n");
+                if (message.length() <= 40) {
                     plot.setIconName(message);
                     user.sendMessage("info.plot-displayname-set", true, message);
                 } else {
-                    user.sendMessage("errors.plot-displayname-too-long", true, String.valueOf(rawMessage.length()));
+                    user.sendMessage("errors.plot-displayname-too-long", true, String.valueOf(message.length()));
                 }
             }
 
             user.datastore().remove("inputtingPlotName");
+        }
+
+        if (user.datastore().containsKey("inputtingCustomId")) {
+            event.setCancelled(true);
+            String plotName = String.valueOf(user.datastore().get("inputtingCustomId"));
+            Plot plot = PlotManager.plots.get(plotName);
+
+            if (plot != null && plot.owner().equalsIgnoreCase(user.name())) {
+                String rawId = ChatColor.stripColor(message);
+
+                if (rawId.length() < 17) {
+                    if (!DatabaseUtil.isValueExist("plots", "custom_id", rawId)) {
+                        Bukkit.getScheduler().runTask(plugin, () -> plot.setCustomId(rawId));
+                        user.sendMessage("info.plot-customid-set", true, message);
+                    } else {
+                        user.sendMessage("errors.customid-already-taken", true, String.valueOf(DatabaseUtil.getValue("plots", "owner_name", "custom_id", rawId)));
+                    }
+                } else {
+                    user.sendMessage("errors.plot-customid-too-long", true, String.valueOf(rawId.length()));
+                }
+            }
+
+            user.datastore().remove("inputtingCustomId");
+        }
+
+        if (user.datastore().containsKey("inputtingLore")) {
+            event.setCancelled(true);
+            String plotName = String.valueOf(user.datastore().get("inputtingLore"));
+            Plot plot = PlotManager.plots.get(plotName);
+
+            if (plot != null && plot.owner().equalsIgnoreCase(user.name())) {
+                List<String> lines = new ArrayList<>(Arrays.asList(message.split("\\\\n")));
+
+                plot.setIconLore(lines);
+                user.sendMessage("info.plot-lore-set", true, "");
+            }
+
+            user.datastore().remove("inputtingLore");
         }
 
         if (user.isInDev()) {
