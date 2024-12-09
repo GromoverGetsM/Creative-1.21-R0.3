@@ -177,6 +177,8 @@ coding:
     cancel_event: "Cancel Event"
     wait: "Wait"
     set_world_name: "Set World Name"
+    set_world_lore: "Set World Lore"
+    set_world_icon: "Set World Icon"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -562,6 +564,20 @@ menus:
           - "&7"
           - "&7Arguments (1):"
           - "&7- &bText: &7New world name &e(1)"
+      set_world_lore:
+        name: "&eWorld Description"
+        lore:
+          - "&7Sets a specified description for the world"
+          - "&7"
+          - "&7Arguments (36):"
+          - "&7- &bText: &7Line of the new description &e(36)"
+      set_world_icon:
+        name: "&eWorld Icon"
+        lore:
+          - "&7Sets a specified icon for the world"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &eItem: &7New icon &e(1)"
 
   worlds-option:
     title: "Choose an Option"

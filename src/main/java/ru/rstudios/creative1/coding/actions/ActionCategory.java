@@ -13,6 +13,8 @@ import ru.rstudios.creative1.coding.actions.playeraction.movement.Teleport;
 import ru.rstudios.creative1.coding.actions.playeraction.movement.ToOtherPlot;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.CancelEvent;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.Wait;
+import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldIcon;
+import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldLore;
 import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldName;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.SwitchItem;
@@ -73,7 +75,9 @@ public enum ActionCategory {
             new SwitchItem(List.of("ticks", "seconds", "minutes"), "menus.switches.actions.wait", List.of(Material.GOLDEN_BOOTS, Material.SNOWBALL, Material.CLOCK))))),
 
     // Действия мира - Мир
+    SET_WORLD_ICON(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldIcon::new, Material.NETHER_STAR, true, "coding.actions.set_world_icon", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
     SET_WORLD_NAME(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldName::new, Material.NAME_TAG, true, "coding.actions.set_world_name", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    SET_WORLD_LORE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldLore::new, Material.BOOKSHELF, true, "coding.actions.set_world_lore", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
     // Если игрок
     NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, "coding.actions.if_player", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>());
