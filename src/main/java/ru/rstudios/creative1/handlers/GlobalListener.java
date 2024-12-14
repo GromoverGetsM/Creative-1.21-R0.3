@@ -25,6 +25,7 @@ import ru.rstudios.creative1.coding.starters.StarterCategory;
 import ru.rstudios.creative1.coding.starters.playerevent.*;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
+import ru.rstudios.creative1.menu.selector.ValuesMenu;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.user.User;
@@ -55,13 +56,14 @@ public class GlobalListener implements Listener {
             }
         }
 
-        if (user.isOnPlot() && user.isOnPlayingWorld() && !user.datastore().containsKey("HandlingPaper")) {
+        /*if (user.isOnPlot() && user.isOnPlayingWorld() && !user.datastore().containsKey("HandlingPaper")) {
+            user.player().setBedSpawnLocation(user.getCurrentPlot().world().getSpawnLocation());
             user.getCurrentPlot().handler.sendStarter(new PlayerJoin.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_JOIN);
         }
 
         if (PlotManager.byWorld(event.getFrom()) != null) {
             PlotManager.byWorld(event.getFrom()).handler.sendStarter(new PlayerQuit.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_QUIT);
-        }
+        }*/
     }
 
     @EventHandler
@@ -175,11 +177,15 @@ public class GlobalListener implements Listener {
                 String rawId = ChatColor.stripColor(message);
 
                 if (rawId.length() < 17) {
-                    if (!DatabaseUtil.isValueExist("plots", "custom_id", rawId)) {
-                        Bukkit.getScheduler().runTask(plugin, () -> plot.setCustomId(rawId));
-                        user.sendMessage("info.plot-customid-set", true, message);
+                    if (rawId.matches(".*[a-zA-Z].*")) {
+                        if (!DatabaseUtil.isValueExist("plots", "custom_id", rawId)) {
+                            Bukkit.getScheduler().runTask(plugin, () -> plot.setCustomId(rawId));
+                            user.sendMessage("info.plot-customid-set", true, message);
+                        } else {
+                            user.sendMessage("errors.customid-already-taken", true, String.valueOf(DatabaseUtil.getValue("plots", "owner_name", "custom_id", rawId)));
+                        }
                     } else {
-                        user.sendMessage("errors.customid-already-taken", true, String.valueOf(DatabaseUtil.getValue("plots", "owner_name", "custom_id", rawId)));
+                        user.sendMessage("errors.plot-customid-no-letter", true, rawId);
                     }
                 } else {
                     user.sendMessage("errors.plot-customid-too-long", true, String.valueOf(rawId.length()));
@@ -188,6 +194,7 @@ public class GlobalListener implements Listener {
 
             user.datastore().remove("inputtingCustomId");
         }
+
 
         if (user.datastore().containsKey("inputtingLore")) {
             event.setCancelled(true);
@@ -202,6 +209,12 @@ public class GlobalListener implements Listener {
             }
 
             user.datastore().remove("inputtingLore");
+        }
+
+        if (user.isOnPlayingWorld()) {
+            if (!event.isCancelled()) {
+                user.getCurrentPlot().handler.sendStarter(new PlayerChatted.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_CHATTED);
+            }
         }
 
         if (user.isInDev()) {
@@ -257,6 +270,21 @@ public class GlobalListener implements Listener {
                 user.player().getInventory().setItemInMainHand(activeItem);
             }
         }
+
+        if (event.isCancelled()) return;
+        event.setCancelled(true);
+
+        String formatted = ChatColor.translateAlternateColorCodes('&', "&f<%player%> &r" + message).replace("%player%", user.player().getName());
+
+        if (user.isOnPlot()) {
+            if (formatted.startsWith("!")) {
+                Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(formatted.replaceFirst("!", "")));
+            } else {
+                user.getCurrentPlot().online().forEach(player -> player.sendMessage(formatted));
+            }
+        } else {
+            user.player().getWorld().getPlayers().forEach(player -> player.sendMessage(formatted));
+        }
     }
 
     @EventHandler
@@ -267,6 +295,9 @@ public class GlobalListener implements Listener {
 
         if (p != null) {
             if (p.isUserInDev(user)) {
+                if (event.getAction() == Action.RIGHT_CLICK_AIR && event.getItem() != null && event.getItem().getType() == Material.APPLE) {
+                    new ValuesMenu(user).open(user);
+                }
                 if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
                     if (event.getClickedBlock().getType() == Material.OAK_WALL_SIGN) {
                         event.setCancelled(true);

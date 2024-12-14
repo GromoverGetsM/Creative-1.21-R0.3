@@ -12,11 +12,9 @@ import java.util.Iterator;
 public class ShowDemoScreen extends Action {
     @Override
     public void execute(GameEvent event) {
-        Iterator<Entity> iterator = getStarter().getSelection().iterator();
-        while (iterator.hasNext()) {
-            Entity e = iterator.next();
+        for (Entity e : getStarter().getSelection()) {
             if (!Development.checkPlot(e, event.getPlot())) {
-                iterator.remove();
+
                 continue;
             }
             if (e instanceof Player player) {

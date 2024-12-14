@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
-import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.starters.playerevent.*;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
@@ -25,6 +24,7 @@ public enum StarterCategory {
     PLAYER_BREAK_BLOCK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerBlockBreak::new, PlayerBlockBreak.Event.class, Material.COBBLESTONE),
     PLAYER_DAMAGED_BLOCK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerBlockDamaged::new, PlayerBlockDamaged.Event.class, Material.GRAVEL),
     PLAYER_DAMAGE_ABORTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerDamageAborted::new, PlayerDamageAborted.Event.class, Material.ANDESITE),
+    PLAYER_CHATTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, PlayerChatted::new, PlayerChatted.Event.class, Material.WRITABLE_BOOK),
     BLOCK_EXPLODED(Development.BlockTypes.BLOCK_EVENT, MenuCategory.WORLD, null, null, Material.TNT);
 
     private Development.BlockTypes type;

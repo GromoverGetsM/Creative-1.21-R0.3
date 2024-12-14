@@ -16,11 +16,9 @@ public class ClearChat extends Action {
         sb.append(" \n".repeat(256));
         String message = sb.toString();
 
-        Iterator<Entity> iterator = getStarter().getSelection().iterator();
-        while (iterator.hasNext()) {
-            Entity e = iterator.next();
+        for (Entity e : getStarter().getSelection()) {
             if (!Development.checkPlot(e, event.getPlot())) {
-                iterator.remove();
+
                 continue;
             }
             e.sendMessage(message);

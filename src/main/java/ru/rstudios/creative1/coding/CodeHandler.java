@@ -12,13 +12,11 @@ import ru.rstudios.creative1.coding.actions.ActionIf;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.coding.starters.Starter;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
+import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.utils.Development;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
@@ -26,6 +24,7 @@ public class CodeHandler {
 
     public Plot plot;
     public List<Starter> starters = new LinkedList<>();
+    public Map<String, DynamicVariable> dynamicVariables = new LinkedHashMap<>();
 
     public CodeHandler (Plot plot) {
         this.plot = plot;
@@ -110,6 +109,10 @@ public class CodeHandler {
             starters.add(starter);
         }
         this.starters.addAll(starters);
+    }
+
+    public Map<String, DynamicVariable> getDynamicVariables() {
+        return dynamicVariables;
     }
 
     public void sendStarter (GameEvent event, StarterCategory sct) {

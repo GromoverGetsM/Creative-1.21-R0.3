@@ -3,18 +3,23 @@ package ru.rstudios.creative1.coding.actions;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.*;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+import ru.rstudios.creative1.coding.eventvalues.StringValue;
+import ru.rstudios.creative1.coding.eventvalues.ValueType;
 import ru.rstudios.creative1.coding.starters.Starter;
 import ru.rstudios.creative1.plots.PlotManager;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
@@ -65,21 +70,17 @@ public class ActionChest {
                     case BOOK -> this.texts = ArrayUtils.add(this.texts, item);
                     case SLIME_BALL -> this.numbers = ArrayUtils.add(this.numbers, item);
                     case PAPER -> this.locations = ArrayUtils.add(this.locations, item);
-                    /*case APPLE -> {
-                        Object o = CodingHandleUtils.parseGameValue(item);
-                        if (o instanceof StringValue) {
-                            this.texts = ArrayUtils.add(this.texts, item);
+                    case APPLE -> {
+                        ValueType type = parseGameValue(item);
+                        String superclass = type.getValueInstance().getClass().getSuperclass().getSimpleName().toLowerCase();
+                        this.texts = ArrayUtils.add(this.texts, item);
+
+                        switch (superclass) {
+                            case "numericvalue" -> this.numbers = ArrayUtils.add(this.numbers, item);
+                            case "locationvalue" -> this.locations = ArrayUtils.add(this.locations, item);
+                            case "itemstackvalue" -> this.itemStackGameValues = ArrayUtils.add(this.itemStackGameValues, item);
                         }
-                        if (o instanceof NumericValue) {
-                            this.numbers = ArrayUtils.add(this.numbers, item);
-                        }
-                        if (o instanceof LocationValue) {
-                            this.locations = ArrayUtils.add(this.locations, item);
-                        }
-                        if (o instanceof ItemStackValue) {
-                            this.itemStackGameValues = ArrayUtils.add(this.itemStackGameValues, item);
-                        }
-                    }*/
+                    }
                     case MAGMA_CREAM -> {
                         this.dynamicVariables = ArrayUtils.add(this.dynamicVariables, item);
                         this.texts = ArrayUtils.add(this.texts, item);
@@ -125,15 +126,15 @@ public class ActionChest {
         for (ItemStack item : this.texts) {
             switch (item.getType()) {
                 case BOOK -> {
-                    list.add(parseText(item));
+                    list.add(Action.replacePlaceholders(parseText(item), event, entity));
                 }
-            /*case APPLE -> {
-                Object o = CodingHandleUtils.parseGameValue(item);
-                if (o instanceof StringValue) {
-                    list.add(((StringValue) o).get(event, entity));
+            case APPLE -> {
+                ValueType type = parseGameValue(item);
+                if (type.getValueInstance() != null) {
+                    list.add(Action.replacePlaceholders(String.valueOf(type.getValueInstance().get(event, entity)), event, entity));
                 }
             }
-            case MAGMA_CREAM -> {
+            /*case MAGMA_CREAM -> {
                 if (item.getItemMeta().hasDisplayName()) {
                     String displayName = item.getItemMeta().getDisplayName();
                     displayName = this.replacePlaceholders(displayName, event, entity);
@@ -172,10 +173,10 @@ public class ActionChest {
             case PAPER -> {
                 return parseLocation(item, event.getPlot().world().getSpawnLocation());
             }
-            /*case APPLE -> {
-                return parseGameValue(item, event);
+            case APPLE -> {
+                return parseGameValue(item, null).getValueInstance().get(event,  entity);
             }
-            case MAGMA_CREAM -> {
+            /*case MAGMA_CREAM -> {
                 return parseDynamicVariable(item, "", true, event, starter);
             }*/
         }
@@ -288,6 +289,33 @@ public class ActionChest {
             }
         } else {
             return def;
+        }
+    }
+
+    public static ValueType parseGameValue (ItemStack item) {
+        return parseGameValue(item, null);
+    }
+    public static ValueType parseGameValue (ItemStack item, ValueType defaultValue) {
+        return parseGameValue(item, defaultValue, true);
+    }
+    public static ValueType parseGameValue (ItemStack item, ValueType defaultValue, boolean checkTypeMatches) {
+        if (item == null) {
+            return defaultValue;
+        }
+
+        if (checkTypeMatches && item.getType() != Material.APPLE) {
+            return defaultValue;
+        } else {
+            PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+            NamespacedKey valueType = new NamespacedKey(plugin, "valueType");
+
+            if (pdc.has(valueType)) {
+                ValueType type = ValueType.byName(pdc.get(valueType, PersistentDataType.STRING).toUpperCase(Locale.ROOT));
+
+                return type == null ? defaultValue : type;
+            } else {
+                return defaultValue;
+            }
         }
     }
 

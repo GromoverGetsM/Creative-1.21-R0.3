@@ -5,7 +5,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.jetbrains.annotations.NotNull;
+import ru.rstudios.creative1.coding.starters.StarterCategory;
+import ru.rstudios.creative1.coding.starters.playerevent.PlayerJoin;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.user.User;
 
@@ -34,7 +37,9 @@ public class playCommand implements CommandExecutor {
                     User user1 = User.asUser(player1);
                     user.datastore().remove("isCoding");
                     if (p.isUserInDev(user1)) {
-                        if (user1.player() == player) p.teleportToPlot(user1);
+                        if (user1.player() == player) {
+                            p.teleportToPlot(user1);
+                        }
                     } else {
                         p.teleportToPlot(user1);
                     }

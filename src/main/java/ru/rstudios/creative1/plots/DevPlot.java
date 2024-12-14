@@ -30,7 +30,7 @@ public class DevPlot {
         try {
             new File(Bukkit.getWorldContainer() + File.separator + linked.plotName().replace("_CraftPlot", "_dev") + File.separator + "DynamicVariables.yml").createNewFile();
         } catch (IOException e) {
-            plugin.getLogger().severe(e.getLocalizedMessage());
+            e.printStackTrace();
         }
 
 
@@ -42,6 +42,7 @@ public class DevPlot {
     public void load() {
         this.world = Bukkit.createWorld(new WorldCreator(linked.plotName().replace("_CraftPlot", "_dev")));
         this.world.setSpawnLocation(new Location(world, 62, -59, 62));
+        this.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
         File dev = new File(Bukkit.getWorldContainer() + File.separator + linked.plotName().replace("_CraftPlot", "_dev"));
         this.dynamicVars = new File(dev, "DynamicVariables.yml");
     }

@@ -28,11 +28,9 @@ public class GiveItems extends Action {
             }
         }
 
-        Iterator<Entity> iterator = getStarter().getSelection().iterator();
-        while (iterator.hasNext()) {
-            Entity e = iterator.next();
+        for (Entity e : getStarter().getSelection()) {
             if (!Development.checkPlot(e, event.getPlot())) {
-                iterator.remove();
+
                 continue;
             }
             if (e instanceof InventoryHolder holder) {

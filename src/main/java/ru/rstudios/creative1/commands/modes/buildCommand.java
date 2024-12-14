@@ -4,7 +4,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.jetbrains.annotations.NotNull;
+import ru.rstudios.creative1.coding.starters.StarterCategory;
+import ru.rstudios.creative1.coding.starters.playerevent.PlayerQuit;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.user.User;
 
@@ -25,6 +28,7 @@ public class buildCommand implements CommandExecutor {
                 if (p.plotMode == Plot.PlotMode.PLAY) {
                     for (Player player1 : p.online()) {
                         User.asUser(player1).sendMessage("info.plot-set-mode-build", true, "");
+                        p.handler.sendStarter(new PlayerQuit.Event(player1, p, new PlayerChangedWorldEvent(player1, player1.getWorld())), StarterCategory.PLAYER_QUIT);
                     }
                     p.plotMode = Plot.PlotMode.BUILD;
                 }
@@ -33,7 +37,9 @@ public class buildCommand implements CommandExecutor {
                     User user1 = User.asUser(player1);
                     user.datastore().remove("isCoding");
                     if (p.isUserInDev(user1)) {
-                        if (user1.player() == player) p.teleportToPlot(user1);
+                        if (user1.player() == player) {
+                            p.teleportToPlot(user1);
+                        }
                     } else {
                         p.teleportToPlot(user1);
                     }

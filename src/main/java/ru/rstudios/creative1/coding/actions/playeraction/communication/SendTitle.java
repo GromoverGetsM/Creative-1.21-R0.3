@@ -17,11 +17,9 @@ public class SendTitle extends Action {
         chest.initInventorySort();
 
 
-        Iterator<Entity> iterator = getStarter().getSelection().iterator();
-        while (iterator.hasNext()) {
-            Entity e = iterator.next();
+        for (Entity e : getStarter().getSelection()) {
             if (!Development.checkPlot(e, event.getPlot())) {
-                iterator.remove();
+
                 continue;
             }
 

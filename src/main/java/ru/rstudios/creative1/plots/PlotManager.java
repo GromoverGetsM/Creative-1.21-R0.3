@@ -70,7 +70,7 @@ public class PlotManager implements Listener {
 
                     if (name.equalsIgnoreCase(world)) {
                         p.teleportToPlot(user);
-                        iterator.remove();
+                        
                     }
                 }
             }, 20L);

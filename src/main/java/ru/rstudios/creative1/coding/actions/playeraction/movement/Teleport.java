@@ -22,12 +22,9 @@ public class Teleport extends Action {
         SwitchItem item = getCategory().getCodingMenu().getSwitches().get(22);
         item.setCurrentState(item.getCurrentState(chest.getOriginalContents()[22]));
 
-        Iterator<Entity> iterator = getStarter().getSelection().iterator();
-        while (iterator.hasNext()) {
-            Entity e = iterator.next();
-
+        for (Entity e : getStarter().getSelection()) {
             if (!Development.checkPlot(e, event.getPlot())) {
-                iterator.remove();
+
                 continue;
             }
 

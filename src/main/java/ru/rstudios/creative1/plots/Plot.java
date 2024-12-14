@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -17,6 +18,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.rstudios.creative1.coding.CodeHandler;
 import ru.rstudios.creative1.coding.actions.Action;
+import ru.rstudios.creative1.coding.starters.StarterCategory;
+import ru.rstudios.creative1.coding.starters.playerevent.PlayerJoin;
+import ru.rstudios.creative1.coding.starters.playerevent.PlayerQuit;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
@@ -124,6 +128,7 @@ public class Plot {
             config.set("gameRules.doImmediateRespawn", true);
             config.set("gameRules.showDeathMessages", false);
             config.set("gameRules.doDaylightCycle", false);
+            config.set("gameRules.tntExplodes", true);
 
             config.save(file);
 
@@ -261,7 +266,7 @@ public class Plot {
         return config.getBoolean("gameRules." + gamerule, false);
     }
 
-    public void teleportToPlot(User user) {
+    public boolean teleportToPlot(User user) {
         String name = user.name();
 
         boolean canJoin = isOpened ||
@@ -280,6 +285,7 @@ public class Plot {
                 awaitTeleport.remove(user);
                 user.clear();
                 user.player().teleport(this.world.getSpawnLocation());
+                user.player().setBedSpawnLocation(user.getCurrentPlot().world().getSpawnLocation());
 
                 if (this.plotMode == PlotMode.BUILD) {
                     if (user.name().equalsIgnoreCase(owner) || allowedBuilders.contains(user.name())) {
@@ -287,15 +293,20 @@ public class Plot {
                     } else {
                         user.player().setGameMode(GameMode.ADVENTURE);
                     }
+                } else if (this.plotMode == PlotMode.PLAY) {
+                    handler.sendStarter(new PlayerJoin.Event(user.player(), this, new PlayerChangedWorldEvent(user.player(), world())), StarterCategory.PLAYER_JOIN);
                 }
             }
         } else {
             user.sendMessage("errors.plot-is-locked", true, "");
         }
+
+        return canJoin;
     }
 
     public void teleportToDev(User user) {
         if (owner().equalsIgnoreCase(user.name()) || allowedDevs().contains(user.name())) {
+            handler.sendStarter(new PlayerQuit.Event(user.player(), this, new PlayerChangedWorldEvent(user.player(), world())), StarterCategory.PLAYER_QUIT);
             user.clear();
             user.player().setGameMode(GameMode.CREATIVE);
             user.player().teleport(dev().world().getSpawnLocation());
@@ -352,7 +363,7 @@ public class Plot {
         try {
             config.save(file);
         } catch (IOException e) {
-            e.getLocalizedMessage();
+            e.printStackTrace();
         }
 
         String[] worldNames = {

@@ -27,11 +27,9 @@ public class ToOtherPlot extends Action {
 
         if (to != null) {
             if (from.owner().equalsIgnoreCase(to.owner()) || to.allowedDevs().contains(from.owner())) {
-                Iterator<Entity> iterator = getStarter().getSelection().iterator();
-                while (iterator.hasNext()) {
-                    Entity e = iterator.next();
+                for (Entity e : getStarter().getSelection()) {
                     if (!Development.checkPlot(e, event.getPlot())) {
-                        iterator.remove();
+
                         continue;
                     }
 

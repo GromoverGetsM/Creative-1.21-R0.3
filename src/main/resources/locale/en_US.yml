@@ -22,6 +22,7 @@ errors:
   plot-undefined: "The identifier &6%s &fdoes not exist or was entered incorrectly!"
   plot-displayname-too-long: "The text is too long! (&6%s/40 chars&f)"
   plot-customid-too-long: "Text too long! (&6%s/16 chars&f)"
+  plot-customid-no-letter: "Custom ID setup canceled. It is prohibited to set a custom ID consisting only of numbers."
   customid-already-taken: "Setting is not possible - this identifier is already in use. Ask player &6%s&f if they are willing to remove the identifier from their world."
   plot-not-in-play-mode: "The plot is not in &6play mode"
   plot-not-in-build-mode: "The plot is not in &6build mode"
@@ -131,13 +132,70 @@ coding:
         - "&7Events or actions"
         - "&7that don't fit into other"
         - "&7categories"
-
-
+    player:
+      name: "&ePlayer"
+      lore:
+        - "&7Actions directly"
+        - "&7related to the player."
 
   tech:
     var-set: "&aValue Set"
     incorrect-value: "&cIncorrect Value"
     vars: "Variables"
+
+  values:
+    category:
+      entity:
+        name: "&eEntity Values"
+        lore:
+          - "&7Values directly related to an entity."
+          - "&7For example: Health, hunger level,"
+          - "&7item in hand."
+      event:
+        name: "&eEvent Values"
+        lore:
+          - "&7Values tied to events."
+          - "&7For example: Player message, block location."
+      world:
+        name: "&eWorld Values"
+        lore:
+          - "&7Values tied to the game world."
+          - "&7For example, number of players on the map."
+
+    type:
+      stringvalue: "&b🖊 Text Value"
+      numericvalue: "&c🔢 Numeric Value"
+      locationvalue: "&f🗺 Location Value"
+      itemstackvalue: "&e🧰 Item Value"
+
+    specific:
+      player_message:
+        name: "&ePlayer Message"
+        lore:
+          - "&7Returns the player's message from"
+          - "&7an event."
+          - "&7"
+          - "&7Works with:"
+          - "&c> &7Chat Event"
+      event_block:
+        name: "&eBlock"
+        lore:
+          - "&7Returns the block from an event."
+          - "&7"
+          - "&7Works with:"
+          - "&c> &7Placed Block"
+          - "&c> &7Broke Block"
+          - "&c> &7..."
+      event_block_loc:
+        name: "&eBlock Location"
+        lore:
+          - "&7Returns the block location"
+          - "&7from an event."
+          - "&7"
+          - "&7Works with:"
+          - "&c> &7Placed Block"
+          - "&c> &7Broke Block"
+          - "&c> &7..."
 
 
   events:
@@ -147,6 +205,7 @@ coding:
     player_break_block: "Broke Block"
     player_damaged_block: "Damaging Block"
     player_damage_aborted: "Stopped Damaging"
+    player_chatted: "Chat Event"
 
   actions:
     send_message: "Send message"
@@ -179,6 +238,10 @@ coding:
     set_world_name: "Set World Name"
     set_world_lore: "Set World Lore"
     set_world_icon: "Set World Icon"
+    set_world_custom_id: "Set Identifier"
+
+    name_equals: "Name equals"
+    message_equals: "Message equals"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -349,6 +412,11 @@ menus:
         lore:
           - "&7Triggered when"
           - "&7a player stops breaking a block"
+      player_chatted:
+        name: "&eChat Event"
+        lore:
+          - "&7Triggers when a player"
+          - "&7sends a message in chat"
 
     actions:
       send_message:
@@ -578,7 +646,33 @@ menus:
           - "&7"
           - "&7Arguments (1):"
           - "&7- &eItem: &7New icon &e(1)"
+      set_world_custom_id:
+        name: "&eSet Identifier"
+        lore:
+          - "&7Sets a new custom world identifier"
+          - "&7if it meets the specified criteria."
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7New world identifier &e(1)"
 
+      name_equals:
+        name: "&eName equals"
+        lore:
+          - "&7Checks if the player's name from the selection"
+          - "&7matches the specified name. Returns &6true&7 if"
+          - "&7at least one text matches the player's name."
+          - "&7"
+          - "&7Arguments (36):"
+          - "&7- &bText: &7Names to check &e(36)"
+      message_equals:
+        name: "&eMessage equals"
+        lore:
+          - "&7Checks if the message from the event"
+          - "&7matches the specified argument. Returns &6true&7"
+          - "&7if at least one text matches the event message."
+          - "&7"
+          - "&7Arguments (36):"
+          - "&7- &bText: &7Messages to check &e(36)"
   worlds-option:
     title: "Choose an Option"
     items:
@@ -730,6 +824,19 @@ menus:
             - "&eLeft-click: &7Click to grant developer rights"
           rem-dev:
             - "&eLeft-click: &7Click to remove developer rights"
+      builders-control:
+        name: "&eBuilders Management"
+        lore:
+          - "&7Menu for granting/removing builder rights"
+          - "&7to players."
+          - "&7"
+          - "&eLMB: &7Click to add a builder"
+          - "&eRMB: &7Click to remove a builder"
+        tech:
+          add-builder:
+            - "&eLMB: &7Click to grant builder rights"
+          rem-builder:
+            - "&eLMB: &7Click to revoke builder rights"
 
   world-browser:
     title: "Worlds browser"
@@ -794,6 +901,19 @@ menus:
         states:
           true: "Enabled"
           false: "Disabled"
-
-
-
+      naturalRegeneration:
+        name: "&eNatural Regeneration"
+        lore:
+          - "&7If enabled, players will regenerate health"
+          - "&7when they have sufficient hunger."
+        states:
+          true: "Enabled"
+          false: "Disabled"
+      mobGriefing:
+        name: "&eMob Griefing"
+        lore:
+          - "&7If disabled, entities will not interact"
+          - "&7with blocks or pick up items from the ground."
+        states:
+          true: "Enabled"
+          false: "Disabled"

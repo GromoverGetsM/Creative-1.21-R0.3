@@ -28,7 +28,7 @@ public class PlayerEvent extends CodingCategoriesMenu {
         List<MenuCategory> categories = new LinkedList<>(StarterCategory.getMenusCategories(Development.BlockTypes.PLAYER_EVENT));
         List<Byte> slots = Arrays.asList((byte) 10, (byte) 13, (byte) 16, (byte) 37, (byte) 40, (byte) 43);
 
-        for (int i = 0; i < Math.min(8, categories.size()); i++) {
+        for (int i = 0; i < Math.min(7, categories.size()); i++) {
             setItem(slots.get(i), categories.get(i).getItem(user));
         }
     }

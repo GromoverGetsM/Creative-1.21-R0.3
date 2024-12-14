@@ -38,11 +38,9 @@ public class PlaySound extends Action {
         float pitch = (float) Math.min(2.0, Math.max(0.5, (Double) ActionChest.parseItem(chest.getNumbers()[1], event, null, this.getStarter())));
 
 
-        Iterator<Entity> iterator = getStarter().getSelection().iterator();
-        while (iterator.hasNext()) {
-            Entity e = iterator.next();
+        for (Entity e : getStarter().getSelection()) {
             if (!Development.checkPlot(e, event.getPlot())) {
-                iterator.remove();
+
                 continue;
             }
             if (e instanceof Player player) {

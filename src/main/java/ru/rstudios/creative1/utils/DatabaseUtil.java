@@ -69,7 +69,7 @@ public class DatabaseUtil {
             pstmt.setObject(1, value);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            plugin.getLogger().severe(e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
 

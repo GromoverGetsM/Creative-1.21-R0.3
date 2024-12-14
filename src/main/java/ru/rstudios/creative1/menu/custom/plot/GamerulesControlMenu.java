@@ -12,10 +12,12 @@ import java.util.List;
 
 public class GamerulesControlMenu extends ProtectedMenu {
 
+    private SwitchItem naturalRegeneration;
     private SwitchItem doTraderSpawning;
     private SwitchItem doWardenSpawning;
     private SwitchItem doPatrolSpawning;
     private SwitchItem doImmediateRespawn;
+    private SwitchItem mobGriefing;
 
     public GamerulesControlMenu(User user) {
         super(LocaleManages.getLocaleMessage(user.getLocale(), "menus.gamerule-management.title", false, ""), (byte) 3);
@@ -27,14 +29,20 @@ public class GamerulesControlMenu extends ProtectedMenu {
         this.doPatrolSpawning.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doPatrolSpawning")));
         this.doImmediateRespawn = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.items.doImmediateRespawn", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.doImmediateRespawn.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doImmediateRespawn")));
+        this.naturalRegeneration = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.items.naturalRegeneration", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.naturalRegeneration.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("naturalRegeneration")));
+        this.mobGriefing = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.items.mobGriefing", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.mobGriefing.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("mobGriefing")));
     }
 
     @Override
     public void fillItems(User user) {
+        setItem((byte) 10, naturalRegeneration.getLocalizedIcon(user));
         setItem((byte) 11, doTraderSpawning.getLocalizedIcon(user));
         setItem((byte) 12, doWardenSpawning.getLocalizedIcon(user));
         setItem((byte) 13, doPatrolSpawning.getLocalizedIcon(user));
         setItem((byte) 14, doImmediateRespawn.getLocalizedIcon(user));
+        setItem((byte) 15, mobGriefing.getLocalizedIcon(user));
     }
 
     @Override
@@ -43,6 +51,15 @@ public class GamerulesControlMenu extends ProtectedMenu {
         event.setCancelled(true);
 
         switch (event.getSlot()) {
+            case 10 -> {
+                if (event.isLeftClick()) naturalRegeneration.nextState();
+                else naturalRegeneration.previousState();
+
+                setItem((byte) 10, naturalRegeneration.getLocalizedIcon(user));
+                updateSlot((byte) 10);
+
+                user.getCurrentPlot().updateGamerule("naturalRegeneration", Boolean.parseBoolean(naturalRegeneration.getCurrentValue()));
+            }
             case 11 -> {
                 if (event.isLeftClick()) doTraderSpawning.nextState();
                 else doTraderSpawning.previousState();
@@ -78,6 +95,15 @@ public class GamerulesControlMenu extends ProtectedMenu {
                 updateSlot((byte) 14);
 
                 user.getCurrentPlot().updateGamerule("doImmediateRespawn", Boolean.parseBoolean(doImmediateRespawn.getCurrentValue()));
+            }
+            case 15 -> {
+                if (event.isLeftClick()) mobGriefing.nextState();
+                else mobGriefing.previousState();
+
+                setItem((byte) 15, mobGriefing.getLocalizedIcon(user));
+                updateSlot((byte) 15);
+
+                user.getCurrentPlot().updateGamerule("mobGriefing", Boolean.parseBoolean(mobGriefing.getCurrentValue()));
             }
         }
     }

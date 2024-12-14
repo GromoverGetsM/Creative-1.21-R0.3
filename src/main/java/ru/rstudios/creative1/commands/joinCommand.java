@@ -4,7 +4,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.jetbrains.annotations.NotNull;
+import ru.rstudios.creative1.coding.starters.StarterCategory;
+import ru.rstudios.creative1.coding.starters.playerevent.PlayerQuit;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.user.User;
 
@@ -18,6 +21,7 @@ public class joinCommand implements CommandExecutor {
                 String id = args[0];
                 Plot plot = null;
                 User user = User.asUser(player);
+                Plot current = user.getCurrentPlot();
 
                 try {
                     int IntegerId = Integer.parseInt(id);
@@ -31,7 +35,9 @@ public class joinCommand implements CommandExecutor {
                 }
 
                 if (plot != null) {
-                    plot.teleportToPlot(user);
+                    if (plot.teleportToPlot(user)) {
+                        if (current != null) current.handler.sendStarter(new PlayerQuit.Event(user.player(), current, new PlayerChangedWorldEvent(user.player(), current.world())), StarterCategory.PLAYER_QUIT);
+                    }
                 } else {
                     user.sendMessage("errors.plot-undefined", true, id);
                 }

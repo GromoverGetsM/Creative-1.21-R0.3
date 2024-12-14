@@ -32,7 +32,7 @@ public class FileUtil {
         try {
             fc.save(f);
         } catch (IOException e) {
-            plugin.getLogger().severe("Error in FileUtil :37 - " + e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
 

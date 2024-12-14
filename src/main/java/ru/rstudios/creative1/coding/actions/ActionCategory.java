@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
+import ru.rstudios.creative1.coding.actions.ifplayer.MessageEquals;
 import ru.rstudios.creative1.coding.actions.ifplayer.NameEquals;
 import ru.rstudios.creative1.coding.actions.playeraction.communication.*;
 import ru.rstudios.creative1.coding.actions.playeraction.inventory.*;
@@ -13,6 +14,7 @@ import ru.rstudios.creative1.coding.actions.playeraction.movement.Teleport;
 import ru.rstudios.creative1.coding.actions.playeraction.movement.ToOtherPlot;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.CancelEvent;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.Wait;
+import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldCustomId;
 import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldIcon;
 import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldLore;
 import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldName;
@@ -76,11 +78,13 @@ public enum ActionCategory {
 
     // Действия мира - Мир
     SET_WORLD_ICON(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldIcon::new, Material.NETHER_STAR, true, "coding.actions.set_world_icon", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
+    SET_WORLD_CUSTOM_ID(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldCustomId::new, Material.REPEATER, true, "coding.actions.set_world_custom_id", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     SET_WORLD_NAME(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldName::new, Material.NAME_TAG, true, "coding.actions.set_world_name", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     SET_WORLD_LORE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldLore::new, Material.BOOKSHELF, true, "coding.actions.set_world_lore", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
     // Если игрок
-    NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, "coding.actions.if_player", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>());
+    NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, "coding.actions.name_equals", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    MESSAGE_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, MessageEquals::new, Material.WRITABLE_BOOK, true, "coding.actions.message_equals", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>());
 
 
     private Development.BlockTypes type;
