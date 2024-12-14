@@ -69,6 +69,7 @@ public class ItemUtil {
 
             if (!meta.hasAttributeModifiers()) {
                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR,new AttributeModifier(new NamespacedKey(plugin,"hide_attributes"),0.0d, AttributeModifier.Operation.ADD_NUMBER));
+
             }
 
             item.setItemMeta(meta);

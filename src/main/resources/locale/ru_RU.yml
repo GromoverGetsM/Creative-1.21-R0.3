@@ -203,6 +203,9 @@ coding:
     player_break_block: "Сломал блок"
     player_damaged_block: "Дамажит блок"
     player_damage_aborted: "Перестал дамажить"
+    player_left_click: "Левый клик"
+    player_right_click: "Правый клик"
+    player_physical_interact: "Физическое взаимодействие"
     player_chatted: "Событие чата"
 
   actions:
@@ -421,6 +424,22 @@ menus:
         lore:
           - "&7Выполняется, когда"
           - "&7игрок перестаёт ломать блок"
+      player_left_click:
+        name: "&eЛевый клик"
+        lore:
+          - "&7Выполняется, когда игрок нажимает"
+          - "&7левую кнопку мыши"
+      player_right_click:
+        name: "&eПравый клик"
+        lore:
+          - "&7Выполняется, когда игрок нажимает"
+          - "&7правую кнопку мыши"
+      player_physical_interact:
+        name: "&eФизическое взаимодействие"
+        lore:
+          - "&7Выполняется, когда игрок нажимает"
+          - "&7на кнопку, нажимную плиту, рычаг,"
+          - "&7открывает дверь и т.п."
       player_chatted:
         name: "&eСобытие чата"
         lore:

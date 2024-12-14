@@ -3,6 +3,7 @@ package ru.rstudios.creative1.coding.starters;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,7 +25,12 @@ public enum StarterCategory {
     PLAYER_BREAK_BLOCK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerBlockBreak::new, PlayerBlockBreak.Event.class, Material.COBBLESTONE),
     PLAYER_DAMAGED_BLOCK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerBlockDamaged::new, PlayerBlockDamaged.Event.class, Material.GRAVEL),
     PLAYER_DAMAGE_ABORTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerDamageAborted::new, PlayerDamageAborted.Event.class, Material.ANDESITE),
+    PLAYER_LEFT_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerLeftClicked::new, PlayerLeftClicked.Event.class, Material.IRON_PICKAXE),
+    PLAYER_RIGHT_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerRightClicked::new, PlayerRightClicked.Event.class, Material.DIAMOND_PICKAXE),
+    PLAYER_PHYSICAL_INTERACT(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerPhysicalInteract::new, PlayerPhysicalInteract.Event.class, Material.GOLDEN_PICKAXE),
     PLAYER_CHATTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, PlayerChatted::new, PlayerChatted.Event.class, Material.WRITABLE_BOOK),
+
+
     BLOCK_EXPLODED(Development.BlockTypes.BLOCK_EVENT, MenuCategory.WORLD, null, null, Material.TNT);
 
     private Development.BlockTypes type;

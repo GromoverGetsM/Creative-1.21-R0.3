@@ -15,6 +15,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -55,15 +56,6 @@ public class GlobalListener implements Listener {
                 user.getCurrentPlot().handler.parseCodeBlocks();
             }
         }
-
-        /*if (user.isOnPlot() && user.isOnPlayingWorld() && !user.datastore().containsKey("HandlingPaper")) {
-            user.player().setBedSpawnLocation(user.getCurrentPlot().world().getSpawnLocation());
-            user.getCurrentPlot().handler.sendStarter(new PlayerJoin.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_JOIN);
-        }
-
-        if (PlotManager.byWorld(event.getFrom()) != null) {
-            PlotManager.byWorld(event.getFrom()).handler.sendStarter(new PlayerQuit.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_QUIT);
-        }*/
     }
 
     @EventHandler
@@ -361,6 +353,14 @@ public class GlobalListener implements Listener {
                             user.sendTitle("coding.tech.var-set", value, 10, 70, 20, true, false);
                         }
 
+                    }
+                } else {
+                    if (event.getHand() == EquipmentSlot.HAND) {
+                        switch (event.getAction()) {
+                            case LEFT_CLICK_AIR, LEFT_CLICK_BLOCK -> user.getCurrentPlot().handler.sendStarter(new PlayerLeftClicked.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_LEFT_CLICK);
+                            case RIGHT_CLICK_BLOCK, RIGHT_CLICK_AIR -> user.getCurrentPlot().handler.sendStarter(new PlayerRightClicked.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_RIGHT_CLICK);
+                            case PHYSICAL -> user.getCurrentPlot().handler.sendStarter(new PlayerPhysicalInteract.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_PHYSICAL_INTERACT);
+                        }
                     }
                 }
             }

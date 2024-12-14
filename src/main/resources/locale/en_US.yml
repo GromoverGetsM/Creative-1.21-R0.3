@@ -205,6 +205,9 @@ coding:
     player_break_block: "Broke Block"
     player_damaged_block: "Damaging Block"
     player_damage_aborted: "Stopped Damaging"
+    player_left_click: "Left Click"
+    player_right_click: "Right Click"
+    player_physical_interact: "Physical Interaction"
     player_chatted: "Chat Event"
 
   actions:
@@ -412,6 +415,22 @@ menus:
         lore:
           - "&7Triggered when"
           - "&7a player stops breaking a block"
+      player_left_click:
+        name: "&eLeft Click"
+        lore:
+          - "&7Triggered when a player presses"
+          - "&7the left mouse button"
+      player_right_click:
+        name: "&eRight Click"
+        lore:
+          - "&7Triggered when a player presses"
+          - "&7the right mouse button"
+      player_physical_interact:
+        name: "&ePhysical Interaction"
+        lore:
+          - "&7Triggered when a player interacts"
+          - "&7with a button, pressure plate, lever,"
+          - "&7opens a door, etc."
       player_chatted:
         name: "&eChat Event"
         lore:
