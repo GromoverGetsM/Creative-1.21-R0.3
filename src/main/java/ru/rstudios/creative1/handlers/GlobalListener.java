@@ -29,6 +29,7 @@ import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
 import ru.rstudios.creative1.menu.selector.ValuesMenu;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
+import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.Development;
@@ -323,6 +324,21 @@ public class GlobalListener implements Listener {
                         }
                     }
                 }
+                if (event.getAction().isRightClick() && event.getItem() != null && event.getItem().getType() == Material.MAGMA_CREAM) {
+                    if (user.player().isSneaking()) {
+                        ItemStack eventItem = event.getItem();
+                        ItemMeta meta = eventItem.getItemMeta();
+                        List<String> lore = meta.getLore();
+                        String isSaved = lore.get(0);
+                        if (isSaved.equalsIgnoreCase(LocaleManages.getLocaleMessage(user.getLocale(), "coding.tech.dynvarsaved", false, ""))) {
+                            lore.remove(0);
+                        } else {
+                            lore.add(0, LocaleManages.getLocaleMessage(user.getLocale(), "coding.tech.dynvarsaved", false, ""));
+                        }
+                        meta.setLore(lore);
+                        eventItem.setItemMeta(meta);
+                    }
+                }
                 if (event.getAction() == Action.LEFT_CLICK_AIR && event.getItem() != null && event.getItem().getType() == Material.PAPER) {
                     user.datastore().put("HandlingPaper", true);
                     user.player().teleport(user.getCurrentPlot().world().getSpawnLocation());
@@ -450,6 +466,14 @@ public class GlobalListener implements Listener {
         if (user.isOnPlayingWorld()) {
             user.getCurrentPlot().handler.sendStarter(new PlayerDamageAborted.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_DAMAGE_ABORTED);
         }
+    }
+
+    @EventHandler
+    public void onPlayerRespawn (PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        World world = player.getLastDeathLocation().getWorld();
+
+        event.setRespawnLocation(world.getSpawnLocation());
     }
 
 }

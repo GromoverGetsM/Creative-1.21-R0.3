@@ -30,13 +30,6 @@ public class NameEquals extends ActionIf {
     }
 
     @Override
-    public void execute(GameEvent event) {
-        if (this.checkCondition(event)) {
-            this.executeConditional(event);
-        }
-    }
-
-    @Override
     public ActionCategory getCategory() {
         return ActionCategory.NAME_EQUALS;
     }

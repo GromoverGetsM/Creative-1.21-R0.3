@@ -66,7 +66,7 @@ public class ActionVar extends CodingCategoriesMenu {
                 user.player().closeInventory();
                 open(user);
             } else {
-                ActionCategory category = ActionCategory.get(event.getCurrentItem().getType(), Development.BlockTypes.WORLD_ACTION, selectedCategory);
+                ActionCategory category = ActionCategory.get(event.getCurrentItem().getType(), Development.BlockTypes.ACTION_VAR, selectedCategory);
 
                 if (category != null) {
                     user.player().closeInventory();

@@ -137,11 +137,22 @@ coding:
       lore:
         - "&7Actions directly"
         - "&7related to the player."
+    vars_assignment:
+      name: "&eVariable Assignment"
+      lore:
+        - "&7Actions related to assigning"
+        - "&7different values to variables"
+    text_operations:
+      name: "&eText Operations"
+      lore:
+        - "&7Actions related to text"
 
   tech:
     var-set: "&aValue Set"
     incorrect-value: "&cIncorrect Value"
     vars: "Variables"
+    dynvarsaved: "&dSAVED"
+    values: "Game values"
 
   values:
     category:
@@ -236,6 +247,8 @@ coding:
     teleport: "Teleport"
     to_other_plot: "To Another Plot"
 
+    set_gamemode: "Set Game mode"
+
     cancel_event: "Cancel Event"
     wait: "Wait"
     set_world_name: "Set World Name"
@@ -245,6 +258,14 @@ coding:
 
     name_equals: "Name equals"
     message_equals: "Message equals"
+
+    set_var: "Set (=)"
+    set_item_var: "Set item"
+
+    get_text_len: "Text Length"
+
+    if_var_equals: "="
+    if_var_exist: "Exists"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -295,7 +316,16 @@ coding:
       lore:
         - "&7Place the desired"
         - "&7item here"
-
+    game_value:
+      name: "&eGame Value"
+      itemlore:
+        - "&7A list of values returned by the event,"
+        - "&7as well as entity and world parameters."
+    any:
+      name: "&3Any Value"
+      lore:
+        - "&7You can place anything here,"
+        - "&7from text to a dynamic variable"
 
 menus:
   switches:
@@ -382,6 +412,15 @@ menus:
           ticks: "Ticks"
           seconds: "Seconds"
           minutes: "Minutes"
+      set_gm:
+        name: "&3Set Game Mode"
+        lore:
+          - "&fChoose the game mode to set"
+        states:
+          creative: "Creative"
+          survival: "Survival"
+          adventure: "Adventure"
+          spectator: "Spectator"
 
   coding:
     player_event:
@@ -628,6 +667,14 @@ menus:
           - "&7Arguments (1):"
           - "&7- &cNumber: &7Plot ID &e(1)"
 
+      set_gamemode:
+        name: "&eSet Game Mode"
+        lore:
+          - "&7Sets the selected game mode for the player"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &6Toggle: &7Game mode &e(1)"
+
       cancel_event:
         name: "&eCancel Event"
         lore:
@@ -692,6 +739,51 @@ menus:
           - "&7"
           - "&7Arguments (36):"
           - "&7- &bText: &7Messages to check &e(36)"
+
+      set_var:
+        name: "&eSet (=)"
+        lore:
+          - "&7Assigns a specified value to a variable. If"
+          - "&7multiple values are specified, they are combined into"
+          - "&7a single string and assigned to the variable."
+          - "&7"
+          - "&7Arguments (28):"
+          - "&7- &6Dynamic Variable: &7The variable to assign to &e(1)"
+          - "&7- &3Any Value: &7Values to assign &e(27)"
+      set_item_var:
+        name: "&eSet Item"
+        lore:
+          - "&7Assigns the specified item to a variable"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic Variable: &7The variable to set &e(1)"
+          - "&7- &eItem: &7The item to assign &e(1)"
+      get_text_len:
+        name: "&eGet Text Length"
+        lore:
+          - "&7Stores the length of the given text in a variable"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic variable: &7Variable for the result &e(1)"
+          - "&7- &bText: &7Text to check &e(1)"
+
+      if_var_equals:
+        name: "&eIf Value Equals"
+        lore:
+          - "&7Checks if a value matches any of the specified values."
+          - "&7"
+          - "&7Arguments (28):"
+          - "&7- &3Any Value: &7The value to check &e(1)"
+          - "&7- &3Any Value: &7Values to compare against &e(27)"
+      if_var_exist:
+        name: "&eIf Variable Exists"
+        lore:
+          - "&7Checks if the specified variable exists."
+          - "&7Ignores save settings"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &6Dynamic Variable: &7The variable to check &e(1)"
+
   worlds-option:
     title: "Choose an Option"
     items:

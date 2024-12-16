@@ -51,6 +51,13 @@ public abstract class ActionIf extends ArrayAction {
         executeNextAction(event);
     }
 
+    @Override
+    public void execute(GameEvent event) {
+        if (this.checkCondition(event)) {
+            this.executeConditional(event);
+        }
+    }
+
     private void executeNextAction(GameEvent event) {
         if (currentIndex >= inConditionalActions.size()) {
             isExecuting = false;

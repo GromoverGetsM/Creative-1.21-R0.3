@@ -1,11 +1,9 @@
 package ru.rstudios.creative1.coding;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
-import ru.rstudios.creative1.utils.Development;
 import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.util.LinkedHashMap;
@@ -34,7 +32,8 @@ public enum MenuCategory {
     LOCATION_OPERATIONS(Material.PAPER),
     ITEM_OPERATIONS(Material.GLOW_ITEM_FRAME),
     LIST_OPERATIONS(Material.BOOKSHELF),
-    MAP_OPERATIONS(Material.CHEST_MINECART);
+    MAP_OPERATIONS(Material.CHEST_MINECART),
+    VARS_ASSIGNMENT(Material.GOLD_INGOT);
 
 
     private final Material material;

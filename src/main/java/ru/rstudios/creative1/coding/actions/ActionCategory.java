@@ -6,12 +6,18 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
+import ru.rstudios.creative1.coding.actions.actionvar.GetTextLength;
+import ru.rstudios.creative1.coding.actions.actionvar.SetItemVar;
+import ru.rstudios.creative1.coding.actions.actionvar.SetVar;
 import ru.rstudios.creative1.coding.actions.ifplayer.MessageEquals;
 import ru.rstudios.creative1.coding.actions.ifplayer.NameEquals;
+import ru.rstudios.creative1.coding.actions.ifvariable.IfVariableEquals;
+import ru.rstudios.creative1.coding.actions.ifvariable.IfVariableExist;
 import ru.rstudios.creative1.coding.actions.playeraction.communication.*;
 import ru.rstudios.creative1.coding.actions.playeraction.inventory.*;
 import ru.rstudios.creative1.coding.actions.playeraction.movement.Teleport;
 import ru.rstudios.creative1.coding.actions.playeraction.movement.ToOtherPlot;
+import ru.rstudios.creative1.coding.actions.playeraction.params.SetGamemode;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.CancelEvent;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.Wait;
 import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldCustomId;
@@ -71,6 +77,9 @@ public enum ActionCategory {
             new SwitchItem(List.of("all", "coords", "eyedir"), "menus.switches.actions.teleport", List.of(Material.PAPER, Material.COMPASS, Material.ENDER_EYE))))),
     TO_OTHER_PLOT(Development.BlockTypes.PLAYER_ACTION, MenuCategory.MOVEMENT, ToOtherPlot::new, Material.DARK_OAK_DOOR, true, "coding.actions.to_other_plot", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
+    SET_GAMEMODE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetGamemode::new, Material.ANVIL, true, "coding.actions.set_gamemode", CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
+            new SwitchItem(List.of("creative", "survival", "adventure", "spectator"), "menus.switches.actions.set_gm", List.of(Material.BRICKS, Material.BEEF, Material.IRON_SWORD, Material.ENDER_EYE))))),
+
     // Действия мира - Линии
     CANCEL_EVENT(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, CancelEvent::new, Material.BARRIER, false, null, null, null, null),
     WAIT(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, Wait::new, Material.CLOCK, true, "coding.actions.wait", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>(Map.of(22,
@@ -84,7 +93,18 @@ public enum ActionCategory {
 
     // Если игрок
     NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, "coding.actions.name_equals", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
-    MESSAGE_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, MessageEquals::new, Material.WRITABLE_BOOK, true, "coding.actions.message_equals", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>());
+    MESSAGE_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, MessageEquals::new, Material.WRITABLE_BOOK, true, "coding.actions.message_equals", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+
+    // Работа с переменными - присвоение
+    SET_VAR(Development.BlockTypes.ACTION_VAR, MenuCategory.VARS_ASSIGNMENT, SetVar::new, Material.IRON_INGOT, true, "coding.actions.set_var", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.ANY), new LinkedHashMap<>()),
+    SET_ITEM_VAR(Development.BlockTypes.ACTION_VAR, MenuCategory.VARS_ASSIGNMENT, SetItemVar::new, Material.CRAFTING_TABLE, true, "coding.actions.set_item_var", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
+
+    // Работа с переменными - операции с текстом
+    GET_TEXT_LEN(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, GetTextLength::new, Material.BOOK, true, "coding.actions.get_text_len", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+
+    // Если переменная - другое
+    IF_VAR_EQUALS(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfVariableEquals::new, Material.BRICK, true, "coding.actions.if_var_equals", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.ANY, CodingMenu.ArgumentType.ANY), new LinkedHashMap<>()),
+    IF_VAR_EXIST(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfVariableExist::new, Material.MAGMA_CREAM, true, "coding.actions.if_var_exist", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR), new LinkedHashMap<>()),;
 
 
     private Development.BlockTypes type;

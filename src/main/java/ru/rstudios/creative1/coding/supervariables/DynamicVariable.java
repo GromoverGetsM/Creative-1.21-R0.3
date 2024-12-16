@@ -1,46 +1,54 @@
 package ru.rstudios.creative1.coding.supervariables;
 
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ru.rstudios.creative1.plots.Plot;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.Serial;
+import java.io.Serializable;
 
-public class DynamicVariable {
+public class DynamicVariable implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private String name;
-    private Object value;
     private boolean isSaved;
+    private Object value;
 
-    public DynamicVariable (String name) {
+    public DynamicVariable (@NotNull String name) {
         this(name, null);
     }
 
-    public DynamicVariable (String name, Object value) {
-        this(name, value, false);
+    public DynamicVariable (@NotNull String name, Object value) {
+        this(name, false, value);
     }
 
-    public DynamicVariable (String name, Object value, boolean isSaved) {
-        if (value instanceof String) {
-            value = cutManySymbols(value.toString());
-        }
+    public DynamicVariable (@NotNull String name, boolean isSaved) {
+        this(name, isSaved, null);
+    }
 
-        name = cutManySymbols(name);
+    public DynamicVariable (@NotNull String name, boolean isSaved, Object value) {
         this.name = name;
-        this.value = value;
         this.isSaved = isSaved;
+        this.value = value;
     }
 
     public String getName() {
-        return this.name;
+        return name;
+    }
+
+    public boolean isSaved() {
+        return isSaved;
+    }
+
+    public void setSaved(boolean saved) {
+        isSaved = saved;
     }
 
     public Object getValue(Plot plot) {
         DynamicVariable var = plot.handler.getDynamicVariables().get(this.getName());
         return var != null ? var.value : null;
-    }
-
-    public boolean isSaved() {
-        return this.isSaved;
     }
 
     public void setName (String name) {
@@ -50,44 +58,27 @@ public class DynamicVariable {
     public void setValue (Plot plot, Object value) {
         this.setValue(plot, value, this.isSaved);
     }
-    public void setValue (Plot plot, Object value, boolean isSaved) {
+    public void setValue (Plot plot, Object value, boolean saved) {
         if (value instanceof String) {
             value = cutManySymbols(value.toString());
         }
 
         this.value = value;
-        this.isSaved = isSaved;
-        plot.handler.getDynamicVariables().put(this.getName(), new DynamicVariable(this.getName(), value, isSaved));
+        this.isSaved = saved;
+        DynamicVariable newVariable = new DynamicVariable(name, saved, value);
+        plot.handler.getDynamicVariables().put(this.getName(), newVariable);
     }
 
-    public void setSaved (boolean isSaved) {
-        this.isSaved = isSaved;
-    }
-
+    @Override
     public String toString() {
-        return "DynamicVariable{name='" + this.name + "', value=" + this.value + ", isSaved=" + this.isSaved + "}";
-    }
-
-    public static DynamicVariable valueOf (String s) {
-        Pattern pattern = Pattern.compile("name='(.*?)', value=(.*?), isSaved=(.*?)}");
-        Matcher matcher = pattern.matcher(s);
-
-        String name = null;
-        Object value = null;
-        boolean isSaved = false;
-
-        if (matcher.find()) {
-            name = matcher.group(1);
-            value = matcher.group(2);
-            String isSavedStr = matcher.group(3);
-
-            isSaved = Boolean.parseBoolean(isSavedStr);
-        }
-
-        return new DynamicVariable(name, value, isSaved);
+        return "DynamicVariable{name='" + name + "', saved=" + isSaved + ", value=" + value + "}";
     }
 
     public static String cutManySymbols (String s) {
         return s.length() > 1024 ? s.substring(0, 1024) : s;
+    }
+
+    public static boolean isVarSaved (ItemStack item) {
+        return item.getItemMeta().getLore().get(0).contains("СОХРАНЕНО") || item.getItemMeta().getLore().get(0).contains("SAVED");
     }
 }

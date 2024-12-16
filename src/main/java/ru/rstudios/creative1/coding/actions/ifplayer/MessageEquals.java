@@ -30,13 +30,6 @@ public class MessageEquals extends ActionIf {
     }
 
     @Override
-    public void execute(GameEvent event) {
-        if (this.checkCondition(event)) {
-            this.executeConditional(event);
-        }
-    }
-
-    @Override
     public ActionCategory getCategory() {
         return ActionCategory.MESSAGE_EQUALS;
     }

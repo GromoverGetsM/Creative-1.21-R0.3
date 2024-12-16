@@ -176,6 +176,7 @@ public class Plot {
 
         dev.load();
         handler.parseCodeBlocks();
+        handler.loadDynamicVars();
 
         if (needToInitWorld) {
             initWorld();
@@ -285,7 +286,6 @@ public class Plot {
                 awaitTeleport.remove(user);
                 user.clear();
                 user.player().teleport(this.world.getSpawnLocation());
-                user.player().setBedSpawnLocation(user.getCurrentPlot().world().getSpawnLocation());
 
                 if (this.plotMode == PlotMode.BUILD) {
                     if (user.name().equalsIgnoreCase(owner) || allowedBuilders.contains(user.name())) {
@@ -346,6 +346,8 @@ public class Plot {
     }
 
     public void unload(boolean onlyWorld, boolean needSave) {
+        handler.saveDynamicVars();
+
         DatabaseUtil.updateValue("plots", "icon", icon.toString(), "plot_name", plotName());
         DatabaseUtil.updateValue("plots", "icon_name", iconName, "plot_name", plotName());
         DatabaseUtil.updateValue("plots", "icon_lore", DatabaseUtil.stringsToJson(iconLore), "plot_name", plotName());
@@ -519,7 +521,7 @@ public class Plot {
         for (Player player : online()) {
             if (owner.equalsIgnoreCase(player.getName()) || allowedDevs.contains(player.getName())) {
                 User user = User.asUser(player);
-                user.datastore().put("ActionLoc", action.getActionBlock().getLocation());
+                Location actionLoc = action.getActionBlock().getLocation();
 
                 String translatedStarter = LocaleManages.getLocaleMessage(user.getLocale(), "coding.events." + action.getStarter().getCategory().name().toLowerCase(Locale.ROOT), false, "");
                 String translatedAction = LocaleManages.getLocaleMessage(user.getLocale(), "coding.actions." + action.getCategory().name().toLowerCase(Locale.ROOT), false, "");
@@ -527,7 +529,7 @@ public class Plot {
                 Component filler = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit-filler", false, ""));
                 Component main = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit", false, translatedStarter, translatedAction));
                 Component hover = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit-hover", false, "")).hoverEvent(HoverEvent.showText(Component.text(parseException(e))));
-                Component teleport = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit-teleport", false, "")).clickEvent(ClickEvent.runCommand("/troubleshooter"));
+                Component teleport = Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "errors.plot-crit-teleport", false, "")).clickEvent(ClickEvent.runCommand("/troubleshooter " + actionLoc.getBlockX() + " " + actionLoc.getBlockY() + " " + actionLoc.getBlockZ()));
 
                 user.sendComponent(filler);
                 user.sendComponent(main);

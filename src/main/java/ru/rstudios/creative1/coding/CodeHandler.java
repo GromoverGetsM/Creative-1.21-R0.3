@@ -1,10 +1,14 @@
 package ru.rstudios.creative1.coding;
 
+import javassist.bytecode.Bytecode;
+import org.apache.commons.lang3.SerializationUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
@@ -16,9 +20,8 @@ import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.utils.Development;
 
+import java.io.*;
 import java.util.*;
-
-import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class CodeHandler {
 
@@ -127,6 +130,44 @@ public class CodeHandler {
                 }
 
             }
+        }
+    }
+
+    public void saveDynamicVars() {
+        Map<String, DynamicVariable> vars = new LinkedHashMap<>();
+        dynamicVariables.forEach((name, variable) -> {
+            if (variable.isSaved()) vars.put(name, variable);
+        });
+
+        File file = new File(Bukkit.getWorldContainer() + File.separator + plot.dev.world().getName() + File.separator + "dynamicVars.txt");
+        if (!file.exists() || !file.isFile()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+             BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(fileOutputStream)) {
+            objectOutputStream.writeObject(vars);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void loadDynamicVars() {
+        File file = new File(Bukkit.getWorldContainer() + File.separator + plot.dev.world().getName() + File.separator + "dynamicVars.txt");
+        if (!file.exists() || !file.isFile() || file.length() == 0) return;
+
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(fileInputStream)) {
+            dynamicVariables.putAll((Map<String, DynamicVariable>) objectInputStream.readObject());
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

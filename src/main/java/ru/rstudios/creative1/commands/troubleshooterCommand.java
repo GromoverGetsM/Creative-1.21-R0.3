@@ -10,18 +10,15 @@ import ru.rstudios.creative1.user.User;
 
 public class troubleshooterCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] strings) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] args) {
         if (commandSender instanceof Player player) {
             User user = User.asUser(player);
 
             if (user.getCurrentPlot().owner().equalsIgnoreCase(user.name()) || user.getCurrentPlot().allowedDevs().contains(user.name())) {
-                if (user.datastore().containsKey("ActionLoc")) {
-                    Location loc = (Location) user.datastore().get("ActionLoc");
-                    user.datastore().remove("ActionLoc");
+                if (args.length == 3) {
+                    Location loc = new Location(user.getCurrentPlot().dev.world(), Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 
                     user.player().teleport(loc);
-                } else {
-                    user.player().sendMessage("§cCannot start troubleshooter: Undefined trouble action block (null)");
                 }
             }
         }

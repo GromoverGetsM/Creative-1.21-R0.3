@@ -3,6 +3,7 @@ package ru.rstudios.creative1.coding.actions;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.*;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,9 @@ import org.bukkit.inventory.ItemStack;
 import ru.rstudios.creative1.coding.eventvalues.StringValue;
 import ru.rstudios.creative1.coding.eventvalues.ValueType;
 import ru.rstudios.creative1.coding.starters.Starter;
+import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
 import ru.rstudios.creative1.plots.PlotManager;
+import ru.rstudios.creative1.utils.Development;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -26,6 +29,7 @@ import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class ActionChest {
 
+    private static Starter starter;
     private Action linkedAction;
     private Block chestBlock;
     private Chest chest;
@@ -125,23 +129,21 @@ public class ActionChest {
 
         for (ItemStack item : this.texts) {
             switch (item.getType()) {
-                case BOOK -> {
-                    list.add(Action.replacePlaceholders(parseText(item), event, entity));
-                }
-            case APPLE -> {
-                ValueType type = parseGameValue(item);
-                if (type.getValueInstance() != null) {
+                case BOOK -> list.add(Action.replacePlaceholders(parseText(item), event, entity));
+                case APPLE -> {
+                    ValueType type = parseGameValue(item);
+                    if (type.getValueInstance() != null) {
                     list.add(Action.replacePlaceholders(String.valueOf(type.getValueInstance().get(event, entity)), event, entity));
+                    }
                 }
-            }
-            /*case MAGMA_CREAM -> {
-                if (item.getItemMeta().hasDisplayName()) {
-                    String displayName = item.getItemMeta().getDisplayName();
-                    displayName = this.replacePlaceholders(displayName, event, entity);
+                case MAGMA_CREAM -> {
+                    if (item.getItemMeta().hasDisplayName()) {
+                        String displayName = item.getItemMeta().getDisplayName();
+                        displayName = Action.replacePlaceholders(displayName, event, entity);
 
-                    list.add(new DynamicVariable(ChatColor.stripColor(displayName)).getValue(event.getPlot()) == null ? "" : new DynamicVariable(ChatColor.stripColor(displayName)).getValue(event.getPlot()).toString());
+                        list.add(new DynamicVariable(ChatColor.stripColor(displayName)).getValue(event.getPlot()) == null ? "" : String.valueOf(new DynamicVariable(ChatColor.stripColor(displayName)).getValue(event.getPlot())));
+                    }
                 }
-            }*/
             }
         }
 
@@ -158,7 +160,7 @@ public class ActionChest {
         return numerics;
     }
 
-    public static Object parseItem (ItemStack item, @Nullable GameEvent event, @Nullable Entity entity, @Nullable Starter starter) {
+    public static Object parseItem (ItemStack item, @Nullable GameEvent event, @Nullable Entity entity) {
         if (item == null) {
             return null;
         }
@@ -176,9 +178,9 @@ public class ActionChest {
             case APPLE -> {
                 return parseGameValue(item, null).getValueInstance().get(event,  entity);
             }
-            /*case MAGMA_CREAM -> {
-                return parseDynamicVariable(item, "", true, event, starter);
-            }*/
+            case MAGMA_CREAM -> {
+                return parseDynamicVariable(item, "", true, event, entity);
+            }
         }
         return null;
     }
@@ -356,5 +358,40 @@ public class ActionChest {
         } else {
             return null;
         }
+    }
+
+    public static Object parseDynamicVariable (ItemStack item, Object defaultValue, boolean checkTypeMatches, GameEvent event, Entity entity) {
+        if (item == null) {
+            return defaultValue;
+        }
+
+        if (checkTypeMatches && item.getType() != Material.MAGMA_CREAM) {
+            return defaultValue;
+        } else {
+            if (item.getItemMeta().hasDisplayName()) {
+                String displayName = Action.replacePlaceholders(item.getItemMeta().getDisplayName(), event, entity);
+                DynamicVariable variable = event.getPlot().handler.getDynamicVariables().get(ChatColor.stripColor(displayName));
+                return variable == null ? "" : variable.getValue(event.getPlot());
+            } else {
+                return defaultValue;
+            }
+        }
+    }
+
+    public static DynamicVariable asDynamicVariable (ItemStack item, GameEvent event, Entity entity) {
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta != null && meta.hasDisplayName()) {
+            String name = Action.replacePlaceholders(meta.getDisplayName(), event, entity);
+
+            DynamicVariable variable = event.getPlot().handler.getDynamicVariables().get(ChatColor.stripColor(name));
+            if (variable != null) {
+                variable.setSaved(DynamicVariable.isVarSaved(item));
+                return variable;
+            }
+            return new DynamicVariable(name);
+        }
+
+        return new DynamicVariable("");
     }
 }

@@ -14,7 +14,9 @@ public class varsCommand implements CommandExecutor {
         if (sender instanceof Player player) {
             User user = User.asUser(player);
 
-            if (user.isInDev()) new VariablesSelector(user).open(user);
+            if (args.length == 0) {
+                if (user.isInDev()) new VariablesSelector(user).open(user);
+            }
         }
         return true;
     }
