@@ -40,12 +40,14 @@ public class User {
     private Player player;
     private final Map<String, Object> datastore = new LinkedHashMap<>();
     private String name;
+    private String locale;
 
     public User (String name) {
         if (name == null || name.isEmpty() || Bukkit.getPlayerExact(name) == null) return;
 
         this.player = Bukkit.getPlayerExact(name);
         this.name = name;
+        this.locale = LocaleManages.getLocale(this.player);
 
         users.add(this);
     }
@@ -80,7 +82,14 @@ public class User {
     }
 
     public String getLocale() {
-        return LocaleManages.getLocale(player);
+        if (this.locale == null || this.locale.isEmpty()) {
+            this.locale = LocaleManages.getLocale(player);
+        }
+        return this.locale;
+    }
+
+    public void setLocale (String locale) {
+        this.locale = locale;
     }
 
     public long getPlotLimit() {

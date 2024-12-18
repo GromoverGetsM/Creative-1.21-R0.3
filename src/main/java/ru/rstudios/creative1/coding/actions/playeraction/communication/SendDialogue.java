@@ -40,7 +40,7 @@ public class SendDialogue extends Action {
 
         Sound finalSound = sound;
         new CreativeRunnable(event.getPlot()) {
-            final ItemStack[] unparsed = Arrays.copyOfRange(chest.getTexts(), 1, chest.getTexts().length);
+            final ItemStack[] unparsed = Arrays.copyOfRange(chest.getTexts(), 0, chest.getTexts().length);
             int current = 0;
 
             @Override

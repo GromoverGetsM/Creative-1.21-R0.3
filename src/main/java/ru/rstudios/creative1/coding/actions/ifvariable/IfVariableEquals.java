@@ -20,7 +20,7 @@ public class IfVariableEquals extends ActionIf {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
-        ItemStack[] args = Arrays.copyOfRange(chest.getOriginalContents(), 27, 54);
+        ItemStack[] args = Arrays.copyOfRange(chest.getOriginalContents(), 26, 54);
         ItemStack[] nonnull = Arrays.stream(args)
                 .filter(item -> item != null && item.getType() != Material.AIR)
                 .toArray(ItemStack[]::new);

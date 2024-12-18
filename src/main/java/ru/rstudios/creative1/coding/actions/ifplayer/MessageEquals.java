@@ -6,6 +6,7 @@ import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.actions.ActionIf;
 import ru.rstudios.creative1.coding.events.ChatEvent;
 import ru.rstudios.creative1.coding.events.GameEvent;
+import ru.rstudios.creative1.utils.Development;
 
 public class MessageEquals extends ActionIf {
     @Override
@@ -19,6 +20,10 @@ public class MessageEquals extends ActionIf {
         }
 
         for (Entity entity : getStarter().getSelection()) {
+            if (!Development.checkPlot(entity, event.getPlot())) {
+                continue;
+            }
+
             for (String s : chest.getAsTexts(event, entity)) {
                 if (((ChatEvent) event).getMessage().equalsIgnoreCase(s)) {
                     return true;

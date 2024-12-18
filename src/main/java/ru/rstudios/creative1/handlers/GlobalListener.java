@@ -3,6 +3,7 @@ package ru.rstudios.creative1.handlers;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -20,11 +21,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
 import ru.rstudios.creative1.coding.starters.playerevent.*;
 import ru.rstudios.creative1.menu.CodingMenu;
+import ru.rstudios.creative1.menu.ProtectedMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
 import ru.rstudios.creative1.menu.selector.ValuesMenu;
 import ru.rstudios.creative1.plots.Plot;
@@ -37,10 +40,25 @@ import ru.rstudios.creative1.utils.Development;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class GlobalListener implements Listener {
+
+    public static String parseColors(String message) {
+        Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
+        Matcher matcher = pattern.matcher(message);
+
+        while (matcher.find()) {
+            String color = message.substring(matcher.start() + 1, matcher.end());
+            message = message.replace("&" + color, ChatColor.of(color) + "");
+            matcher = pattern.matcher(message);
+        }
+
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
 
     @EventHandler
     public void onWorldChanged (PlayerChangedWorldEvent event) {
@@ -194,6 +212,8 @@ public class GlobalListener implements Listener {
             String plotName = String.valueOf(user.datastore().get("inputtingLore"));
             Plot plot = PlotManager.plots.get(plotName);
 
+            message = parseColors(message);
+
             if (plot != null && plot.owner().equalsIgnoreCase(user.name())) {
                 List<String> lines = new ArrayList<>(Arrays.asList(message.split("\\\\n")));
 
@@ -227,6 +247,9 @@ public class GlobalListener implements Listener {
 
                         meta = activeItem.getItemMeta();
                         if (meta != null) {
+                            if (activeItem.getType() == Material.MAGMA_CREAM) {
+                                meta.getPersistentDataContainer().set(new NamespacedKey(plugin, "variable"), PersistentDataType.BOOLEAN, true);
+                            }
                             meta.setDisplayName(message);
                         }
                     }
@@ -267,7 +290,7 @@ public class GlobalListener implements Listener {
         if (event.isCancelled()) return;
         event.setCancelled(true);
 
-        String formatted = ChatColor.translateAlternateColorCodes('&', "&f<%player%> &r" + message).replace("%player%", user.player().getName());
+        String formatted = parseColors("&f<%player%> &r" + message).replace("%player%", user.player().getName());
 
         if (user.isOnPlot()) {
             if (formatted.startsWith("!")) {
@@ -288,7 +311,7 @@ public class GlobalListener implements Listener {
 
         if (p != null) {
             if (p.isUserInDev(user)) {
-                if (event.getAction() == Action.RIGHT_CLICK_AIR && event.getItem() != null && event.getItem().getType() == Material.APPLE) {
+                if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && event.getPlayer().getTargetBlockExact(5) != null && event.getPlayer().getTargetBlockExact(5).getType() != Material.CHEST && event.getItem() != null && event.getItem().getType() == Material.APPLE) {
                     new ValuesMenu(user).open(user);
                 }
                 if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
@@ -390,9 +413,13 @@ public class GlobalListener implements Listener {
         if (event.getClickedInventory() != null && event.getClickedInventory().getHolder() instanceof CodingMenu menu) {
             if (!menu.getArgumentSlots().contains(event.getSlot())) {
                 event.setCancelled(true);
-                if (menu.getSwitches().containsKey(event.getSlot())) {
-                    menu.getSwitches().get(event.getSlot()).onClick(user, event);
-                }
+            }
+            if (menu.getSwitches().containsKey(event.getSlot())) {
+                menu.getSwitches().get(event.getSlot()).onClick(user, event);
+            }
+        } else if (!(event.getClickedInventory() instanceof ProtectedMenu)) {
+            if (user.isOnPlayingWorld()) {
+                user.getCurrentPlot().handler.sendStarter(new PlayerClickedInventory.Event((Player) event.getWhoClicked(), user.getCurrentPlot(), event), StarterCategory.PLAYER_INV_CLICK);
             }
         }
     }

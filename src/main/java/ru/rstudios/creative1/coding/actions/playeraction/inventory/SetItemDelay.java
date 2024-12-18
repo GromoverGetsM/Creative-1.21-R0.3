@@ -19,18 +19,19 @@ public class SetItemDelay extends Action {
         chest.initInventorySort();
 
         double delay = ActionChest.parseNumber(chest.getOriginalContents()[15]);
-        ItemStack item = chest.getOriginalContents()[11];
-
-        if (item == null || item.getType() == Material.AIR) {
-            event.getPlot().throwException(this, new IllegalArgumentException("Предмет отсутствует, установка задержки невозможна!"));
-            return;
-        }
 
         for (Entity e : getStarter().getSelection()) {
             if (!Development.checkPlot(e, event.getPlot())) {
-
                 continue;
             }
+
+            ItemStack item = ActionChest.parseItemArgument(chest.getOriginalContents()[11], event, e);
+
+            if (item == null || item.getType() == Material.AIR) {
+                event.getPlot().throwException(this, new IllegalArgumentException("Предмет отсутствует, установка задержки невозможна!"));
+                return;
+            }
+
             if (e instanceof Player player) {
                 player.setCooldown(item.getType(), (int) delay);
             }

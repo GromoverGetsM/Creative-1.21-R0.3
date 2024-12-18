@@ -8,6 +8,7 @@ import ru.rstudios.creative1.commands.modes.playCommand;
 import ru.rstudios.creative1.handlers.GlobalListener;
 import ru.rstudios.creative1.menu.ProtectedManager;
 import ru.rstudios.creative1.plots.PlotManager;
+import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.FileUtil;
 
@@ -47,6 +48,8 @@ public final class Creative_1 extends JavaPlugin {
             getLogger().severe("WorldEdit 3.3.0 не найден в списке плагинов. Выключаюсь...");
             getServer().getPluginManager().disablePlugin(this);
         }
+
+        LocaleManages.loadLocales();
 
         Objects.requireNonNull(getCommand("games")).setExecutor(new gamesCommand());
         Objects.requireNonNull(getCommand("world")).setExecutor(new WorldCommand());

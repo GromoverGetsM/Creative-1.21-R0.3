@@ -6,13 +6,12 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
-import ru.rstudios.creative1.coding.actions.actionvar.GetTextLength;
-import ru.rstudios.creative1.coding.actions.actionvar.SetItemVar;
-import ru.rstudios.creative1.coding.actions.actionvar.SetVar;
+import ru.rstudios.creative1.coding.actions.actionvar.*;
+import ru.rstudios.creative1.coding.actions.ifplayer.ItemEquals;
 import ru.rstudios.creative1.coding.actions.ifplayer.MessageEquals;
 import ru.rstudios.creative1.coding.actions.ifplayer.NameEquals;
-import ru.rstudios.creative1.coding.actions.ifvariable.IfVariableEquals;
-import ru.rstudios.creative1.coding.actions.ifvariable.IfVariableExist;
+import ru.rstudios.creative1.coding.actions.ifplayer.PlayerHoldItem;
+import ru.rstudios.creative1.coding.actions.ifvariable.*;
 import ru.rstudios.creative1.coding.actions.playeraction.communication.*;
 import ru.rstudios.creative1.coding.actions.playeraction.inventory.*;
 import ru.rstudios.creative1.coding.actions.playeraction.movement.Teleport;
@@ -20,10 +19,7 @@ import ru.rstudios.creative1.coding.actions.playeraction.movement.ToOtherPlot;
 import ru.rstudios.creative1.coding.actions.playeraction.params.SetGamemode;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.CancelEvent;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.Wait;
-import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldCustomId;
-import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldIcon;
-import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldLore;
-import ru.rstudios.creative1.coding.actions.worldaction.world.SetWorldName;
+import ru.rstudios.creative1.coding.actions.worldaction.world.*;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.user.LocaleManages;
@@ -45,6 +41,7 @@ public enum ActionCategory {
     CLEAR_INVENTORY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, ClearInventory::new, Material.GLASS, false, null, null, null, null),
     CLOSE_INVENTORY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, CloseInventory::new, Material.STRUCTURE_VOID, false, null, null, null, null),
     SET_ITEM_DELAY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, SetItemDelay::new, Material.CLOCK, true, "coding.actions.set_item_delay", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.ITEMSTACK, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    REMOVE_ITEM(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, RemoveItem::new, Material.COBWEB, true, "coding.actions.remove_item", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
     GIVE_RANDOM_ITEM(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, GiveRandomItem::new, Material.BLUE_SHULKER_BOX, true, "coding.actions.give_random_item", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
     OPEN_INTERFACE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, OpenInterface::new, Material.BROWN_SHULKER_BOX, true, "coding.actions.open_interface", CodingMenu.MenuType.DEFAULT, new LinkedList<>(),
             new LinkedHashMap<>(Map.of(13, new SwitchItem(List.of("workbench", "enchanting", "anvil", "cartography", "grindstone", "loom", "smith", "stonecutter"), "menus.switches.actions.oi.", List.of(
@@ -86,25 +83,49 @@ public enum ActionCategory {
             new SwitchItem(List.of("ticks", "seconds", "minutes"), "menus.switches.actions.wait", List.of(Material.GOLDEN_BOOTS, Material.SNOWBALL, Material.CLOCK))))),
 
     // Действия мира - Мир
+    SET_BLOCK(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, PlaceBlock::new, Material.GRASS_BLOCK, true, "coding.actions.set_block", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.ITEMSTACK, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
     SET_WORLD_ICON(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldIcon::new, Material.NETHER_STAR, true, "coding.actions.set_world_icon", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
     SET_WORLD_CUSTOM_ID(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldCustomId::new, Material.REPEATER, true, "coding.actions.set_world_custom_id", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     SET_WORLD_NAME(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldName::new, Material.NAME_TAG, true, "coding.actions.set_world_name", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     SET_WORLD_LORE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldLore::new, Material.BOOKSHELF, true, "coding.actions.set_world_lore", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
-    // Если игрок
+    // Если игрок - общее
     NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, "coding.actions.name_equals", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     MESSAGE_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, MessageEquals::new, Material.WRITABLE_BOOK, true, "coding.actions.message_equals", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+
+    // Если игрок - предметы
+    PLAYER_HOLD_ITEM(Development.BlockTypes.IF_PLAYER, MenuCategory.INVENTORY, PlayerHoldItem::new, Material.SHIELD, true, "coding.actions.player_hold_item", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>(Map.of(49,
+            new SwitchItem(List.of("hand", "off_hand"), "menus.switches.actions.player_hold_item", List.of(Material.BRICK, Material.NETHER_BRICK))))),
+    ITEM_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.INVENTORY, ItemEquals::new, Material.CRAFTING_TABLE, true, "coding.actions.item_equals", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
 
     // Работа с переменными - присвоение
     SET_VAR(Development.BlockTypes.ACTION_VAR, MenuCategory.VARS_ASSIGNMENT, SetVar::new, Material.IRON_INGOT, true, "coding.actions.set_var", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.ANY), new LinkedHashMap<>()),
     SET_ITEM_VAR(Development.BlockTypes.ACTION_VAR, MenuCategory.VARS_ASSIGNMENT, SetItemVar::new, Material.CRAFTING_TABLE, true, "coding.actions.set_item_var", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
 
+    // Работа с переменными - операции с числом
+    VAR_MULTIPLY(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarMultiply::new, Material.REINFORCED_DEEPSLATE, true, "coding.actions.var_multiply", CodingMenu.MenuType.DUO_SET, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    VAR_INCREMENT(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarIncrement::new, Material.IRON_INGOT, true, "coding.actions.var_increment", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    VAR_DECREMENT(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarDecrement::new, Material.COPPER_INGOT, true, "coding.actions.var_decrement", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+
     // Работа с переменными - операции с текстом
     GET_TEXT_LEN(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, GetTextLength::new, Material.BOOK, true, "coding.actions.get_text_len", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
+    // Если переменная - условия чисел
+    COMPARE_NUM_EZ(Development.BlockTypes.IF_VARIABLE, MenuCategory.NUMBER_OPERATIONS, IfVariableCompareNumberEasy::new, Material.SANDSTONE_STAIRS, true, "coding.actions.compare_num_ez", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NULL, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>(Map.of(13,
+            new SwitchItem(List.of("more", "moreorequals", "lower", "lowerorequals"), "menus.switches.actions.compare_ez", List.of(Material.COPPER_BLOCK, Material.COPPER_INGOT, Material.GOLD_BLOCK, Material.GOLD_INGOT))))),
+
+    // Если переменная - условия текста
+    IF_TEXT_CONTAINS(Development.BlockTypes.IF_VARIABLE, MenuCategory.TEXT_OPERATIONS, IfTextContains::new, Material.LECTERN, true, "coding.actions.if_text_contains", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(21,
+            new SwitchItem(List.of("false", "true"), "menus.switches.ignorecase", List.of(Material.RED_CONCRETE_POWDER, Material.GREEN_CONCRETE_POWDER)), 23, new SwitchItem(List.of("false", "true"), "menus.switches.ignorecolors", List.of(Material.RED_CONCRETE_POWDER, Material.GREEN_CONCRETE_POWDER))))),
+    IF_TEXT_STARTS_WITH(Development.BlockTypes.IF_VARIABLE, MenuCategory.TEXT_OPERATIONS, IfTextStartsWith::new, Material.BOOK, true, "coding.actions.if_text_starts_with", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(21,
+            new SwitchItem(List.of("false", "true"), "menus.switches.ignorecase", List.of(Material.RED_CONCRETE_POWDER, Material.GREEN_CONCRETE_POWDER)), 23, new SwitchItem(List.of("false", "true"), "menus.switches.ignorecolors", List.of(Material.RED_CONCRETE_POWDER, Material.GREEN_CONCRETE_POWDER))))),
+    IF_TEXT_ENDS_WITH(Development.BlockTypes.IF_VARIABLE, MenuCategory.TEXT_OPERATIONS, IfTextEndsWith::new, Material.WRITTEN_BOOK, true, "coding.actions.if_text_ends_with", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(21,
+            new SwitchItem(List.of("false", "true"), "menus.switches.ignorecase", List.of(Material.RED_CONCRETE_POWDER, Material.GREEN_CONCRETE_POWDER)), 23, new SwitchItem(List.of("false", "true"), "menus.switches.ignorecolors", List.of(Material.RED_CONCRETE_POWDER, Material.GREEN_CONCRETE_POWDER))))),
+
     // Если переменная - другое
     IF_VAR_EQUALS(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfVariableEquals::new, Material.BRICK, true, "coding.actions.if_var_equals", CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.ANY, CodingMenu.ArgumentType.ANY), new LinkedHashMap<>()),
-    IF_VAR_EXIST(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfVariableExist::new, Material.MAGMA_CREAM, true, "coding.actions.if_var_exist", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR), new LinkedHashMap<>()),;
+    IF_VAR_EXIST(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfVariableExist::new, Material.MAGMA_CREAM, true, "coding.actions.if_var_exist", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR), new LinkedHashMap<>()),
+    IF_LOC_IN_REG(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfLocationInRegion::new, Material.HEAVY_CORE, true, "coding.actions.if_loc_in_reg", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>());
 
 
     private Development.BlockTypes type;

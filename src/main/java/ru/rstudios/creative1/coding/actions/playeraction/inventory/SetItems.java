@@ -24,27 +24,32 @@ public class SetItems extends Action {
         switchItem.setCurrentState(switchItem.getCurrentState(chest.getOriginalContents()[49]));
 
         boolean placeAirToo = Boolean.parseBoolean(switchItem.getCurrentValue());
-        Inventory transformed = transformInventory(chest.getOriginalContents());
+        ItemStack[] originalContents = chest.getOriginalContents();
+        Inventory transformed = transformInventory(originalContents);
 
         for (Entity e : getStarter().getSelection()) {
             if (!Development.checkPlot(e, event.getPlot())) {
-
                 continue;
             }
+
             if (e instanceof Player player) {
-                if (placeAirToo) {
-                    for (int i = 0; i < transformed.getContents().length; i++) {
-                        if (transformed.getContents()[i] != null) {
-                            player.getInventory().setItem(i, transformed.getContents()[i]);
-                        }
+                ItemStack[] playerContents = new ItemStack[transformed.getSize()];
+
+                for (int i = 0; i < transformed.getContents().length; i++) {
+                    ItemStack item = transformed.getItem(i);
+
+                    if (item != null) {
+                        playerContents[i] = ActionChest.parseItemArgument(item, event, e);
+                    } else if (placeAirToo) {
+                        playerContents[i] = null;
                     }
-                } else {
-                    player.getInventory().setContents(transformed.getContents());
                 }
+
+                player.getInventory().setContents(playerContents);
             }
         }
-
     }
+
 
     @Override
     public ActionCategory getCategory() {

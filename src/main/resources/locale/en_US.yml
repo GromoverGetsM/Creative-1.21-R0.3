@@ -146,6 +146,10 @@ coding:
       name: "&eText Operations"
       lore:
         - "&7Actions related to text"
+    number_operations:
+      name: "&eNumber Operations"
+      lore:
+        - "&7Actions and operations related to numbers"
 
   tech:
     var-set: "&aValue Set"
@@ -207,7 +211,13 @@ coding:
           - "&c> &7Placed Block"
           - "&c> &7Broke Block"
           - "&c> &7..."
-
+      event_item:
+        name: "&eEvent Item"
+        lore:
+          - "&7Returns the item from the event."
+          - "&7"
+          - "&7Works with:"
+          - "&c> &7Inventory Click"
 
   events:
     player_join: "Player joined"
@@ -219,6 +229,7 @@ coding:
     player_left_click: "Left Click"
     player_right_click: "Right Click"
     player_physical_interact: "Physical Interaction"
+    player_inv_click: "Inventory Click"
     player_chatted: "Chat Event"
 
   actions:
@@ -243,6 +254,7 @@ coding:
     set_item_delay: "Set Item Delay"
     open_interface: "Open Interface"
     give_random_item: "Random Item"
+    remove_item: "Remove Item"
 
     teleport: "Teleport"
     to_other_plot: "To Another Plot"
@@ -251,6 +263,8 @@ coding:
 
     cancel_event: "Cancel Event"
     wait: "Wait"
+
+    set_block: "Set block"
     set_world_name: "Set World Name"
     set_world_lore: "Set World Lore"
     set_world_icon: "Set World Icon"
@@ -259,13 +273,27 @@ coding:
     name_equals: "Name equals"
     message_equals: "Message equals"
 
+    player_hold_item: "Holds Item"
+    item_equals: "Item equals"
+
     set_var: "Set (=)"
     set_item_var: "Set item"
 
+    var_multiply: "*"
+    var_increment: "+="
+    var_decrement: "-="
+
     get_text_len: "Text Length"
+
+    compare_num_ez: "Comparison (Easy)"
+
+    if_text_contains: "Text Contains"
+    if_text_starts_with: "Starts With"
+    if_text_ends_with: "Ends With"
 
     if_var_equals: "="
     if_var_exist: "Exists"
+    if_loc_in_reg: "In Region"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -326,9 +354,30 @@ coding:
       lore:
         - "&7You can place anything here,"
         - "&7from text to a dynamic variable"
+    null:
+      name: ""
+      lore:
+        - ""
 
 menus:
   switches:
+    ignorecase:
+      name: "&3Ignore Case"
+      lore:
+        - "&fChoose whether to ignore case"
+        - "&fwhen comparing"
+      states:
+        true: "Enabled"
+        false: "Disabled"
+    ignorecolors:
+      name: "&3Ignore Colors"
+      lore:
+        - "&fChoose whether to ignore colors"
+        - "&fwhen comparing"
+      states:
+        true: "Enabled"
+        false: "Disabled"
+
     actions:
       sm:
         name: "&3Separator"
@@ -421,6 +470,23 @@ menus:
           survival: "Survival"
           adventure: "Adventure"
           spectator: "Spectator"
+      compare_ez:
+        name: "&3Comparison Condition"
+        lore:
+          - "&fSelect the condition for comparing"
+          - "&fnumbers."
+        states:
+          more: "Greater"
+          moreorequals: "Greater or Equal"
+          lower: "Less"
+          lowerorequals: "Less or Equal"
+      player_hold_item:
+        name: "&3Hand to Check"
+        lore:
+          - "&fSelect which hand's item to check"
+        states:
+          hand: "Main Hand"
+          off_hand: "Off Hand"
 
   coding:
     player_event:
@@ -470,6 +536,11 @@ menus:
           - "&7Triggered when a player interacts"
           - "&7with a button, pressure plate, lever,"
           - "&7opens a door, etc."
+      player_inv_click:
+        name: "&eInventory Click"
+        lore:
+          - "&7Triggered when a player clicks"
+          - "&7on the inventory."
       player_chatted:
         name: "&eChat Event"
         lore:
@@ -646,7 +717,14 @@ menus:
           - "&7a different item."
           - "&7"
           - "&7Arguments (36):"
-          - "&7- &eItem: &7Item for possible selection"
+          - "&7- &eItem: &7Item for possible selection &e(36)"
+      remove_item:
+        name: "&eRemove Item"
+        lore:
+          - "&7Removes specified items from the player's inventory."
+          - "&7The item is removed in the same quantity as specified."
+          - "&7Arguments (36):"
+          - "&7- &eItem: &7The item to remove &e(36)"
 
       teleport:
         name: "&eTeleport"
@@ -690,6 +768,15 @@ menus:
           - "&7Arguments (2):"
           - "&7- &cNumber: &7Amount of delay time units &e(1)"
           - "&7- &6Toggle: &7Time unit &e(1)"
+
+      set_block:
+        name: "&eSet Block"
+        lore:
+          - "&7Sets a block at the specified locations."
+          - "&7"
+          - "&7Arguments (28):"
+          - "&7- &eItem: &7The type of block to set &e(1)"
+          - "&7- &fLocation: &7Locations where the block should be set &e(27)"
       set_world_name:
         name: "&eSet World Name"
         lore:
@@ -740,6 +827,26 @@ menus:
           - "&7Arguments (36):"
           - "&7- &bText: &7Messages to check &e(36)"
 
+      player_hold_item:
+        name: "&eHolds an Item"
+        lore:
+          - "&7Compares the item in the player's hand"
+          - "&7with an item in the chest. Returns &6true&7 if"
+          - "&7at least one item matches."
+          - "&7"
+          - "&7Arguments (37):"
+          - "&7- &eItem: &7Item to check &e(36)"
+          - "&7- &6Toggle: &7Hand to check &e(1)"
+      item_equals:
+        name: "&eItem Equals"
+        lore:
+          - "&7Checks if the given item matches"
+          - "&7the item from the event. Returns &6true&7 if"
+          - "&7at least one item matches"
+          - "&7"
+          - "&7Arguments (36):"
+          - "&7- &eItem: &7Item to check &e(36)"
+
       set_var:
         name: "&eSet (=)"
         lore:
@@ -758,6 +865,37 @@ menus:
           - "&7Arguments (2):"
           - "&7- &6Dynamic Variable: &7The variable to set &e(1)"
           - "&7- &eItem: &7The item to assign &e(1)"
+
+      var_multiply:
+        name: "&eMultiply (*)"
+        lore:
+          - "&7Multiplies the initial number by all the numbers listed below,"
+          - "&7and stores the result in a variable."
+          - "&7"
+          - "&7Arguments (29):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &cNumber: &7Number to multiply &e(1)"
+          - "&7- &cNumber: &7Numbers to multiply by &e(27)"
+      var_increment:
+        name: "&eAdd (+=)"
+        lore:
+          - "&7Adds the specified value to the variable."
+          - "&7If the value is invalid or missing, 1 is added."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic Variable: &7The variable to modify &e(1)"
+          - "&7- &cNumber: &7The amount to add &e(1)"
+
+      var_decrement:
+        name: "&eSubtract (-=)"
+        lore:
+          - "&7Subtracts the specified value from the variable."
+          - "&7If the value is invalid or missing, 1 is subtracted."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic Variable: &7The variable to modify &e(1)"
+          - "&7- &cNumber: &7The amount to subtract &e(1)"
+
       get_text_len:
         name: "&eGet Text Length"
         lore:
@@ -766,6 +904,46 @@ menus:
           - "&7Arguments (2):"
           - "&7- &6Dynamic variable: &7Variable for the result &e(1)"
           - "&7- &bText: &7Text to check &e(1)"
+
+      compare_num_ez:
+        name: "&eCompare Numbers (Easy)"
+        lore:
+          - "&7Compares two numbers based on a specified criterion."
+          - "&7"
+          - "&7Arguments (3):"
+          - "&7- &cNumber: &7The number to compare &e(1)"
+          - "&7- &6Toggle: &7Comparison type &e(1)"
+          - "&7- &cNumber: &7The number to compare against &e(1)"
+
+      if_text_contains:
+        name: "&eIf Text Contains"
+        lore:
+          - "&7Checks if the main argument contains any"
+          - "&7of the specified texts below"
+          - "&7"
+          - "&7Arguments (28):"
+          - "&7- &bText: &7Main text &e(1)"
+          - "&7- &bText: &7Texts to compare &e(27)"
+
+      if_text_starts_with:
+        name: "&eIf Starts With"
+        lore:
+          - "&7Checks if the main argument starts with any"
+          - "&7of the specified texts below"
+          - "&7"
+          - "&7Arguments (28):"
+          - "&7- &bText: &7Main text &e(1)"
+          - "&7- &bText: &7Texts to compare &e(27)"
+
+      if_text_ends_with:
+        name: "&eIf Text Ends With"
+        lore:
+          - "&7Checks if the main argument ends with any"
+          - "&7of the specified texts below"
+          - "&7"
+          - "&7Arguments (28):"
+          - "&7- &bText: &7Main text &e(1)"
+          - "&7- &bText: &7Texts to compare &e(27)"
 
       if_var_equals:
         name: "&eIf Value Equals"
@@ -783,6 +961,16 @@ menus:
           - "&7"
           - "&7Arguments (1):"
           - "&7- &6Dynamic Variable: &7The variable to check &e(1)"
+      if_loc_in_reg:
+        name: "&eIf Location in Region"
+        lore:
+          - "&7Checks if a location is within the"
+          - "&7specified range (inclusive)"
+          - "&7"
+          - "&7Arguments (3):"
+          - "&7- &fLocation: &7The location to check &e(1)"
+          - "&7- &fLocation: &7Min point of the region &e(1)"
+          - "&7- &fLocation: &7Max point of the region &e(1)"
 
   worlds-option:
     title: "Choose an Option"
@@ -1025,6 +1213,16 @@ menus:
         lore:
           - "&7If disabled, entities will not interact"
           - "&7with blocks or pick up items from the ground."
+        states:
+          true: "Enabled"
+          false: "Disabled"
+      doMobSpawning:
+        name: "&eNatural Mob Spawning"
+        lore:
+          - "&7If disabled, mobs will not spawn naturally"
+          - "&7(by Minecraft's system)."
+          - "&7Spawn eggs and spawning through code"
+          - "&7will still function."
         states:
           true: "Enabled"
           false: "Disabled"

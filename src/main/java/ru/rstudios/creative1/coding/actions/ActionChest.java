@@ -150,6 +150,49 @@ public class ActionChest {
         return list;
     }
 
+    public List<ItemStack> getAsItemStacks (GameEvent event, Entity entity, int from, int to) {
+        List<ItemStack> items = new LinkedList<>();
+        ItemStack[] args = Arrays.copyOfRange(originalContents, from, to);
+
+        for (ItemStack item : args) {
+            if (!isNullOrAir(item)) {
+                Object o = parseItemArgument(item, event, entity);
+
+                if (o instanceof ItemStack itemStack) {
+                    items.add(itemStack);
+                }
+            }
+        }
+
+        return items;
+    }
+
+    public List<Double> getAsNumbers (GameEvent event, Entity entity, int from, int to) {
+        List<Double> items = new LinkedList<>();
+        ItemStack[] args = Arrays.copyOfRange(originalContents, from, to);
+
+        for (ItemStack item : args) {
+            if (!isNullOrAir(item)) {
+                items.add(parseNumberPlus(item, 1.0, event, entity));
+            }
+        }
+
+        return items;
+    }
+
+    public List<Location> getAsLocations (GameEvent event, Entity entity, int from, int to) {
+        List<Location> items = new LinkedList<>();
+        ItemStack[] args = Arrays.copyOfRange(originalContents, from, to);
+
+        for (ItemStack item : args) {
+            if (!isNullOrAir(item)) {
+                items.add(parseLocationPlus(item, event.getPlot().world().getSpawnLocation(), event, entity));
+            }
+        }
+
+        return items;
+    }
+
     public List<Double> getAsNumerics() {
         List<Double> numerics = new LinkedList<>();
 
@@ -183,6 +226,49 @@ public class ActionChest {
             }
         }
         return null;
+    }
+
+    public static ItemStack parseItemArgument (ItemStack item, GameEvent event, Entity entity) {
+        if (item == null || event == null || entity == null) return item;
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
+
+        NamespacedKey key = new NamespacedKey(plugin, "variable");
+        if (!meta.getPersistentDataContainer().has(key, PersistentDataType.BOOLEAN)) {
+            return item;
+        }
+
+        Object value;
+        if (item.getType() == Material.MAGMA_CREAM) {
+            String name = ChatColor.stripColor(meta.getDisplayName());
+            value = new DynamicVariable(name).getValue(event.getPlot());
+        } else if (item.getType() == Material.APPLE) {
+            value = parseGameValue(item, null).getValueInstance().get(event, entity);
+        } else return item;
+
+        return value instanceof ItemStack ? (ItemStack) value : item;
+    }
+
+
+    public static double parseNumberPlus (ItemStack item, double defValue, GameEvent event, Entity entity) {
+        if (item == null) {
+            return defValue;
+        }
+
+        Object o = parseItem(item, event, entity);
+        if (o instanceof Number number) return number.doubleValue();
+
+        return defValue;
+    }
+
+    public static Location parseLocationPlus (ItemStack item, Location defaultValue, GameEvent event, Entity entity) {
+        if (item == null) return defaultValue;
+
+        Object o = parseItem(item, event, entity);
+        if (o instanceof Location location) return location;
+
+        return defaultValue;
     }
 
     public Action getLinkedAction() {

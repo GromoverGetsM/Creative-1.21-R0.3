@@ -6,6 +6,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.coding.eventvalues.specific.EventBlockLocationValue;
 import ru.rstudios.creative1.coding.eventvalues.specific.EventBlockValue;
+import ru.rstudios.creative1.coding.eventvalues.specific.EventClickedItemValue;
 import ru.rstudios.creative1.coding.eventvalues.specific.EventMessage;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
@@ -19,7 +20,8 @@ public enum ValueType {
 
     PLAYER_MESSAGE("coding.values.specific.player_message", Value.Category.EVENT, Material.WRITABLE_BOOK, EventMessage::new),
     EVENT_BLOCK("coding.values.specific.event_block", Value.Category.EVENT, Material.GRASS_BLOCK, EventBlockValue::new),
-    EVENT_BLOCK_LOC("coding.values.specific.event_block_loc", Value.Category.EVENT, Material.PAPER, EventBlockLocationValue::new);
+    EVENT_BLOCK_LOC("coding.values.specific.event_block_loc", Value.Category.EVENT, Material.PAPER, EventBlockLocationValue::new),
+    EVENT_ITEM("coding.values.specific.event_item", Value.Category.EVENT, Material.CRAFTING_TABLE, EventClickedItemValue::new);
 
     private final String localeCode;
     private final Value.Category category;

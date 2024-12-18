@@ -50,6 +50,7 @@ public class DevPlot {
     public boolean inTerritory (Location location) {
         BlockVector3 pos1 = BlockVector3.at(63, -59, 63);
         BlockVector3 pos2 = BlockVector3.at(-64, 255, -64);
+
         CuboidRegion region = new CuboidRegion(pos1, pos2);
 
         return region.contains(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ()));

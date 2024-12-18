@@ -21,6 +21,7 @@ import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
 import ru.rstudios.creative1.coding.starters.playerevent.PlayerJoin;
 import ru.rstudios.creative1.coding.starters.playerevent.PlayerQuit;
+import ru.rstudios.creative1.handlers.GlobalListener;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
@@ -128,7 +129,7 @@ public class Plot {
             config.set("gameRules.doImmediateRespawn", true);
             config.set("gameRules.showDeathMessages", false);
             config.set("gameRules.doDaylightCycle", false);
-            config.set("gameRules.tntExplodes", true);
+            config.set("gameRules.doMobSpawning", false);
 
             config.save(file);
 
@@ -431,7 +432,7 @@ public class Plot {
     public ItemStack icon() {
         ItemStack icon = new ItemStack(this.isOpened ? this.icon : Material.BARRIER);
         ItemMeta iconMeta = icon.getItemMeta();
-        iconMeta.setDisplayName(this.iconName.replace("&", "§"));
+        iconMeta.setDisplayName(GlobalListener.parseColors(this.iconName));
 
         PersistentDataContainer pdc = iconMeta.getPersistentDataContainer();
         pdc.set(new NamespacedKey(plugin, "plotName"), PersistentDataType.STRING, this.plotName());

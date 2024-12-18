@@ -28,6 +28,7 @@ public enum StarterCategory {
     PLAYER_LEFT_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerLeftClicked::new, PlayerLeftClicked.Event.class, Material.IRON_PICKAXE),
     PLAYER_RIGHT_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerRightClicked::new, PlayerRightClicked.Event.class, Material.DIAMOND_PICKAXE),
     PLAYER_PHYSICAL_INTERACT(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerPhysicalInteract::new, PlayerPhysicalInteract.Event.class, Material.GOLDEN_PICKAXE),
+    PLAYER_INV_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.INVENTORY, PlayerClickedInventory::new, PlayerClickedInventory.Event.class, Material.PAINTING),
     PLAYER_CHATTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, PlayerChatted::new, PlayerChatted.Event.class, Material.WRITABLE_BOOK),
 
 

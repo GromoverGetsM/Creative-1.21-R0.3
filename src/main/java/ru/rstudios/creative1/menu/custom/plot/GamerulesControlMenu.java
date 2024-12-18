@@ -18,6 +18,7 @@ public class GamerulesControlMenu extends ProtectedMenu {
     private SwitchItem doPatrolSpawning;
     private SwitchItem doImmediateRespawn;
     private SwitchItem mobGriefing;
+    private SwitchItem doMobSpawning;
 
     public GamerulesControlMenu(User user) {
         super(LocaleManages.getLocaleMessage(user.getLocale(), "menus.gamerule-management.title", false, ""), (byte) 3);
@@ -33,6 +34,8 @@ public class GamerulesControlMenu extends ProtectedMenu {
         this.naturalRegeneration.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("naturalRegeneration")));
         this.mobGriefing = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.items.mobGriefing", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.mobGriefing.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("mobGriefing")));
+        this.doMobSpawning = new SwitchItem(List.of("true", "false"), "menus.gamerule-management.items.doMobSpawning", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.doMobSpawning.setCurrentState(String.valueOf(user.getCurrentPlot().getGamerule("doMobSpawning")));
     }
 
     @Override
@@ -43,6 +46,7 @@ public class GamerulesControlMenu extends ProtectedMenu {
         setItem((byte) 13, doPatrolSpawning.getLocalizedIcon(user));
         setItem((byte) 14, doImmediateRespawn.getLocalizedIcon(user));
         setItem((byte) 15, mobGriefing.getLocalizedIcon(user));
+        setItem((byte) 16, doMobSpawning.getLocalizedIcon(user));
     }
 
     @Override
@@ -104,6 +108,15 @@ public class GamerulesControlMenu extends ProtectedMenu {
                 updateSlot((byte) 15);
 
                 user.getCurrentPlot().updateGamerule("mobGriefing", Boolean.parseBoolean(mobGriefing.getCurrentValue()));
+            }
+            case 16 -> {
+                if (event.isLeftClick()) doMobSpawning.nextState();
+                else doMobSpawning.previousState();
+
+                setItem((byte) 16, doMobSpawning.getLocalizedIcon(user));
+                updateSlot((byte) 16);
+
+                user.getCurrentPlot().updateGamerule("doMobSpawning", Boolean.parseBoolean(doMobSpawning.getCurrentValue()));
             }
         }
     }

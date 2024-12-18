@@ -34,16 +34,17 @@ public class PlaySound extends Action {
             event.getPlot().throwException(this, new IllegalArgumentException("Звук " + definedSoundString + " не найден, перепроверьте!"));
             return;
         }
-        float volume = (float) Math.min(2.0, Math.max(0.5, ActionChest.parseNumber(chest.getNumbers()[0])));
-        float pitch = (float) Math.min(2.0, Math.max(0.5, ActionChest.parseNumber(chest.getNumbers()[1])));
 
 
         for (Entity e : getStarter().getSelection()) {
             if (!Development.checkPlot(e, event.getPlot())) {
-
                 continue;
             }
+
             if (e instanceof Player player) {
+                float volume = (float) Math.min(2.0, Math.max(0.5, ActionChest.parseNumberPlus(chest.getNumbers()[0], 0.0, event, e)));
+                float pitch = (float) Math.min(2.0, Math.max(0.5, ActionChest.parseNumberPlus(chest.getNumbers()[1], 0.0, event, e)));
+
                 player.playSound(loc, sound, category, volume, pitch);
             }
         }

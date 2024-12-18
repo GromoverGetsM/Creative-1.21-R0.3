@@ -34,7 +34,7 @@ public class GiveItems extends Action {
                 continue;
             }
             if (e instanceof InventoryHolder holder) {
-                itemsToGive.forEach(item -> holder.getInventory().addItem(item));
+                itemsToGive.forEach(item -> holder.getInventory().addItem(ActionChest.parseItemArgument(item, event, e)));
             }
         }
 

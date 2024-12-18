@@ -30,7 +30,7 @@ public class GiveRandomItem extends Action {
                     number = random.nextInt(9, 44);
                 } while (chest.getOriginalContents()[number] == null);
 
-                holder.getInventory().addItem(chest.getOriginalContents()[number]);
+                holder.getInventory().addItem(ActionChest.parseItemArgument(chest.getOriginalContents()[number], event, e));
             }
         }
 

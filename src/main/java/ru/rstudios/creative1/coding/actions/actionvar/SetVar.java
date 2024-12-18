@@ -21,7 +21,7 @@ public class SetVar extends Action {
         chest.initInventorySort();
 
         ItemStack dynamic = chest.getOriginalContents()[13];
-        ItemStack[] args = Arrays.copyOfRange(chest.getOriginalContents(), 27, 54);
+        ItemStack[] args = Arrays.copyOfRange(chest.getOriginalContents(), 26, 54);
         ItemStack[] nonnull = Arrays.stream(args)
                 .filter(item -> item != null && item.getType() != Material.AIR)
                 .toArray(ItemStack[]::new);

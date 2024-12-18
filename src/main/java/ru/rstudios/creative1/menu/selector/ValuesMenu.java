@@ -57,7 +57,9 @@ public class ValuesMenu extends ProtectedMenu {
 
                     if (meta != null) {
                         meta.setDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
-                        meta.getPersistentDataContainer().set(new NamespacedKey(plugin, "valueType"), PersistentDataType.STRING, type.name().toLowerCase(Locale.ROOT));
+                        NamespacedKey valueType = new NamespacedKey(plugin, "valueType");
+                        meta.getPersistentDataContainer().set(new NamespacedKey(plugin, "variable"), PersistentDataType.BOOLEAN, true);
+                        meta.getPersistentDataContainer().set(valueType, PersistentDataType.STRING, type.name().toUpperCase());
 
                         toUpdate.setItemMeta(meta);
                     }
