@@ -12,12 +12,13 @@ import ru.rstudios.creative1.utils.Development;
 
 import java.nio.file.AccessDeniedException;
 import java.util.Iterator;
+import java.util.List;
 
 import static ru.rstudios.creative1.plots.PlotManager.plots;
 
 public class ToOtherPlot extends Action {
     @Override
-    public void execute(GameEvent event) {
+    public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
@@ -27,7 +28,7 @@ public class ToOtherPlot extends Action {
 
         if (to != null) {
             if (from.owner().equalsIgnoreCase(to.owner()) || to.allowedDevs().contains(from.owner())) {
-                for (Entity e : getStarter().getSelection()) {
+                for (Entity e : selection) {
                     if (!Development.checkPlot(e, event.getPlot())) {
 
                         continue;

@@ -11,16 +11,17 @@ import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.Iterator;
+import java.util.List;
 
 public class SetItemDelay extends Action {
     @Override
-    public void execute(GameEvent event) {
+    public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
         double delay = ActionChest.parseNumber(chest.getOriginalContents()[15]);
 
-        for (Entity e : getStarter().getSelection()) {
+        for (Entity e : selection) {
             if (!Development.checkPlot(e, event.getPlot())) {
                 continue;
             }

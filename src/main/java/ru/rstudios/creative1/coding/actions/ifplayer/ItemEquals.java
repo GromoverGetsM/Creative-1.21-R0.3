@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ItemEquals extends ActionIf {
     @Override
-    public boolean conditionExpression(GameEvent event) {
+    public boolean conditionExpression(GameEvent event, List<Entity> selection) {
         if (!(event instanceof ItemEvent)) {
             event.getPlot().throwException(this,
                     new UnsupportedOperationException("Вызвано событие с несовместимым условием 'Предмет равен'"));
@@ -28,7 +28,7 @@ public class ItemEquals extends ActionIf {
             return false;
         }
 
-        for (Entity entity : getStarter().getSelection()) {
+        for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) {
                 continue;
             }

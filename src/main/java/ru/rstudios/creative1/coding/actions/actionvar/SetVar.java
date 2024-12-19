@@ -13,21 +13,22 @@ import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class SetVar extends Action {
     @Override
-    public void execute(GameEvent event) {
+    public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
         ItemStack dynamic = chest.getOriginalContents()[13];
-        ItemStack[] args = Arrays.copyOfRange(chest.getOriginalContents(), 26, 54);
+        ItemStack[] args = Arrays.copyOfRange(chest.getOriginalContents(), 27, 54);
         ItemStack[] nonnull = Arrays.stream(args)
                 .filter(item -> item != null && item.getType() != Material.AIR)
                 .toArray(ItemStack[]::new);
 
         if (dynamic != null) {
-            for (Entity entity : getStarter().getSelection()) {
+            for (Entity entity : selection) {
                 if (!Development.checkPlot(entity, event.getPlot())) {
                     continue;
                 }

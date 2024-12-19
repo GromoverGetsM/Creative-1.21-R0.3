@@ -1,17 +1,20 @@
 package ru.rstudios.creative1.coding.actions.worldaction.lines;
 
+import org.bukkit.entity.Entity;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.menu.SwitchItem;
 
+import java.util.List;
+
 public class Wait extends Action {
 
     private long waitTimeTicks;
 
     @Override
-    public void execute(GameEvent event) {
+    public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 

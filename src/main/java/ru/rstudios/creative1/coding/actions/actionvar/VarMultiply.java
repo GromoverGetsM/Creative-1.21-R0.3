@@ -13,13 +13,13 @@ import java.util.List;
 
 public class VarMultiply extends Action {
     @Override
-    public void execute(GameEvent event) {
+    public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
         ItemStack varItem = chest.getOriginalContents()[12];
 
-        for (Entity entity : getStarter().getSelection()) {
+        for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) {
                 continue;
             }

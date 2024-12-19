@@ -18,6 +18,7 @@ public class troubleshooterCommand implements CommandExecutor {
                 if (args.length == 3) {
                     Location loc = new Location(user.getCurrentPlot().dev.world(), Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 
+                    user.getCurrentPlot().teleportToDev(user);
                     user.player().teleport(loc);
                 }
             }

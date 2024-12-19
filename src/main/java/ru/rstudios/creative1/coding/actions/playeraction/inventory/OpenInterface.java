@@ -10,17 +10,18 @@ import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.Iterator;
+import java.util.List;
 
 public class OpenInterface extends Action {
     @Override
-    public void execute(GameEvent event) {
+    public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
         SwitchItem item = getCategory().getCodingMenu().getSwitches().get(13);
         item.setCurrentState(item.getCurrentState(chest.getOriginalContents()[13]));
 
-        for (Entity e : getStarter().getSelection()) {
+        for (Entity e : selection) {
             if (!Development.checkPlot(e, event.getPlot())) {
 
                 continue;

@@ -19,11 +19,15 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
+import ru.rstudios.creative1.menu.ProtectedMenu;
 import ru.rstudios.creative1.menu.selector.*;
 import ru.rstudios.creative1.plots.DevPlot;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
+import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 
 import java.util.Arrays;
@@ -39,22 +43,25 @@ public class Development {
     public enum BlockTypes {
 
         PLAYER_EVENT(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, PlayerEvent::new,true, false),
+        FUNCTION(Material.LAPIS_BLOCK, Material.LAPIS_ORE, null, true, false),
+        CYCLE(Material.EMERALD_BLOCK, Material.EMERALD_ORE, null, true, false),
         BLOCK_EVENT(Material.PRISMARINE_BRICKS, Material.PRISMARINE, BlockEvent::new, true, false),
         PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, PlayerAction::new,false, false),
         ENTITY_ACTION(Material.MUD_BRICKS, Material.PACKED_MUD, EntityAction::new,false, false),
         ACTION_VAR(Material.IRON_BLOCK, Material.IRON_ORE, ActionVar::new,false, false),
         WORLD_ACTION(Material.RED_NETHER_BRICKS, Material.NETHERRACK, WorldAction::new,false, false),
         IF_PLAYER(Material.OAK_PLANKS, Material.PISTON, IfPlayer::new,false, true),
-        IF_VARIABLE(Material.OBSIDIAN, Material.PISTON, IfVariable::new,false, true);
+        IF_VARIABLE(Material.OBSIDIAN, Material.PISTON, IfVariable::new,false, true),
+        SELECT(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, SelectMenu::new, false, false);
 
 
         private Material mainBlock;
         private Material additionalBlock;
-        private final Function<User, CodingCategoriesMenu> constructor;
+        private final Function<User, ProtectedMenu> constructor;
         private boolean isEvent;
         private boolean isCondition;
 
-        BlockTypes (Material mainBlock, Material additionalBlock, Function<User, CodingCategoriesMenu> constructor, boolean isEvent, boolean isCondition) {
+        BlockTypes (Material mainBlock, Material additionalBlock, Function<User, ProtectedMenu> constructor, boolean isEvent, boolean isCondition) {
             this.mainBlock = mainBlock;
             this.additionalBlock = additionalBlock;
             this.constructor = constructor;
@@ -90,8 +97,18 @@ public class Development {
             return constructor != null;
         }
 
-        public CodingCategoriesMenu createMenuInstance(User user) {
+        public ProtectedMenu createMenuInstance(User user) {
             return constructor.apply(user);
+        }
+
+        public ItemStack getIcon (User user) {
+            ItemStack item = new ItemStack(getMainBlock());
+            ItemMeta meta = item.getItemMeta();
+
+            meta.setDisplayName(LocaleManages.getLocaleMessage(user.getLocale(), "coding." + name().toLowerCase(Locale.ROOT), false, ""));
+            item.setItemMeta(meta);
+
+            return item;
         }
     }
 
@@ -137,6 +154,11 @@ public class Development {
 
             if (signBlock.getState() instanceof Sign sign) {
                 sign.setLine(1, "coding." + type.name().toLowerCase(Locale.ROOT));
+
+                if (type == BlockTypes.CYCLE) {
+                    sign.setLine(3, "20");
+                }
+
                 sign.update();
             }
 

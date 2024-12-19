@@ -13,11 +13,11 @@ import java.util.List;
 
 public class SendMessage extends Action {
     @Override
-    public void execute(GameEvent event) {
+    public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
-        for (Entity e : getStarter().getSelection()) {
+        for (Entity e : selection) {
             if (!Development.checkPlot(e, event.getPlot())) {
                 continue;
             }

@@ -12,11 +12,12 @@ import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.events.GameEvent;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class SendDialogue extends Action {
     @Override
-    public void execute(GameEvent event) {
+    public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
@@ -54,7 +55,7 @@ public class SendDialogue extends Action {
                     current++;
                 }
             }
-        }.runTaskTimer(getStarter().getSelection(), 0, cooldown);
+        }.runTaskTimer(selection, 0, cooldown);
     }
 
     @Override

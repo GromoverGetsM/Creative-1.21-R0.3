@@ -9,10 +9,12 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import ru.rstudios.creative1.coding.MenuCategory;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.menu.CodingMenu;
+import ru.rstudios.creative1.menu.ProtectedMultipages;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
@@ -30,7 +32,7 @@ public class IfVariable extends CodingCategoriesMenu {
     }
 
     @Override
-    public void fillCategoryPage(User user) {
+    public void fillItems(User user) {
         List<MenuCategory> categories = new LinkedList<>(ActionCategory.getMenuCategories(Development.BlockTypes.IF_VARIABLE));
         List<Byte> slots = Arrays.asList((byte) 10, (byte) 13, (byte) 16, (byte) 37, (byte) 40, (byte) 43);
 
@@ -40,59 +42,17 @@ public class IfVariable extends CodingCategoriesMenu {
     }
 
     @Override
-    public void fillItemsPage(User user) {
-        List<ActionCategory> actions = ActionCategory.getActionsByCategory(Development.BlockTypes.IF_VARIABLE, this.selectedCategory);
-        List<Byte> slots = new LinkedList<>();
-        addRange(slots, (byte) 10, (byte) 16);
-        addRange(slots, (byte) 19, (byte) 25);
-        addRange(slots, (byte) 28, (byte) 34);
-        addRange(slots, (byte) 37, (byte) 43);
-
-        for (int i = 0; i < Math.min(actions.size(), slots.size()); i++) {
-            setItem(slots.get(i), actions.get(i).getIcon(user));
-            updateSlot(slots.get(i));
-        }
-    }
-
-    @Override
     public void onClick(InventoryClickEvent event) {
         User user = User.asUser(event.getWhoClicked());
 
         if (event.getCurrentItem() != null) {
-            if (selectedCategory == null) {
-                selectedCategory = MenuCategory.getByMaterial(event.getCurrentItem().getType());
-                isCategorySelected = true;
-                this.items.clear();
-                user.player().closeInventory();
-                open(user);
-            } else {
-                ActionCategory category = ActionCategory.get(event.getCurrentItem().getType(), Development.BlockTypes.IF_VARIABLE, selectedCategory);
+            event.setCancelled(true);
+            MenuCategory category = MenuCategory.getByMaterial(event.getCurrentItem().getType());
 
-                if (category != null) {
-                    user.player().closeInventory();
-                    Sign sign = (Sign) this.sign.getState();
-                    sign.setLine(2, "coding.actions." + category.name().toLowerCase(Locale.ROOT));
-                    sign.update();
-                    user.sendTranslatedSign(this.sign.getLocation());
-
-                    this.sign.setMetadata("selectedAction", new FixedMetadataValue(plugin, category.name()));
-
-                    Block chestBlock = this.sign.getRelative(BlockFace.SOUTH).getRelative(BlockFace.UP);
-
-                    if (category.hasChest()) {
-                        chestBlock.setType(Material.CHEST);
-
-
-                        Chest chest = (Chest) chestBlock.getState();
-                        CodingMenu menu = category.getCodingMenu();
-
-                        NamespacedKey inventory = new NamespacedKey(plugin, "inventory");
-
-                        chest.getPersistentDataContainer().set(inventory, DataType.ITEM_STACK_ARRAY, menu.getInventory(user).getContents());
-                        chest.update();
-
-                    } else chestBlock.setType(Material.AIR);
-                }
+            if (category != null) {
+                CodingMultipagesMenu menu = new IfVariable.Actions(user, category, this.sign);
+                menu.setSign(this.sign);
+                menu.open(user);
             }
         }
     }
@@ -100,5 +60,68 @@ public class IfVariable extends CodingCategoriesMenu {
     @Override
     public void onOpen(InventoryOpenEvent event) {
 
+    }
+
+    static class Actions extends CodingMultipagesMenu {
+
+        private final MenuCategory category;
+        private final Block sign;
+
+        public Actions(User user, MenuCategory category, Block sign) {
+            super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.if_variable", false, ""), user);
+            this.itemsSlots = new byte[]{10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
+            this.category = category;
+            this.sign = sign;
+        }
+
+        @Override
+        public List<ItemStack> getMenuElements() {
+            List<ActionCategory> actions = ActionCategory.getActionsByCategory(Development.BlockTypes.IF_VARIABLE, this.category);
+            List<ItemStack> icons = new LinkedList<>();
+            actions.forEach(actioncategory -> icons.add(actioncategory.getIcon(this.user)));
+            return icons;
+        }
+
+        @Override
+        public void onMenuElementClick(InventoryClickEvent event) {
+            ActionCategory category = ActionCategory.get(event.getCurrentItem().getType(), Development.BlockTypes.IF_VARIABLE, this.category);
+
+            if (category != null) {
+                user.player().closeInventory();
+                Sign sign = (Sign) this.sign.getState();
+                int setterLine = sign.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.PURPUR_BLOCK ? 3 : 2;
+                sign.setLine(setterLine, "coding.actions." + category.name().toLowerCase(Locale.ROOT));
+                sign.update();
+                user.sendTranslatedSign(this.sign.getLocation());
+
+                this.sign.setMetadata("selectedAction", new FixedMetadataValue(plugin, category.name()));
+
+                Block chestBlock = this.sign.getRelative(BlockFace.SOUTH).getRelative(BlockFace.UP);
+
+                if (category.hasChest()) {
+                    chestBlock.setType(Material.CHEST);
+
+
+                    Chest chest = (Chest) chestBlock.getState();
+                    CodingMenu menu = category.getCodingMenu();
+
+                    NamespacedKey inventory = new NamespacedKey(plugin, "inventory");
+
+                    chest.getPersistentDataContainer().set(inventory, DataType.ITEM_STACK_ARRAY, menu.getInventory(user).getContents());
+                    chest.update();
+
+                } else chestBlock.setType(Material.AIR);
+            }
+        }
+
+        @Override
+        public void fillOther() {
+
+        }
+
+        @Override
+        public void onOpen(InventoryOpenEvent event) {
+
+        }
     }
 }

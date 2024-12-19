@@ -8,9 +8,11 @@ import ru.rstudios.creative1.coding.events.ChatEvent;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.utils.Development;
 
+import java.util.List;
+
 public class MessageEquals extends ActionIf {
     @Override
-    public boolean conditionExpression(GameEvent event) {
+    public boolean conditionExpression(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
@@ -19,7 +21,7 @@ public class MessageEquals extends ActionIf {
             return false;
         }
 
-        for (Entity entity : getStarter().getSelection()) {
+        for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) {
                 continue;
             }

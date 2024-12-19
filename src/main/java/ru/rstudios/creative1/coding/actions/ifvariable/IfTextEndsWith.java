@@ -17,11 +17,11 @@ import java.util.List;
 
 public class IfTextEndsWith extends ActionIf {
     @Override
-    public boolean conditionExpression(GameEvent event) {
+    public boolean conditionExpression(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
-        ItemStack[] args = Arrays.copyOfRange(chest.getOriginalContents(), 26, 54);
+        ItemStack[] args = Arrays.copyOfRange(chest.getOriginalContents(), 27, 54);
         ItemStack[] nonnull = Arrays.stream(args)
                 .filter(item -> item != null && item.getType() != Material.AIR)
                 .toArray(ItemStack[]::new);
@@ -35,7 +35,7 @@ public class IfTextEndsWith extends ActionIf {
         boolean caseI = Boolean.parseBoolean(caseIgnore.getCurrentValue());
         boolean colorI = Boolean.parseBoolean(colorsIgnore.getCurrentValue());
 
-        for (Entity entity : getStarter().getSelection()) {
+        for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) {
                 continue;
             }

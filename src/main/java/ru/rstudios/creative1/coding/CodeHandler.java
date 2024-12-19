@@ -1,23 +1,28 @@
 package ru.rstudios.creative1.coding;
 
 import javassist.bytecode.Bytecode;
+import net.kyori.adventure.bossbar.BossBar;
 import org.apache.commons.lang3.SerializationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
-import ru.rstudios.creative1.coding.actions.Action;
-import ru.rstudios.creative1.coding.actions.ActionCategory;
-import ru.rstudios.creative1.coding.actions.ActionChest;
-import ru.rstudios.creative1.coding.actions.ActionIf;
+import ru.rstudios.creative1.coding.actions.*;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.coding.starters.Starter;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
+import ru.rstudios.creative1.coding.starters.uncommon.Cycle;
+import ru.rstudios.creative1.coding.starters.uncommon.Function;
 import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
 import ru.rstudios.creative1.plots.Plot;
+import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
 
 import java.io.*;
@@ -28,6 +33,9 @@ public class CodeHandler {
     public Plot plot;
     public List<Starter> starters = new LinkedList<>();
     public Map<String, DynamicVariable> dynamicVariables = new LinkedHashMap<>();
+    private final Map<String, BossBar> bossBars = new LinkedHashMap<>();
+    private final Map<String, Scoreboard> scoreboards = new LinkedHashMap<>();
+    public List<Cycle> cycles = new LinkedList<>();
 
     public CodeHandler (Plot plot) {
         this.plot = plot;
@@ -45,11 +53,32 @@ public class CodeHandler {
             if (type == null || !type.isEvent()) continue;
 
             Sign sign = (Sign) loc.getBlock().getRelative(BlockFace.NORTH).getState();
-            StarterCategory stc = StarterCategory.byName(sign.getLine(2).replace("coding.events.", ""));
+            StarterCategory stc;
+
+            if (loc.getBlock().getType() == Development.BlockTypes.FUNCTION.getMainBlock()) {
+                stc = StarterCategory.FUNCTION;
+            } else if (loc.getBlock().getType() == Development.BlockTypes.CYCLE.getMainBlock()) {
+                stc = StarterCategory.CYCLE;
+            }
+            else stc = StarterCategory.byName(sign.getLine(2).replace("coding.events.", ""));
 
             if (stc == null || stc.getConstructor() == null) continue;
 
             Starter starter = stc.getConstructor().get();
+
+            if (stc == StarterCategory.FUNCTION) {
+                if (sign.getLine(2).isEmpty()) {
+                    continue;
+                }
+                ((Function) starter).setName(sign.getLine(2));
+            }
+            if (stc == StarterCategory.CYCLE) {
+                if (sign.getLine(2).isEmpty() || sign.getLine(3).isEmpty()) return;
+
+                ((Cycle) starter).setName(sign.getLine(2));
+                ((Cycle) starter).setRepeatTime(Integer.parseInt(sign.getLine(3)) <= 0 ? 20 : Integer.parseInt(sign.getLine(3)) > 432000 ? 20 : Integer.parseInt(sign.getLine(3)));
+            }
+
             List<Action> actions = new LinkedList<>();
 
             for (int dx = 58; dx > -60; dx -= 2) {
@@ -66,6 +95,22 @@ public class CodeHandler {
                 Action action = acc.getConstructor().get();
                 action.setActionBlock(actionBlock);
                 action.setStarter(starter);
+
+                if (actionBlock.getType() == Material.PURPUR_BLOCK) {
+                    if (!actionsSign.getLine(3).isEmpty()) {
+                        ActionCategory selectCondition = ActionCategory.byName(actionsSign.getLine(3).replace("coding.actions.", ""));
+
+                        if (selectCondition == null || selectCondition.getConstructor() == null) continue;
+
+                        ActionIf selectCond = ((ActionIf) selectCondition.getConstructor().get());
+                        if (selectCondition.hasChest()) {
+                            ActionChest actionChest = new ActionChest(action, actionBlock.getRelative(BlockFace.UP));
+                            selectCond.setChest(actionChest);
+                        }
+                        ((ActionSelect) action).setCondition(selectCond);
+                    }
+                }
+
                 if (acc.hasChest()) {
                     ActionChest actionChest = new ActionChest(action, actionBlock.getRelative(BlockFace.UP));
                     action.setChest(actionChest);
@@ -118,6 +163,18 @@ public class CodeHandler {
         return dynamicVariables;
     }
 
+    public Map<String, Scoreboard> getScoreboards() {
+        return scoreboards;
+    }
+
+    public Map<String, BossBar> getBossBars() {
+        return bossBars;
+    }
+
+    public void setDynamicVariables(Map<String, DynamicVariable> dynamicVariables) {
+        this.dynamicVariables = dynamicVariables;
+    }
+
     public void sendStarter (GameEvent event, StarterCategory sct) {
         if (plot.plotMode == Plot.PlotMode.PLAY) {
             if (this.starters != null && !this.starters.isEmpty()) {
@@ -130,6 +187,30 @@ public class CodeHandler {
                 }
 
             }
+        }
+    }
+
+    public void launchFunction (GameEvent event, String name, List<Entity> selection) {
+        for (Starter starter : starters) {
+            if (starter instanceof Function function && function.getName().equals(name)) {
+                function.setSelection(selection);
+                function.execute(event);
+            }
+        }
+    }
+
+    public void launchCycle (GameEvent event, String name, List<Entity> selection) {
+        for (Starter starter : starters) {
+            if (starter instanceof Cycle cycle && cycle.getName().equals(name)) {
+                cycle.setSelection(selection);
+                cycle.executeCycle(event);
+            }
+        }
+    }
+
+    public void stopCycle (String name) {
+        for (Cycle cycle : cycles) {
+            if (cycle.getName().equals(name)) cycle.stop(this);
         }
     }
 
@@ -154,6 +235,12 @@ public class CodeHandler {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void stopCycles() {
+        for (Cycle cycle : cycles) {
+             cycle.stop(this);
         }
     }
 

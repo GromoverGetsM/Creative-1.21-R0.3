@@ -3,6 +3,7 @@ package ru.rstudios.creative1.coding.starters;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.rstudios.creative1.coding.actions.Action;
+import ru.rstudios.creative1.coding.actions.ActionSelect;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.Wait;
 import ru.rstudios.creative1.coding.events.GameEvent;
 
@@ -58,7 +59,7 @@ public abstract class Starter {
 
         if (currentAction instanceof Wait) {
             Wait waitAction = (Wait) currentAction;
-            waitAction.execute(event);
+            waitAction.execute(event, getSelection());
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -66,7 +67,10 @@ public abstract class Starter {
                 }
             }.runTaskLater(plugin, waitAction.getWaitTimeTicks());
         } else {
-            currentAction.execute(event);
+            if (currentAction instanceof ActionSelect) {
+                ((ActionSelect) currentAction).execute(event);
+            }
+            else currentAction.execute(event, getSelection());
             executeNextAction(event);
         }
     }

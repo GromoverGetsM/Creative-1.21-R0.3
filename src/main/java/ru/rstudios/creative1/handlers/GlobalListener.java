@@ -29,6 +29,7 @@ import ru.rstudios.creative1.coding.starters.playerevent.*;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.ProtectedMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
+import ru.rstudios.creative1.menu.selector.CodingMultipagesMenu;
 import ru.rstudios.creative1.menu.selector.ValuesMenu;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
@@ -80,6 +81,8 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onPlayerJoin (PlayerJoinEvent event) {
         User user = User.asUser(event.getPlayer());
+        user.clear();
+        user.player().teleport(Bukkit.getWorld("world").getSpawnLocation());
 
         if (!DatabaseUtil.isValueExist("players", "player_name", user.name())) {
             DatabaseUtil.insertValue("players", "player_name", user.name());
@@ -311,7 +314,7 @@ public class GlobalListener implements Listener {
 
         if (p != null) {
             if (p.isUserInDev(user)) {
-                if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && event.getPlayer().getTargetBlockExact(5) != null && event.getPlayer().getTargetBlockExact(5).getType() != Material.CHEST && event.getItem() != null && event.getItem().getType() == Material.APPLE) {
+                if ((event.getAction() == Action.RIGHT_CLICK_AIR || (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getTargetBlockExact(5) != null && event.getPlayer().getTargetBlockExact(5).getType() != Material.CHEST)) && event.getItem() != null && event.getItem().getType() == Material.APPLE) {
                     new ValuesMenu(user).open(user);
                 }
                 if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
@@ -320,9 +323,24 @@ public class GlobalListener implements Listener {
 
                         Development.BlockTypes type = Development.BlockTypes.getByMainBlock(event.getClickedBlock().getRelative(BlockFace.SOUTH));
                         if (type != null && type.hasConstructor()) {
-                            CodingCategoriesMenu menu = type.createMenuInstance(user);
+                            ProtectedMenu menu = type.createMenuInstance(user);
                             menu.open(user);
-                            menu.setSign(event.getClickedBlock());
+                            if (menu instanceof CodingCategoriesMenu ccmenu) ccmenu.setSign(event.getClickedBlock());
+                            else if (menu instanceof CodingMultipagesMenu cmmenu) cmmenu.setSign(event.getClickedBlock());
+                        } else if ((type == Development.BlockTypes.FUNCTION || type == Development.BlockTypes.CYCLE) && event.getItem() != null && event.getItem().getType() == Material.BOOK) {
+                            ItemStack book = event.getItem();
+                            if (book.getItemMeta() == null || !book.getItemMeta().hasDisplayName()) return;
+
+                            Sign sign = (Sign) event.getClickedBlock().getState();
+                            sign.setLine(2, book.getItemMeta().getDisplayName());
+                            sign.update();
+                        } else if (type == Development.BlockTypes.CYCLE && event.getItem() != null && event.getItem().getType() == Material.SLIME_BALL) {
+                            ItemStack slime = event.getItem();
+                            if (slime.getItemMeta() == null || !slime.getItemMeta().hasDisplayName()) return;
+
+                            Sign sign = (Sign) event.getClickedBlock().getState();
+                            sign.setLine(3, slime.getItemMeta().getDisplayName());
+                            sign.update();
                         }
                     } else if (event.getClickedBlock().getType() == Material.CHEST) {
                         event.setCancelled(true);
@@ -332,8 +350,14 @@ public class GlobalListener implements Listener {
                         Chest chest = (Chest) event.getClickedBlock().getState();
                         ItemStack[] contents = chest.getPersistentDataContainer().get(inventory, DataType.ITEM_STACK_ARRAY);
                         Sign sign = (Sign) event.getClickedBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.NORTH).getState();
+                        ActionCategory category;
 
-                        ActionCategory category = ActionCategory.byName(sign.getLine(2).replace("coding.actions.", ""));
+                        if (event.getClickedBlock().getRelative(BlockFace.DOWN).getType() != Material.PURPUR_BLOCK) {
+                            category = ActionCategory.byName(sign.getLine(2).replace("coding.actions.", ""));
+                        } else {
+                            category = ActionCategory.byName(sign.getLine((sign.getLine(3).isEmpty() ? 2 : 3)).replace("coding.actions.", ""));
+                        }
+
                         if (category.hasChest()) {
                             CodingMenu codingMenu = category.getCodingMenu();
 

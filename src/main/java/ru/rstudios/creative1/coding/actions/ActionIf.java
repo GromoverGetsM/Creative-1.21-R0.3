@@ -1,6 +1,7 @@
 package ru.rstudios.creative1.coding.actions;
 
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.Wait;
 import ru.rstudios.creative1.coding.events.GameEvent;
@@ -40,25 +41,25 @@ public abstract class ActionIf extends ArrayAction {
         isInverted = inverted;
     }
 
-    public boolean checkCondition (GameEvent event) {
-        return this.isInverted != this.conditionExpression(event);
+    public boolean checkCondition (GameEvent event, List<Entity> selection) {
+        return this.isInverted != this.conditionExpression(event, selection);
     }
 
-    public void executeConditional(GameEvent event) {
+    public void executeConditional(GameEvent event, List<Entity> selection) {
         if (isExecuting) return;
         isExecuting = true;
 
-        executeNextAction(event);
+        executeNextAction(event, selection);
     }
 
     @Override
-    public void execute(GameEvent event) {
-        if (this.checkCondition(event)) {
-            this.executeConditional(event);
+    public void execute(GameEvent event, List<Entity> selection) {
+        if (this.checkCondition(event, selection)) {
+            this.executeConditional(event, selection);
         }
     }
 
-    private void executeNextAction(GameEvent event) {
+    private void executeNextAction(GameEvent event, List<Entity> selection) {
         if (currentIndex >= inConditionalActions.size()) {
             isExecuting = false;
             currentIndex = 0;
@@ -70,18 +71,18 @@ public abstract class ActionIf extends ArrayAction {
 
         if (currentAction instanceof Wait) {
             Wait waitAction = (Wait) currentAction;
-            waitAction.execute(event);
+            waitAction.execute(event, selection);
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    executeNextAction(event);
+                    executeNextAction(event, selection);
                 }
             }.runTaskLater(plugin, waitAction.getWaitTimeTicks());
         } else {
-            currentAction.execute(event);
-            executeNextAction(event);
+            currentAction.execute(event, selection);
+            executeNextAction(event, selection);
         }
     }
 
-    public abstract boolean conditionExpression (GameEvent event);
+    public abstract boolean conditionExpression (GameEvent event, List<Entity> selection);
 }

@@ -7,16 +7,15 @@ import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.Iterator;
+import java.util.List;
 
 public class ClearChat extends Action {
 
     @Override
-    public void execute(GameEvent event) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" \n".repeat(256));
-        String message = sb.toString();
+    public void execute(GameEvent event, List<Entity> selection) {
+        String message = " \n".repeat(256);
 
-        for (Entity e : getStarter().getSelection()) {
+        for (Entity e : selection) {
             if (!Development.checkPlot(e, event.getPlot())) {
 
                 continue;

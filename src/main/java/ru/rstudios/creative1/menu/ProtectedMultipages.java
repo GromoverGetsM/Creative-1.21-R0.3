@@ -24,6 +24,7 @@ public abstract class ProtectedMultipages extends ProtectedMenu {
 
     protected List<ItemStack> menuElements = new LinkedList<>();
     protected byte[] itemsSlots = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25};
+    // Когда соберёшься переводить CodingCategories на новую систему - ставь такие itemslotы - new byte[]{10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
 
     protected byte menuDoNotFilled = 22;
     protected byte previousPageSlot = 47;

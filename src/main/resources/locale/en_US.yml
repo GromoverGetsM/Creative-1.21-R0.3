@@ -232,6 +232,8 @@ coding:
     player_inv_click: "Inventory Click"
     player_chatted: "Chat Event"
 
+    function: "Function"
+
   actions:
     send_message: "Send message"
     send_title: "Show title"
@@ -263,6 +265,10 @@ coding:
 
     cancel_event: "Cancel Event"
     wait: "Wait"
+    launch_function: "Call function"
+    launch_cycle: "Start loop"
+    stop_cycle: "Stop loop"
+    clear_cache_vars: "Clear cache"
 
     set_block: "Set block"
     set_world_name: "Set World Name"
@@ -295,6 +301,13 @@ coding:
     if_var_exist: "Exists"
     if_loc_in_reg: "In Region"
 
+    select_all_players: "All players"
+    select_all_entities: "All Entities"
+    select_default_entity: "Default Entity"
+    select_default_player: "Default Player"
+    select_player_by_cond: "Players by cond"
+    send_selection: "Send selection"
+
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
   player_action: "&7&lPlayer Action"
@@ -303,6 +316,11 @@ coding:
   world_action: "&c&lWorld Action"
   if_player: "&6&lIf Player"
   if_variable: "&5&lIf Variable"
+  select: "&d&lSelect object"
+  player_conds: "Player conditions"
+
+  function: "&9&lFunction"
+  cycle: "&a&lCycle"
 
   var-types:
     text:
@@ -768,6 +786,34 @@ menus:
           - "&7Arguments (2):"
           - "&7- &cNumber: &7Amount of delay time units &e(1)"
           - "&7- &6Toggle: &7Time unit &e(1)"
+      launch_function:
+        name: "&eCall function"
+        lore:
+          - "&7Calls the function with the given name"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Function name &e(1)"
+      launch_cycle:
+        name: "&eStart loop"
+        lore:
+          - "&7Starts the loop with the given name"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Loop name &e(1)"
+      stop_cycle:
+        name: "&eStop loop"
+        lore:
+          - "&7Stops the loop with the given name"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Loop name &e(1)"
+      clear_cache_vars:
+        name: "&eClear cache"
+        lore:
+          - "&7Resets all unsaved variables to"
+          - "&7a state as if they never existed"
+          - "&7"
+          - "&aNo arguments required"
 
       set_block:
         name: "&eSet Block"
@@ -972,6 +1018,48 @@ menus:
           - "&7- &fLocation: &7Min point of the region &e(1)"
           - "&7- &fLocation: &7Max point of the region &e(1)"
 
+      select_all_players:
+        name: "&eSelect All Players"
+        lore:
+          - "&7Replaces the selection with a list of all players in the game world."
+          - "&7"
+          - "&aNo arguments required"
+      select_all_entities:
+        name: "&eSelect All Entities"
+        lore:
+          - "&7Replaces the selection with a list of all entities (excluding"
+          - "&7players) in the game world."
+          - "&7"
+          - "&aNo arguments required"
+
+      select_default_entity:
+        name: "&eSelect Default Entity"
+        lore:
+          - "&7Replaces the selection with the default entity if"
+          - "&7the entity is not a player."
+          - "&7"
+          - "&aNo arguments required"
+
+      select_default_player:
+        name: "&eSelect Default Player"
+        lore:
+          - "&7Replaces the selection with the default entity if"
+          - "&7the entity is a player."
+          - "&7"
+          - "&aNo arguments required"
+      select_player_by_cond:
+        name: "&eSelect players by condition"
+        lore:
+          - "&7Selects players based on a specified condition"
+          - "&7"
+          - "&7Arguments (?):"
+          - "&7- &c?: &7Depends on the chosen condition"
+      send_selection:
+        name: "&eSend current selection"
+        lore:
+          - "&7Outputs the current selection to chat"
+          - "&7"
+          - "&aNo arguments required"
   worlds-option:
     title: "Choose an Option"
     items:

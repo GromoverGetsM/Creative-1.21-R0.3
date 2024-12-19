@@ -8,9 +8,11 @@ import ru.rstudios.creative1.coding.actions.ActionChest;
 import ru.rstudios.creative1.coding.actions.ActionIf;
 import ru.rstudios.creative1.coding.events.GameEvent;
 
+import java.util.List;
+
 public class IfVariableExist extends ActionIf {
     @Override
-    public boolean conditionExpression(GameEvent event) {
+    public boolean conditionExpression(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
@@ -24,7 +26,7 @@ public class IfVariableExist extends ActionIf {
 
         String name = meta.getDisplayName();
 
-        for (Entity entity : getStarter().getSelection()) {
+        for (Entity entity : selection) {
            String parsedName = ActionIf.replacePlaceholders(name, event, entity);
 
            return event.getPlot().handler.getDynamicVariables().containsKey(parsedName);

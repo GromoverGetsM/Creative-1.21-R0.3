@@ -9,13 +9,15 @@ import ru.rstudios.creative1.coding.actions.ActionIf;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.utils.Development;
 
+import java.util.List;
+
 public class IfLocationInRegion extends ActionIf {
     @Override
-    public boolean conditionExpression(GameEvent event) {
+    public boolean conditionExpression(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
-        for (Entity entity : getStarter().getSelection()) {
+        for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) {
                 continue;
             }

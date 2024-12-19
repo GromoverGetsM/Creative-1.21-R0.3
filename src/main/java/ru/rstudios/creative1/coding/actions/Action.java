@@ -8,6 +8,7 @@ import ru.rstudios.creative1.coding.starters.Starter;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.Iterator;
+import java.util.List;
 
 public abstract class Action {
 
@@ -63,6 +64,6 @@ public abstract class Action {
         this.actionBlock = actionBlock;
     }
 
-    public abstract void execute(GameEvent event);
+    public abstract void execute(GameEvent event, List<Entity> selection);
     public abstract ActionCategory getCategory();
 }

@@ -16,6 +16,7 @@ import ru.rstudios.creative1.coding.eventvalues.StringValue;
 import ru.rstudios.creative1.coding.eventvalues.ValueType;
 import ru.rstudios.creative1.coding.starters.Starter;
 import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
+import ru.rstudios.creative1.handlers.GlobalListener;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.utils.Development;
 
@@ -260,6 +261,14 @@ public class ActionChest {
         if (o instanceof Number number) return number.doubleValue();
 
         return defValue;
+    }
+
+    public static String parseTextPlus (ItemStack item, String defValue, GameEvent event, Entity entity) {
+        if (item == null) return defValue;
+
+        Object o = parseItem(item, event, entity);
+        if (o == null) return defValue;
+        else return GlobalListener.parseColors(String.valueOf(o));
     }
 
     public static Location parseLocationPlus (ItemStack item, Location defaultValue, GameEvent event, Entity entity) {

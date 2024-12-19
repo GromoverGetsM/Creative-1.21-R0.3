@@ -29,6 +29,7 @@ public class buildCommand implements CommandExecutor {
                     for (Player player1 : p.online()) {
                         User.asUser(player1).sendMessage("info.plot-set-mode-build", true, "");
                         p.handler.sendStarter(new PlayerQuit.Event(player1, p, new PlayerChangedWorldEvent(player1, player1.getWorld())), StarterCategory.PLAYER_QUIT);
+                        p.handler.stopCycles();
                     }
                     p.plotMode = Plot.PlotMode.BUILD;
                 }

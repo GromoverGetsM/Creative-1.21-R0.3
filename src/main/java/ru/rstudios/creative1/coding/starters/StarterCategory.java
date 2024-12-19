@@ -3,12 +3,13 @@ package ru.rstudios.creative1.coding.starters;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
 import ru.rstudios.creative1.coding.starters.playerevent.*;
+import ru.rstudios.creative1.coding.starters.uncommon.Cycle;
+import ru.rstudios.creative1.coding.starters.uncommon.Function;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
@@ -18,6 +19,9 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public enum StarterCategory {
+
+    FUNCTION(Development.BlockTypes.FUNCTION, null, Function::new, null, Material.AIR),
+    CYCLE(Development.BlockTypes.CYCLE, null, Cycle::new, null, Material.AIR),
 
     PLAYER_JOIN(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerJoin::new, PlayerJoin.Event.class, Material.OAK_DOOR),
     PLAYER_QUIT(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerQuit::new, PlayerQuit.Event.class, Material.IRON_DOOR),

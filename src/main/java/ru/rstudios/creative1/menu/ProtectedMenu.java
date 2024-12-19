@@ -121,6 +121,12 @@ public abstract class ProtectedMenu implements InventoryHolder {
         return (event.getWhoClicked() instanceof Player);
     }
 
+    protected void addRange(List<Byte> list, byte start, byte end) {
+        for (byte i = start; i <= end; i++) {
+            list.add(i);
+        }
+    }
+
 
     public byte getSize() {
         return (byte) (rows*9);

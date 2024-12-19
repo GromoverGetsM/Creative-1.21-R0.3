@@ -16,7 +16,7 @@ import java.util.Locale;
 
 public class PlayerHoldItem extends ActionIf {
     @Override
-    public boolean conditionExpression(GameEvent event) {
+    public boolean conditionExpression(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
@@ -25,7 +25,7 @@ public class PlayerHoldItem extends ActionIf {
 
         EquipmentSlot slot = EquipmentSlot.valueOf(handSelector.getCurrentValue().toUpperCase(Locale.ROOT));
 
-        for (Entity entity : getStarter().getSelection()) {
+        for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) {
                 continue;
             }

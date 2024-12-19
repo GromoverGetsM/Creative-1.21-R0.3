@@ -313,12 +313,7 @@ public class Plot {
             user.player().teleport(dev().world().getSpawnLocation());
 
             for (Development.BlockTypes type : Development.BlockTypes.values()) {
-                ItemStack item = new ItemStack(type.getMainBlock());
-                ItemMeta meta = item.getItemMeta();
-
-                meta.setDisplayName(LocaleManages.getLocaleMessage(user.getLocale(), "coding." + type.name().toLowerCase(Locale.ROOT), false, ""));
-                item.setItemMeta(meta);
-                user.player().getInventory().addItem(item);
+                user.player().getInventory().addItem(type.getIcon(user));
             }
         }
     }
@@ -347,6 +342,7 @@ public class Plot {
     }
 
     public void unload(boolean onlyWorld, boolean needSave) {
+        handler.stopCycles();
         handler.saveDynamicVars();
 
         DatabaseUtil.updateValue("plots", "icon", icon.toString(), "plot_name", plotName());
