@@ -46,3 +46,5 @@ commands:
   vars:
     aliases:
       - мфкы
+  limit:
+    permission: creative.setlimits

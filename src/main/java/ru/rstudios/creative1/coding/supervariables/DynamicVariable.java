@@ -66,7 +66,7 @@ public class DynamicVariable implements Serializable {
         this.value = value;
         this.isSaved = saved;
         DynamicVariable newVariable = new DynamicVariable(name, saved, value);
-        plot.handler.getDynamicVariables().put(this.getName(), newVariable);
+        plot.handler.putDynamicVariable(this.name, newVariable);
     }
 
     @Override

@@ -63,6 +63,10 @@ public class Plot {
     public PlotMode plotMode;
     public CodeHandler handler;
 
+    public Set<DynamicLimit> limits = new LinkedHashSet<>();
+    private int lastModifiedBlocksAmount;
+    private int lastRedstoneOperationsAmount;
+
     public Plot (String owner) {
         this.owner = owner;
     }
@@ -140,6 +144,8 @@ public class Plot {
         handler.parseCodeBlocks();
 
         applyGameRules();
+        LimitManager.createIfNotExist(this);
+        this.limits = LimitManager.loadLimits(this);
     }
 
     public void init (long id, boolean needToInitWorld) {
@@ -192,6 +198,8 @@ public class Plot {
 
         this.world = creator.createWorld();
         applyGameRules();
+        LimitManager.createIfNotExist(this);
+        this.limits = LimitManager.loadLimits(this);
 
         world.setAutoSave(true);
         world.setKeepSpawnInMemory(false);
@@ -537,6 +545,13 @@ public class Plot {
         }
     }
 
+    public void throwException(String exception, String... changes) {
+        for (Player player : online()) {
+            User user = User.asUser(player);
+            user.sendMessage("errors.exceptions." + exception, false, changes);
+        }
+    }
+
     private String parseException (Exception e) {
         Set<String> lastStacks = new HashSet<>();
         byte i = 0;
@@ -566,4 +581,21 @@ public class Plot {
         newText = newText.replace("com.destroystokyo.paper.", "");
         return newText;
     }
+
+    public void setLastModifiedBlocksAmount(int lastModifiedBlocksAmount) {
+        this.lastModifiedBlocksAmount = lastModifiedBlocksAmount;
+    }
+
+    public void setLastRedstoneOperationsAmount(int lastRedstoneOperationsAmount) {
+        this.lastRedstoneOperationsAmount = lastRedstoneOperationsAmount;
+    }
+
+    public int getLastModifiedBlocksAmount() {
+        return lastModifiedBlocksAmount;
+    }
+
+    public int getLastRedstoneOperationsAmount() {
+        return lastRedstoneOperationsAmount;
+    }
+
 }

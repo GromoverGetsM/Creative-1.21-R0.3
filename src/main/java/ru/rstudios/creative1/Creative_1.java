@@ -63,6 +63,7 @@ public final class Creative_1 extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("games")).setExecutor(new gamesCommand());
         Objects.requireNonNull(getCommand("world")).setExecutor(new WorldCommand());
+        Objects.requireNonNull(getCommand("world")).setTabCompleter(new WorldCommand());
         Objects.requireNonNull(getCommand("plot")).setExecutor(new plotCommand());
         Objects.requireNonNull(getCommand("join")).setExecutor(new joinCommand());
         Objects.requireNonNull(getCommand("locale")).setExecutor(new localeCommand());
@@ -71,6 +72,8 @@ public final class Creative_1 extends JavaPlugin {
         Objects.requireNonNull(getCommand("dev")).setExecutor(new devCommand());
         Objects.requireNonNull(getCommand("troubleshooter")).setExecutor(new troubleshooterCommand());
         Objects.requireNonNull(getCommand("vars")).setExecutor(new varsCommand());
+        Objects.requireNonNull(getCommand("limit")).setExecutor(new limitsCommand());
+        Objects.requireNonNull(getCommand("limit")).setTabCompleter(new limitsCommand());
     }
 
     @Override

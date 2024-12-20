@@ -10,6 +10,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -18,15 +20,19 @@ import ru.rstudios.creative1.coding.actions.*;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.coding.starters.Starter;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
+import ru.rstudios.creative1.coding.starters.playerevent.PlayerQuit;
 import ru.rstudios.creative1.coding.starters.uncommon.Cycle;
 import ru.rstudios.creative1.coding.starters.uncommon.Function;
 import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
+import ru.rstudios.creative1.plots.LimitManager;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
 
 import java.io.*;
 import java.util.*;
+
+import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class CodeHandler {
 
@@ -36,6 +42,8 @@ public class CodeHandler {
     private final Map<String, BossBar> bossBars = new LinkedHashMap<>();
     private final Map<String, Scoreboard> scoreboards = new LinkedHashMap<>();
     public List<Cycle> cycles = new LinkedList<>();
+
+    int callsAmount = 0;
 
     public CodeHandler (Plot plot) {
         this.plot = plot;
@@ -179,10 +187,21 @@ public class CodeHandler {
         if (plot.plotMode == Plot.PlotMode.PLAY) {
             if (this.starters != null && !this.starters.isEmpty()) {
 
-                for (Starter starter : this.starters) {
-                    if (starter.getCategory() == sct) {
-                        starter.setSelection(Collections.singletonList(event.getDefaultEntity()));
-                        starter.execute(event);
+                if (!LimitManager.checkLimit(plot, "code_operations", callsAmount)) {
+                    for (Player player1 : plot.online()) {
+                        User.asUser(player1).sendMessage("info.plot-set-mode-build", true, "");
+                        plot.throwException("code_operations", String.valueOf(callsAmount), String.valueOf(LimitManager.getLimitValue(plot, "code_operations")));
+                        plot.handler.sendStarter(new PlayerQuit.Event(player1, plot, new PlayerChangedWorldEvent(player1, player1.getWorld())), StarterCategory.PLAYER_QUIT);
+                    }
+                    plot.handler.stopCycles();
+                    plot.plotMode = Plot.PlotMode.BUILD;
+                } else {
+                    for (Starter starter : this.starters) {
+                        if (starter.getCategory() == sct) {
+                            starter.setSelection(Collections.singletonList(event.getDefaultEntity()));
+                            starter.execute(event);
+                            increaseCalls();
+                        }
                     }
                 }
 
@@ -191,10 +210,22 @@ public class CodeHandler {
     }
 
     public void launchFunction (GameEvent event, String name, List<Entity> selection) {
-        for (Starter starter : starters) {
-            if (starter instanceof Function function && function.getName().equals(name)) {
-                function.setSelection(selection);
-                function.execute(event);
+        if (!LimitManager.checkLimit(plot, "code_operations", callsAmount)) {
+            for (Player player1 : plot.online()) {
+                User.asUser(player1).sendMessage("info.plot-set-mode-build", true, "");
+                plot.throwException("code_operations", String.valueOf(callsAmount), String.valueOf(LimitManager.getLimitValue(plot, "code_operations")));
+                plot.handler.sendStarter(new PlayerQuit.Event(player1, plot, new PlayerChangedWorldEvent(player1, player1.getWorld())), StarterCategory.PLAYER_QUIT);
+            }
+            plot.handler.stopCycles();
+            plot.plotMode = Plot.PlotMode.BUILD;
+        } else {
+            for (Starter starter : starters) {
+                if (starter instanceof Function function && function.getName().equals(name)) {
+                    function.setSelection(selection);
+                    function.execute(event);
+                    callsAmount++;
+                    increaseCalls();
+                }
             }
         }
     }
@@ -258,5 +289,16 @@ public class CodeHandler {
         }
     }
 
+    public void increaseCalls() {
+        callsAmount++;
+        Bukkit.getScheduler().runTaskLater(plugin, () -> callsAmount--, 35L);
+    }
 
+    public void putDynamicVariable (DynamicVariable variable) {
+        if (LimitManager.checkLimit(plot, "variables", dynamicVariables.size())) dynamicVariables.put(variable.getName(), variable);
+    }
+
+    public void putDynamicVariable (String name, DynamicVariable variable) {
+        if (LimitManager.checkLimit(plot, "variables", dynamicVariables.size())) dynamicVariables.put(name, variable);
+    }
 }
