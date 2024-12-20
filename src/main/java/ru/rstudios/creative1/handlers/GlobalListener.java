@@ -1,6 +1,9 @@
 package ru.rstudios.creative1.handlers;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.event.extent.EditSessionEvent;
+import com.sk89q.worldedit.util.eventbus.Subscribe;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
@@ -15,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -35,6 +39,7 @@ import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
+import ru.rstudios.creative1.utils.ChestMenuHook;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.Development;
 
@@ -348,6 +353,11 @@ public class GlobalListener implements Listener {
                         NamespacedKey inventory = new NamespacedKey(plugin, "inventory");
 
                         Chest chest = (Chest) event.getClickedBlock().getState();
+                        if (chest.getPersistentDataContainer().has(new NamespacedKey(plugin, "openedName"))) {
+                            user.sendMessage("errors.chest-already-taken", true, "");
+                            return;
+                        }
+
                         ItemStack[] contents = chest.getPersistentDataContainer().get(inventory, DataType.ITEM_STACK_ARRAY);
                         Sign sign = (Sign) event.getClickedBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.NORTH).getState();
                         ActionCategory category;
@@ -458,15 +468,17 @@ public class GlobalListener implements Listener {
 
             if (user.datastore().containsKey("chestBlockActive")) {
                 Block block = (Block) user.datastore().get("chestBlockActive");
-                Chest ch = (Chest) block.getState();
-                NamespacedKey inventoryKey = new NamespacedKey(plugin, "inventory");
 
-                PersistentDataContainer container = ch.getPersistentDataContainer();
-                if (container.has(inventoryKey, DataType.ITEM_STACK_ARRAY)) container.remove(inventoryKey);
+                if (block.getState() instanceof Chest ch) {
+                    NamespacedKey inventoryKey = new NamespacedKey(plugin, "inventory");
+                    ch.getPersistentDataContainer().remove(new NamespacedKey(plugin, "openedName"));
 
-                container.set(inventoryKey, DataType.ITEM_STACK_ARRAY, contents);
-                ch.update();
+                    PersistentDataContainer container = ch.getPersistentDataContainer();
+                    if (container.has(inventoryKey, DataType.ITEM_STACK_ARRAY)) container.remove(inventoryKey);
 
+                    container.set(inventoryKey, DataType.ITEM_STACK_ARRAY, contents);
+                    ch.update();
+                }
             }
 
             user.datastore().remove("chestBlockActive");
@@ -526,5 +538,25 @@ public class GlobalListener implements Listener {
 
         event.setRespawnLocation(world.getSpawnLocation());
     }
+
+    @EventHandler
+    public void onInventoryOpen (InventoryOpenEvent event) {
+        if (event.getInventory().getHolder() instanceof CodingMenu) {
+            Player player = (Player) event.getPlayer();
+            Block target = player.getTargetBlockExact(5);
+
+            if (target != null && target.getType() == Material.CHEST) {
+                Chest chest = (Chest) target.getState();
+
+                chest.getPersistentDataContainer().set(new NamespacedKey(plugin, "openedName"), PersistentDataType.STRING, player.getName());
+                chest.update();
+            }
+        }
+    }
+
+    public static void onEditSessionEvent (EditSessionEvent event) {
+        event.setExtent(new ChestMenuHook(event.getExtent(), event.getWorld()));
+    }
+
 
 }

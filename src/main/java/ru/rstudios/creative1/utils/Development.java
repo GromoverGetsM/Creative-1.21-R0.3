@@ -217,10 +217,7 @@ public class Development {
     }
 
     private static void breakAsDefault (Block block, boolean needToMoveBack) {
-        block.getRelative(BlockFace.NORTH).setType(Material.AIR);
-        block.getRelative(BlockFace.UP).setType(Material.AIR);
-        block.getRelative(BlockFace.WEST).setType(Material.AIR);
-        block.setType(Material.AIR);
+        setBlocks(block.getWorld(), block.getLocation(), block.getLocation().add(-1, 1, -1));
 
         if (needToMoveBack) {
             Block lastInString = getLastBlockInString(block.getRelative(BlockFace.WEST, 2));

@@ -1,5 +1,8 @@
 package ru.rstudios.creative1;
 
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.event.extent.EditSessionEvent;
+import com.sk89q.worldedit.util.eventbus.Subscribe;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.rstudios.creative1.commands.*;
 import ru.rstudios.creative1.commands.modes.buildCommand;
@@ -31,6 +34,13 @@ public final class Creative_1 extends JavaPlugin {
         plugin = this;
         DatabaseUtil.createTables();
         PlotManager.loadPlots();
+
+        WorldEdit.getInstance().getEventBus().register(new Object() {
+            @Subscribe
+            public void onEditSessionEvent(EditSessionEvent event) {
+                GlobalListener.onEditSessionEvent(event);
+            }
+        });
 
         getServer().getPluginManager().registerEvents(new GlobalListener(), this);
         getServer().getPluginManager().registerEvents(new ProtectedManager(), this);
