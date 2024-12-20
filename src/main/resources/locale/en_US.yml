@@ -283,6 +283,7 @@ coding:
 
     set_block: "Set block"
     set_world_name: "Set World Name"
+    set_world_privacy: "Set World Privacy"
     set_world_lore: "Set World Lore"
     set_world_icon: "Set World Icon"
     set_world_custom_id: "Set Identifier"
