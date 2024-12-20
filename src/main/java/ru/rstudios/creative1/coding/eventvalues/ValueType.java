@@ -8,6 +8,9 @@ import ru.rstudios.creative1.coding.eventvalues.specific.EventBlockLocationValue
 import ru.rstudios.creative1.coding.eventvalues.specific.EventBlockValue;
 import ru.rstudios.creative1.coding.eventvalues.specific.EventClickedItemValue;
 import ru.rstudios.creative1.coding.eventvalues.specific.EventMessage;
+import ru.rstudios.creative1.coding.eventvalues.specific.entity.EntityHealthValue;
+import ru.rstudios.creative1.coding.eventvalues.specific.entity.EntityHungerValue;
+import ru.rstudios.creative1.coding.eventvalues.specific.entity.EntityMaxHealthValue;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 
@@ -18,18 +21,20 @@ import java.util.stream.Collectors;
 
 public enum ValueType {
 
-    PLAYER_MESSAGE("coding.values.specific.player_message", Value.Category.EVENT, Material.WRITABLE_BOOK, EventMessage::new),
-    EVENT_BLOCK("coding.values.specific.event_block", Value.Category.EVENT, Material.GRASS_BLOCK, EventBlockValue::new),
-    EVENT_BLOCK_LOC("coding.values.specific.event_block_loc", Value.Category.EVENT, Material.PAPER, EventBlockLocationValue::new),
-    EVENT_ITEM("coding.values.specific.event_item", Value.Category.EVENT, Material.CRAFTING_TABLE, EventClickedItemValue::new);
+    ENTITY_HEALTH(Value.Category.ENTITY, Material.APPLE, EntityHealthValue::new),
+    ENTITY_MAX_HEALTH(Value.Category.ENTITY, Material.GOLDEN_APPLE, EntityMaxHealthValue::new),
+    ENTITY_HUNGER(Value.Category.ENTITY, Material.GOLDEN_CARROT, EntityHungerValue::new),
 
-    private final String localeCode;
+    PLAYER_MESSAGE(Value.Category.EVENT, Material.WRITABLE_BOOK, EventMessage::new),
+    EVENT_BLOCK(Value.Category.EVENT, Material.GRASS_BLOCK, EventBlockValue::new),
+    EVENT_BLOCK_LOC(Value.Category.EVENT, Material.PAPER, EventBlockLocationValue::new),
+    EVENT_ITEM(Value.Category.EVENT, Material.CRAFTING_TABLE, EventClickedItemValue::new);
+
     private final Value.Category category;
     private final Material icon;
     private final Supplier<Value> supplier;
 
-    ValueType (String localeCode, Value.Category category, Material icon, Supplier<Value> supplier) {
-        this.localeCode = localeCode;
+    ValueType (Value.Category category, Material icon, Supplier<Value> supplier) {
         this.category = category;
         this.icon = icon;
         this.supplier = supplier;
@@ -38,7 +43,7 @@ public enum ValueType {
     private static final Map<String, ValueType> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap((e) -> e.name().toUpperCase(Locale.ROOT), Function.identity()));
 
     public String getLocaleCode() {
-        return this.localeCode;
+        return "coding.values.specific." + name().toLowerCase();
     }
 
     public Value getValueInstance() { return supplier.get(); }
@@ -67,11 +72,6 @@ public enum ValueType {
 
     public static @Nullable ValueType byName (String name) {
         return BY_NAME.get(name.toUpperCase(Locale.ROOT));
-    }
-
-
-    public static @Nullable ValueType getByLocaleCode (String localeCode) {
-        return BY_NAME.values().stream().filter((e) -> e.localeCode.equalsIgnoreCase(localeCode)).findFirst().orElse(null);
     }
 
     public static @Nullable ValueType getByMaterial (Material material) {

@@ -1,4 +1,4 @@
-package ru.rstudios.creative1.coding.actions.worldaction.world;
+package ru.rstudios.creative1.coding.actions.worldaction.lines;
 
 import org.bukkit.entity.Entity;
 import ru.rstudios.creative1.coding.actions.Action;

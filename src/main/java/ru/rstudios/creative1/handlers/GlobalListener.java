@@ -12,10 +12,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -26,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
@@ -35,6 +38,7 @@ import ru.rstudios.creative1.menu.ProtectedMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
 import ru.rstudios.creative1.menu.selector.CodingMultipagesMenu;
 import ru.rstudios.creative1.menu.selector.ValuesMenu;
+import ru.rstudios.creative1.plots.LimitManager;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.user.LocaleManages;
@@ -557,6 +561,54 @@ public class GlobalListener implements Listener {
     public static void onEditSessionEvent (EditSessionEvent event) {
         event.setExtent(new ChestMenuHook(event.getExtent(), event.getWorld()));
     }
+
+    @EventHandler
+    public void onBlockRedstone(BlockRedstoneEvent event) {
+        Location location = event.getBlock().getLocation();
+
+        Plot plot = PlotManager.byWorld(event.getBlock().getWorld());
+        if (plot != null) {
+            plot.setLastRedstoneOperationsAmount(plot.getLastRedstoneOperationsAmount()+1);
+            if (plot.getLastRedstoneOperationsAmount() > LimitManager.getLimitValue(plot, "redstone_operations")) {
+                plot.throwException("redstone-limit", String.valueOf(LimitManager.getLimitValue(plot, "redstone_operations")));
+                if (location.getBlock().getType() == Material.OBSERVER) {
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            location.getBlock().setType(Material.AIR);
+                        }
+                    }.runTaskLater(plugin,1L);
+                } else {
+                    location.getBlock().setType(Material.CAVE_AIR);
+                }
+                plot.setLastRedstoneOperationsAmount(0);
+            }
+            if (plot.getLastRedstoneOperationsAmount() > 0) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        plot.setLastRedstoneOperationsAmount(plot.getLastRedstoneOperationsAmount()-1);
+                    }
+                }.runTaskLater(plugin,5L);
+            }
+        }
+
+    }
+
+    @EventHandler
+    public void onEntitySpawn (EntitySpawnEvent event) {
+        Entity entity = event.getEntity();
+        World world = entity.getWorld();
+        Plot possible = PlotManager.byWorld(world);
+
+        if (possible != null) {
+            if (world.getEntities().stream().filter(e -> !(e instanceof Player)).toList().size() < LimitManager.getLimitValue(possible, "entities")) {
+                event.setCancelled(true);
+                possible.throwException("entities", String.valueOf(world.getEntities().stream().filter(e -> !(e instanceof Player)).toList().size()), String.valueOf(LimitManager.getLimitValue(possible, "entities")));
+            }
+        }
+    }
+
 
 
 }

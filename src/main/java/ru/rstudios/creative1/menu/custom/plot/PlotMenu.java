@@ -24,7 +24,7 @@ public class PlotMenu extends ProtectedMenu {
     public PlotMenu (User user) {
         super(LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.title", false, ""), (byte) 6);
 
-        this.closeable = new SwitchItem(List.of("true", "false"), "menus.plot.items.closeable.", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
+        this.closeable = new SwitchItem(List.of("true", "false"), "menus.plot.items.closeable", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER));
         this.closeable.setCurrentState(String.valueOf(user.getCurrentPlot().isOpened));
     }
 

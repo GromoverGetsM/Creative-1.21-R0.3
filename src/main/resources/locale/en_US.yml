@@ -801,6 +801,57 @@ menus:
           - "&7"
           - "&7Arguments (1):"
           - "&7- &6Toggle: &7Game mode &e(1)"
+      set_immortality:
+        name: "&eSet invincibility"
+        lore:
+          - "&7Grants invincibility to a player"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &6Toggle: &7Invincibility &e(1)"
+
+      create_scoreboard:
+        name: "&eCreate board"
+        lore:
+          - "&7Adds a new scoreboard panel to memory"
+          - "&7that can be interacted with and displayed"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Board name &e(1)"
+          - "&7- &bText: &7Display name &e(1)"
+      delete_scoreboard:
+        name: "&eDelete board"
+        lore:
+          - "&7Removes a scoreboard panel from memory"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Board name &e(1)"
+      scoreboard_set_score:
+        name: "&eSet board score"
+        lore:
+          - "&7Adds a row to the scoreboard with a given"
+          - "&7score value"
+          - "&7"
+          - "&7Arguments (3):"
+          - "&7- &bText: &7Board name &e(1)"
+          - "&7- &cNumber: &7Score value &e(1)"
+          - "&7- &bText: &7Row name &e(1)"
+      scoreboard_reset_score:
+        name: "&eReset board score"
+        lore:
+          - "&7Removes a specified row from the scoreboard"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Board name &e(1)"
+          - "&7- &bText: &7Row name &e(1)"
+      scoreboard_set_display:
+        name: "&eSet display name"
+        lore:
+          - "&7Changes the display name of the scoreboard"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Board name &e(1)"
+          - "&7- &bText: &7New display name &e(1)"
+
 
       cancel_event:
         name: "&eCancel Event"
