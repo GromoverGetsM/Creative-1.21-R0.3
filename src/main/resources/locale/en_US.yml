@@ -263,6 +263,7 @@ coding:
 
     set_flying: "Flying"
     set_gamemode: "Set Game mode"
+    set_immortality: "Set Immortality"
 
     show_scoreboard: "Show board"
     hide_scoreboard: "Hide board"
@@ -328,9 +329,6 @@ coding:
   if_variable: "&5&lIf Variable"
   select: "&d&lSelect object"
   player_conds: "Player conditions"
-
-  function: "&9&lFunction"
-  cycle: "&a&lCycle"
 
   var-types:
     text:
@@ -496,6 +494,13 @@ menus:
         states:
           true: "Flight allowed"
           false: "Flight denied"
+      set_immortality:
+        name: "&3Set immortality"
+        lore:
+          - "&fChoice of whether the player will take damage"
+        states:
+          true: "Player takes damage"
+          false: "Player does NOT take damage"
       allow_fly:
         name: "&3Allow re-flight"
         lore:

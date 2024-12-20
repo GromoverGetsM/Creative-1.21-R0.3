@@ -20,6 +20,7 @@ import ru.rstudios.creative1.coding.actions.playeraction.movement.Teleport;
 import ru.rstudios.creative1.coding.actions.playeraction.movement.ToOtherPlot;
 import ru.rstudios.creative1.coding.actions.playeraction.params.SetFlying;
 import ru.rstudios.creative1.coding.actions.playeraction.params.SetGamemode;
+import ru.rstudios.creative1.coding.actions.playeraction.params.SetImmortality;
 import ru.rstudios.creative1.coding.actions.select.*;
 import ru.rstudios.creative1.coding.actions.worldaction.appearence.*;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.*;
@@ -82,6 +83,8 @@ public enum ActionCategory {
             new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_fly", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER)), 15, new SwitchItem(List.of("true", "false"), "menus.switches.actions.allow_fly", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
     SET_GAMEMODE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetGamemode::new, Material.ANVIL, true, "coding.actions.set_gamemode", CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
             new SwitchItem(List.of("creative", "survival", "adventure", "spectator"), "menus.switches.actions.set_gm", List.of(Material.BRICKS, Material.BEEF, Material.IRON_SWORD, Material.ENDER_EYE))))),
+    SET_IMMORTALITY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetImmortality::new, Material.TOTEM_OF_UNDYING, true, "coding.actions.set_immortality", CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
+            new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_immortality", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
 
     SHOW_SCOREBOARD(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, ShowScoreboard::new, Material.LANTERN, true, "coding.actions.show_scoreboard", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     HIDE_SCOREBOARD(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, HideScoreboard::new, Material.GLASS, false, "", null, null, null),
