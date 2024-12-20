@@ -375,7 +375,7 @@ public class Plot {
             if (world != null) {
                 if (worldName.equals(plotName())) {
                     for (Player player : online()) {
-                        player.teleport(new Location(Bukkit.getWorld("world"), 28, 64, -4));
+                        player.teleport(Bukkit.getWorld(worldName).getSpawnLocation());
                         User.asUser(player).sendMessage("info.plot-offline", true, "");
                     }
                 }

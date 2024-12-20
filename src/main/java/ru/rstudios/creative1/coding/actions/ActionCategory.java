@@ -110,6 +110,8 @@ public enum ActionCategory {
     SET_WORLD_ICON(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldIcon::new, Material.NETHER_STAR, true, "coding.actions.set_world_icon", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
     SET_WORLD_CUSTOM_ID(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldCustomId::new, Material.REPEATER, true, "coding.actions.set_world_custom_id", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     SET_WORLD_NAME(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldName::new, Material.NAME_TAG, true, "coding.actions.set_world_name", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    SET_WORLD_PRIVACY(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, SetWorldPrivacy::new, Material.IRON_DOOR, true, "coding.actions.set_world_privacy", CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
+            new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_world_privacy", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
     SET_WORLD_LORE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldLore::new, Material.BOOKSHELF, true, "coding.actions.set_world_lore", CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
     // Если игрок - общее
