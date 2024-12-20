@@ -261,7 +261,17 @@ coding:
     teleport: "Teleport"
     to_other_plot: "To Another Plot"
 
+    set_flying: "Flying"
     set_gamemode: "Set Game mode"
+
+    show_scoreboard: "Show board"
+    hide_scoreboard: "Hide board"
+
+    create_scoreboard: "Create board"
+    delete_scoreboard: "Delete board"
+    scoreboard_set_score: "Set score"
+    scoreboard_reset_score: "Reset score"
+    scoreboard_set_display: "Board name"
 
     cancel_event: "Cancel Event"
     wait: "Wait"
@@ -479,6 +489,22 @@ menus:
           ticks: "Ticks"
           seconds: "Seconds"
           minutes: "Minutes"
+      set_fly:
+        name: "&3Set flight mode"
+        lore:
+          - "&fToggle whether the player can fly currently"
+        states:
+          true: "Flight allowed"
+          false: "Flight denied"
+      allow_fly:
+        name: "&3Allow re-flight"
+        lore:
+          - "&fToggle whether the player can fly again"
+          - "&fafter disabling flight mode (e.g.,"
+          - "&fwhen landing)"
+        states:
+          true: "Allowed"
+          false: "Not allowed"
       set_gm:
         name: "&3Set Game Mode"
         lore:

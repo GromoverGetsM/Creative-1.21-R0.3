@@ -1,5 +1,6 @@
 package ru.rstudios.creative1.coding.actions.worldaction.appearence;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -11,7 +12,7 @@ import ru.rstudios.creative1.utils.Development;
 
 import java.util.List;
 
-public class ScoreboardSetScore extends Action {
+public class ScoreboardSetDisplayname extends Action {
     @Override
     public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
@@ -20,28 +21,28 @@ public class ScoreboardSetScore extends Action {
         for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
 
-            String name = ActionChest.parseTextPlus(chest.getOriginalContents()[10], "", event, entity);
-            int score = ActionChest.parseNumberPlus(chest.getOriginalContents()[13], 0, event, entity).intValue();
-            String object = ActionChest.parseTextPlus(chest.getOriginalContents()[16], "", event, entity);
+            String name = ActionChest.parseTextPlus(chest.getOriginalContents()[11], "", event, entity);
+            String display = ActionChest.parseTextPlus(chest.getOriginalContents()[15], "", event, entity);
 
             if (name.isEmpty()) {
-                event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно изменить скорборд с пустым именем!"));
+                event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно удалить скорборд с пустым именем!"));
                 return;
             }
 
             Scoreboard scoreboard = event.getPlot().handler.getScoreboards().get(name.toLowerCase());
+
             if (scoreboard == null) {
                 event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно изменить несуществующий скорборд!"));
                 return;
             }
 
             Objective objective = scoreboard.getObjective("score");
-            if (objective != null) objective.getScore(object).setScore(score);
+            if (objective != null) objective.displayName(Component.text(display));
         }
     }
 
     @Override
     public ActionCategory getCategory() {
-        return ActionCategory.SCOREBOARD_SET_SCORE;
+        return null;
     }
 }

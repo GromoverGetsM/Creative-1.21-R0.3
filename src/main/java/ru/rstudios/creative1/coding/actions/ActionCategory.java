@@ -12,6 +12,8 @@ import ru.rstudios.creative1.coding.actions.ifplayer.MessageEquals;
 import ru.rstudios.creative1.coding.actions.ifplayer.NameEquals;
 import ru.rstudios.creative1.coding.actions.ifplayer.PlayerHoldItem;
 import ru.rstudios.creative1.coding.actions.ifvariable.*;
+import ru.rstudios.creative1.coding.actions.playeraction.appearence.HideScoreboard;
+import ru.rstudios.creative1.coding.actions.playeraction.appearence.ShowScoreboard;
 import ru.rstudios.creative1.coding.actions.playeraction.communication.*;
 import ru.rstudios.creative1.coding.actions.playeraction.inventory.*;
 import ru.rstudios.creative1.coding.actions.playeraction.movement.Teleport;
@@ -19,10 +21,7 @@ import ru.rstudios.creative1.coding.actions.playeraction.movement.ToOtherPlot;
 import ru.rstudios.creative1.coding.actions.playeraction.params.SetFlying;
 import ru.rstudios.creative1.coding.actions.playeraction.params.SetGamemode;
 import ru.rstudios.creative1.coding.actions.select.*;
-import ru.rstudios.creative1.coding.actions.worldaction.appearence.CreateScoreboard;
-import ru.rstudios.creative1.coding.actions.worldaction.appearence.DeleteScoreboard;
-import ru.rstudios.creative1.coding.actions.worldaction.appearence.ScoreboardResetScore;
-import ru.rstudios.creative1.coding.actions.worldaction.appearence.ScoreboardSetScore;
+import ru.rstudios.creative1.coding.actions.worldaction.appearence.*;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.*;
 import ru.rstudios.creative1.coding.actions.worldaction.world.*;
 import ru.rstudios.creative1.menu.CodingMenu;
@@ -79,16 +78,20 @@ public enum ActionCategory {
             new SwitchItem(List.of("all", "coords", "eyedir"), "menus.switches.actions.teleport", List.of(Material.PAPER, Material.COMPASS, Material.ENDER_EYE))))),
     TO_OTHER_PLOT(Development.BlockTypes.PLAYER_ACTION, MenuCategory.MOVEMENT, ToOtherPlot::new, Material.DARK_OAK_DOOR, true, "coding.actions.to_other_plot", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
-    SET_FLYING(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetFlying::new, Material.FEATHER, true, "coding.actions.set_flying", CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
-            new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_fly", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
+    SET_FLYING(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetFlying::new, Material.FEATHER, true, "coding.actions.set_flying", CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(11,
+            new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_fly", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER)), 15, new SwitchItem(List.of("true", "false"), "menus.switches.actions.allow_fly", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
     SET_GAMEMODE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetGamemode::new, Material.ANVIL, true, "coding.actions.set_gamemode", CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
             new SwitchItem(List.of("creative", "survival", "adventure", "spectator"), "menus.switches.actions.set_gm", List.of(Material.BRICKS, Material.BEEF, Material.IRON_SWORD, Material.ENDER_EYE))))),
+
+    SHOW_SCOREBOARD(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, ShowScoreboard::new, Material.LANTERN, true, "coding.actions.show_scoreboard", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    HIDE_SCOREBOARD(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, HideScoreboard::new, Material.GLASS, false, "", null, null, null),
 
     // Действия мира - внешний вид
     CREATE_SCOREBOARD(Development.BlockTypes.WORLD_ACTION, MenuCategory.APPEARANCE, CreateScoreboard::new, Material.PAINTING, true, "coding.actions.create_scoreboard", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     DELETE_SCOREBOARD(Development.BlockTypes.WORLD_ACTION, MenuCategory.APPEARANCE, DeleteScoreboard::new, Material.STRUCTURE_VOID, true, "coding.actions.delete_scoreboard", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     SCOREBOARD_SET_SCORE(Development.BlockTypes.WORLD_ACTION, MenuCategory.APPEARANCE, ScoreboardSetScore::new, Material.EMERALD, true, "coding.actions.scoreboard_set_score", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     SCOREBOARD_RESET_SCORE(Development.BlockTypes.WORLD_ACTION, MenuCategory.APPEARANCE, ScoreboardResetScore::new, Material.GLASS, true, "coding.actions.scoreboard_reset_score", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    SCOREBOARD_SET_DISPLAY(Development.BlockTypes.WORLD_ACTION, MenuCategory.APPEARANCE, ScoreboardSetDisplayname::new, Material.WRITTEN_BOOK, true, "coding.actions.scoreboard_set_display", CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
     // Действия мира - Линии
     CANCEL_EVENT(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, CancelEvent::new, Material.BARRIER, false, null, null, null, null),

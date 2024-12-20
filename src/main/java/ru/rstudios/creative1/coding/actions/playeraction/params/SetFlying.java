@@ -17,15 +17,22 @@ public class SetFlying extends Action {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
-        SwitchItem item = getCategory().getCodingMenu().getSwitches().get(13);
-        item.setCurrentState(item.getCurrentState(chest.getOriginalContents()[13]));
+        SwitchItem setFlight = getCategory().getCodingMenu().getSwitches().get(11);
+        setFlight.setCurrentState(setFlight.getCurrentState(chest.getOriginalContents()[11]));
+
+        SwitchItem allowFlying = getCategory().getCodingMenu().getSwitches().get(15);
+        allowFlying.setCurrentState(allowFlying.getCurrentState(chest.getOriginalContents()[15]));
 
         for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
 
-            boolean isFlying = Boolean.parseBoolean(item.getCurrentValue());
+            boolean isFlying = Boolean.parseBoolean(setFlight.getCurrentValue());
+            boolean allowAfterfly = Boolean.parseBoolean(allowFlying.getCurrentValue());
 
-            if (entity instanceof Player player) player.setFlying(isFlying);
+            if (entity instanceof Player player) {
+                player.setFlying(isFlying);
+                player.setAllowFlight(allowAfterfly);
+            }
         }
     }
 

@@ -252,7 +252,7 @@ public class ActionChest {
     }
 
 
-    public static double parseNumberPlus (ItemStack item, double defValue, GameEvent event, Entity entity) {
+    public static Double parseNumberPlus (ItemStack item, double defValue, GameEvent event, Entity entity) {
         if (item == null) {
             return defValue;
         }

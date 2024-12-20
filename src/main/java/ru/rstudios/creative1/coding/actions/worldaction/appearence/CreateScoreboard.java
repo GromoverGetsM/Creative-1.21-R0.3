@@ -52,6 +52,6 @@ public class CreateScoreboard extends Action {
 
     @Override
     public ActionCategory getCategory() {
-        return null;
+        return ActionCategory.CREATE_SCOREBOARD;
     }
 }

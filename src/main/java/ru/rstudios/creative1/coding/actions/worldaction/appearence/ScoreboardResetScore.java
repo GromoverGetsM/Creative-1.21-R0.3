@@ -42,6 +42,6 @@ public class ScoreboardResetScore extends Action {
 
     @Override
     public ActionCategory getCategory() {
-        return null;
+        return ActionCategory.SCOREBOARD_RESET_SCORE;
     }
 }

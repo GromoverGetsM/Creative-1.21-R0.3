@@ -24,9 +24,9 @@ public class SendTitle extends Action {
                 continue;
             }
 
-            int fadeIn = (int) ActionChest.parseNumberPlus(chest.getOriginalContents()[13], 0.0, event, e);
-            int duration = (int) ActionChest.parseNumberPlus(chest.getOriginalContents()[15], 0.0, event, e);
-            int fadeOut = (int) ActionChest.parseNumberPlus(chest.getOriginalContents()[17], 0.0, event, e);
+            int fadeIn = ActionChest.parseNumberPlus(chest.getOriginalContents()[13], 0.0, event, e).intValue();
+            int duration = ActionChest.parseNumberPlus(chest.getOriginalContents()[15], 0.0, event, e).intValue();
+            int fadeOut = ActionChest.parseNumberPlus(chest.getOriginalContents()[17], 0.0, event, e).intValue();
 
             String title = ActionChest.parseText(chest.getOriginalContents()[9]);
             String subtitle = ActionChest.parseText(chest.getOriginalContents()[11]);
