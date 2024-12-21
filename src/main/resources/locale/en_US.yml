@@ -338,6 +338,15 @@ coding:
     name_equals: "Name equals"
     message_equals: "Message equals"
 
+    if_player_blocking: "Using Shield"
+    if_player_flying: "Flying"
+    if_player_gliding: "Gliding (Elytra)"
+    if_player_licensed: "Has License"
+    if_player_sleeping: "Sleeping"
+    if_player_sneaking: "Sneaking"
+    if_player_sprinting: "Running"
+    if_player_swimming: "Swimming"
+
     player_hold_item: "Holds Item"
     item_equals: "Item equals"
 
@@ -1009,6 +1018,57 @@ menus:
           - "&7"
           - "&7Arguments (36):"
           - "&7- &bText: &7Messages to check &e(36)"
+
+      if_player_blocking:
+        name: "&eUsing Shield"
+        lore:
+          - "&7Checks if the player is using a shield"
+          - "&7"
+          - "&aNo arguments required"
+      if_player_flying:
+        name: "&eFlying"
+        lore:
+          - "&7Checks if the player is flying, e.g.,"
+          - "&7in Creative mode"
+          - "&7"
+          - "&aNo arguments required"
+      if_player_gliding:
+        name: "&eGliding with Elytra"
+        lore:
+          - "&7Checks if the player is gliding using"
+          - "&7an elytra"
+          - "&7"
+          - "&aNo arguments required"
+      if_player_licensed:
+        name: "&eHas License"
+        lore:
+          - "&7Checks if the player has a license"
+          - "&7"
+          - "&aNo arguments required"
+      if_player_sleeping:
+        name: "&eSleeping"
+        lore:
+          - "&7Checks if the player is sleeping in a bed"
+          - "&7"
+          - "&aNo arguments required"
+      if_player_sneaking:
+        name: "&eSneaking"
+        lore:
+          - "&7Checks if the player is sneaking"
+          - "&7"
+          - "&aNo arguments required"
+      if_player_sprinting:
+        name: "&eSprinting"
+        lore:
+          - "&7Checks if the player is sprinting"
+          - "&7"
+          - "&aNo arguments required"
+      if_player_swimming:
+        name: "&eSwimming"
+        lore:
+          - "&7Checks if the player is swimming"
+          - "&7"
+          - "&aNo arguments required"
 
       player_hold_item:
         name: "&eHolds an Item"

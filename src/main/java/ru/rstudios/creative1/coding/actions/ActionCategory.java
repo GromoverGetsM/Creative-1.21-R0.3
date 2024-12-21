@@ -7,10 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
 import ru.rstudios.creative1.coding.actions.actionvar.*;
-import ru.rstudios.creative1.coding.actions.ifplayer.ItemEquals;
-import ru.rstudios.creative1.coding.actions.ifplayer.MessageEquals;
-import ru.rstudios.creative1.coding.actions.ifplayer.NameEquals;
-import ru.rstudios.creative1.coding.actions.ifplayer.PlayerHoldItem;
+import ru.rstudios.creative1.coding.actions.ifplayer.*;
 import ru.rstudios.creative1.coding.actions.ifvariable.*;
 import ru.rstudios.creative1.coding.actions.playeraction.appearence.HideScoreboard;
 import ru.rstudios.creative1.coding.actions.playeraction.appearence.ShowScoreboard;
@@ -117,6 +114,16 @@ public enum ActionCategory {
     // Если игрок - общее
     NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     MESSAGE_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, MessageEquals::new, Material.WRITABLE_BOOK, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+
+    // Если игрок - проверка состояний
+    IF_PLAYER_BLOCKING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerBlocking::new, Material.SHIELD, false, null, null, null),
+    IF_PLAYER_FLYING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerFlying::new, Material.CHAINMAIL_BOOTS, false, null, null, null),
+    IF_PLAYER_GLIDING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerGliding::new, Material.ELYTRA, false, null, null, null),
+    IF_PLAYER_LICENSED(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerLicensed::new, Material.GOLD_INGOT, false, null, null, null),
+    IF_PLAYER_SLEEPING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerSleeping::new, Material.RED_BED, false, null, null, null),
+    IF_PLAYER_SNEAKING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerSneaking::new, Material.CHAINMAIL_LEGGINGS, false, null, null, null),
+    IF_PLAYER_SPRINTING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerSprinting::new, Material.GOLDEN_BOOTS, false, null, null, null),
+    IF_PLAYER_SWIMMING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerSwiming::new, Material.WATER_BUCKET, false, null, null, null),
 
     // Если игрок - предметы
     PLAYER_HOLD_ITEM(Development.BlockTypes.IF_PLAYER, MenuCategory.INVENTORY, PlayerHoldItem::new, Material.SHIELD, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>(Map.of(49,
