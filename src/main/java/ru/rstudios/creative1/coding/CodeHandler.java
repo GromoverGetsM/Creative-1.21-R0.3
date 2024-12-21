@@ -43,7 +43,7 @@ public class CodeHandler {
     private final Map<String, Scoreboard> scoreboards = new LinkedHashMap<>();
     public List<Cycle> cycles = new LinkedList<>();
 
-    int callsAmount = 0;
+    public int callsAmount = 0;
 
     public CodeHandler (Plot plot) {
         this.plot = plot;

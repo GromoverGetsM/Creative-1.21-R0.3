@@ -211,6 +211,16 @@ coding:
           - "&c> &7Placed Block"
           - "&c> &7Broke Block"
           - "&c> &7..."
+      event_block_face:
+        name: "&eBlock side"
+        lore:
+          - "&7Returns the side of the block from"
+          - "&7the event"
+          - "&7"
+          - "&7Works with:"
+          - "&c> &7Placed block"
+          - "&c> &7Broke block"
+          - "&c> &7..."
       event_item:
         name: "&eEvent Item"
         lore:
@@ -218,6 +228,43 @@ coding:
           - "&7"
           - "&7Works with:"
           - "&c> &7Inventory Click"
+
+      entity_health:
+        name: "&eCurrent health"
+        lore:
+          - "&7Returns the current health of the entity"
+      entity_max_health:
+        name: "&eMax health"
+        lore:
+          - "&7Returns the maximum health of the entity"
+      entity_hunger:
+        name: "&eHunger level"
+        lore:
+          - "&7Returns the current hunger level of the entity"
+      entity_location:
+        name: "&eCurrent location"
+        lore:
+          - "&7Returns the entity's location"
+      entity_opened_inv_title:
+        name: "&eOpened inventory"
+        lore:
+          - "&7Returns the title of the opened inventory"
+
+      current_actions_counter:
+        name: "&eRunning actions count"
+        lore:
+          - "&7Returns the number of actions"
+          - "&7currently running in the code"
+      plot_id:
+        name: "&ePlot ID"
+        lore:
+          - "&7Returns the numeric ID of the plot"
+      plot_online:
+        name: "&ePlayers in world"
+        lore:
+          - "&7Returns the number of players in the game world"
+          - "&7Excludes players in the developer world"
+
 
   events:
     player_join: "Player joined"
@@ -906,6 +953,13 @@ menus:
           - "&7Arguments (28):"
           - "&7- &eItem: &7The type of block to set &e(1)"
           - "&7- &fLocation: &7Locations where the block should be set &e(27)"
+      set_world_privacy:
+        name: "&eSet world access"
+        lore:
+          - "&7Sets the accessibility of the world"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &6Toggle: &7Access &e(1)"
       set_world_name:
         name: "&eSet World Name"
         lore:

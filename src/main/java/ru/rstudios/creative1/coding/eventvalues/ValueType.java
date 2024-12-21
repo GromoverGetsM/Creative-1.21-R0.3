@@ -4,13 +4,11 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
-import ru.rstudios.creative1.coding.eventvalues.specific.EventBlockLocationValue;
-import ru.rstudios.creative1.coding.eventvalues.specific.EventBlockValue;
-import ru.rstudios.creative1.coding.eventvalues.specific.EventClickedItemValue;
-import ru.rstudios.creative1.coding.eventvalues.specific.EventMessage;
-import ru.rstudios.creative1.coding.eventvalues.specific.entity.EntityHealthValue;
-import ru.rstudios.creative1.coding.eventvalues.specific.entity.EntityHungerValue;
-import ru.rstudios.creative1.coding.eventvalues.specific.entity.EntityMaxHealthValue;
+import ru.rstudios.creative1.coding.eventvalues.specific.entity.*;
+import ru.rstudios.creative1.coding.eventvalues.specific.event.*;
+import ru.rstudios.creative1.coding.eventvalues.specific.world.CurrentActionsCounter;
+import ru.rstudios.creative1.coding.eventvalues.specific.world.PlotId;
+import ru.rstudios.creative1.coding.eventvalues.specific.world.PlotOnline;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 
@@ -24,11 +22,18 @@ public enum ValueType {
     ENTITY_HEALTH(Value.Category.ENTITY, Material.APPLE, EntityHealthValue::new),
     ENTITY_MAX_HEALTH(Value.Category.ENTITY, Material.GOLDEN_APPLE, EntityMaxHealthValue::new),
     ENTITY_HUNGER(Value.Category.ENTITY, Material.GOLDEN_CARROT, EntityHungerValue::new),
+    ENTITY_LOCATION(Value.Category.ENTITY, Material.MAP, EntityLocationValue::new),
+    ENTITY_OPENED_INV_TITLE(Value.Category.ENTITY, Material.PAINTING, EntityOpenedInvTitleValue::new),
 
     PLAYER_MESSAGE(Value.Category.EVENT, Material.WRITABLE_BOOK, EventMessage::new),
     EVENT_BLOCK(Value.Category.EVENT, Material.GRASS_BLOCK, EventBlockValue::new),
     EVENT_BLOCK_LOC(Value.Category.EVENT, Material.PAPER, EventBlockLocationValue::new),
-    EVENT_ITEM(Value.Category.EVENT, Material.CRAFTING_TABLE, EventClickedItemValue::new);
+    EVENT_BLOCK_FACE(Value.Category.EVENT, Material.MAGENTA_GLAZED_TERRACOTTA, EventBlockFaceValue::new),
+    EVENT_ITEM(Value.Category.EVENT, Material.CRAFTING_TABLE, EventClickedItemValue::new),
+
+    CURRENT_ACTIONS_COUNTER(Value.Category.WORLD, Material.SLIME_BALL, CurrentActionsCounter::new),
+    PLOT_ID(Value.Category.WORLD, Material.COMPARATOR, PlotId::new),
+    PLOT_ONLINE(Value.Category.WORLD, Material.PLAYER_HEAD, PlotOnline::new);
 
     private final Value.Category category;
     private final Material icon;

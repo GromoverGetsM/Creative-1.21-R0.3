@@ -1,4 +1,4 @@
-package ru.rstudios.creative1.coding.eventvalues.specific;
+package ru.rstudios.creative1.coding.eventvalues.specific.event;
 
 import org.bukkit.entity.Entity;
 import ru.rstudios.creative1.coding.events.ChatEvent;
