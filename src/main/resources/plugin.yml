@@ -48,3 +48,5 @@ commands:
       - мфкы
   limit:
     permission: creative.setlimits
+  like:
+    aliases: дшлу

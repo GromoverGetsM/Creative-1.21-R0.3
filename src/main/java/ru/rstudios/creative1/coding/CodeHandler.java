@@ -31,6 +31,7 @@ import ru.rstudios.creative1.utils.Development;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
@@ -246,10 +247,10 @@ public class CodeHandler {
     }
 
     public void saveDynamicVars() {
-        Map<String, DynamicVariable> vars = new LinkedHashMap<>();
-        dynamicVariables.forEach((name, variable) -> {
-            if (variable.isSaved()) vars.put(name, variable);
-        });
+        Map<String, DynamicVariable> vars = dynamicVariables.entrySet().stream()
+                .filter(entry -> entry.getValue().isSaved())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b, LinkedHashMap::new));
+
 
         File file = new File(Bukkit.getWorldContainer() + File.separator + plot.dev.world().getName() + File.separator + "dynamicVars.txt");
         if (!file.exists() || !file.isFile()) {

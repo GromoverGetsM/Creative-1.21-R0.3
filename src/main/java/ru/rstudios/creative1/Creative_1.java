@@ -74,6 +74,7 @@ public final class Creative_1 extends JavaPlugin {
         Objects.requireNonNull(getCommand("vars")).setExecutor(new varsCommand());
         Objects.requireNonNull(getCommand("limit")).setExecutor(new limitsCommand());
         Objects.requireNonNull(getCommand("limit")).setTabCompleter(new limitsCommand());
+        Objects.requireNonNull(getCommand("like")).setExecutor(new likeCommand());
     }
 
     @Override

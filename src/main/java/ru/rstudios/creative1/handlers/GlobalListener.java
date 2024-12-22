@@ -82,7 +82,7 @@ public class GlobalListener implements Listener {
             boolean handlingPaper = user.datastore().containsKey("HandlingPaper");
 
             if (!isMovingToLinkedCraftPlot || !handlingPaper) {
-                user.getCurrentPlot().handler.parseCodeBlocks();
+                if (user.isOnPlot()) user.getCurrentPlot().handler.parseCodeBlocks();
             }
         }
     }

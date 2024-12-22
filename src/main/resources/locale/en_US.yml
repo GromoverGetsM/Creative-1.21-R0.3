@@ -15,6 +15,7 @@ info:
   plot-set-mode-build: "The plot is now in &6build mode"
   user-issued-play: "You have entered &6play mode"
   user-issued-build: "You have entered &6build mode"
+  successfully-liked: "&r\n&f Player &6%s &fliked this game!\n&f Do you like it too? &d/like\n&r"
 
 errors:
   menu-not-defined: "&4⛔ &cMenu is not defined"
@@ -30,6 +31,7 @@ errors:
   plot-crit-hover: "&a&l[Hover to view error details]&r"
   plot-crit-teleport: "&e&l[Click to teleport to the problematic block]&r"
   plot-crit-filler: "&8==============================================="
+  already-liked: "You have &6already liked&f this game!"
 
 global-items:
   menu-not-filled:

@@ -14,6 +14,7 @@ info:
   plot-set-mode-build: "Плот запущен в режиме &6строительства"
   user-issued-play: "Ты вошёл в режим &6игры"
   user-issued-build: "Ты вошёл в режим &6строительства"
+  successfully-liked: "&r\n&f Игроку &6%s &fпонравилась эта игра!\n&f Тебе она тоже нравится? &d/like\n&r"
 
 errors:
   menu-not-defined: "&4⛔ &cМеню ещё не определено"
@@ -29,6 +30,7 @@ errors:
   plot-crit-hover: "&a&l[Наведите курсор, чтобы увидеть описание ошибки]&r"
   plot-crit-teleport: "&e&l[Щелкните, чтобы телепортироваться к проблемному блоку]&r"
   plot-crit-filler: "&8==============================================="
+  already-liked: "Вы &6уже ставили&f лайк этой игре!"
 
 global-items:
   menu-not-filled:

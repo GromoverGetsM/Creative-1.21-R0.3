@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 

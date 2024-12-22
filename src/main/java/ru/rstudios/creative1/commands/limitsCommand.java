@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.plots.DynamicLimit;
 import ru.rstudios.creative1.plots.LimitManager;
 import ru.rstudios.creative1.user.User;
+import ru.rstudios.creative1.utils.DatabaseUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,18 +24,25 @@ public class limitsCommand implements CommandExecutor, TabCompleter {
             User user = User.asUser(player);
 
             if (user.isOnPlot()) {
+                Player target = Bukkit.getPlayerExact(args[0]);
                 String limitName = args[1];
 
-                if (args.length == 2 && args[0].equalsIgnoreCase("get")) {
-                    user.player().sendMessage("Current limit=" + LimitManager.getLimit(user.getCurrentPlot(), limitName).toString());
-                } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
-                    int limitValue = Integer.parseInt(args[2]);
+                if (target == null) {
+                    if (args.length == 2 && args[0].equalsIgnoreCase("get")) {
+                        user.player().sendMessage("Current limit=" + LimitManager.getLimit(user.getCurrentPlot(), limitName).toString());
+                    } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
+                        int limitValue = Integer.parseInt(args[2]);
 
-                    DynamicLimit limit = LimitManager.getLimit(user.getCurrentPlot(), limitName);
+                        DynamicLimit limit = LimitManager.getLimit(user.getCurrentPlot(), limitName);
 
-                    if (limit != null) {
-                        limit.setValue(limitValue);
-                        user.getCurrentPlot().limits.add(limit);
+                        if (limit != null) {
+                            limit.setValue(limitValue);
+                            user.getCurrentPlot().limits.add(limit);
+                        }
+                    }
+                } else {
+                    if (args.length == 3 && limitName.equalsIgnoreCase("plot_limit")) {
+                        DatabaseUtil.updateValue("players", "plot_limit", Integer.parseInt(args[2]), "player_name", target.getName());
                     }
                 }
             }
@@ -58,6 +66,7 @@ public class limitsCommand implements CommandExecutor, TabCompleter {
             pArgs.add("opening_inventories");
             pArgs.add("variables");
             pArgs.add("modifying_blocks");
+            pArgs.add("plot_limit");
         }
         return pArgs;
     }

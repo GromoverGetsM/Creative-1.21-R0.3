@@ -16,11 +16,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 import ru.rstudios.creative1.coding.CodeHandler;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
 import ru.rstudios.creative1.coding.starters.playerevent.PlayerJoin;
 import ru.rstudios.creative1.coding.starters.playerevent.PlayerQuit;
+import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
 import ru.rstudios.creative1.handlers.GlobalListener;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
@@ -29,8 +32,7 @@ import ru.rstudios.creative1.utils.Development;
 import ru.rstudios.creative1.utils.FileUtil;
 import ru.rstudios.creative1.utils.WorldUtil;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -62,6 +64,8 @@ public class Plot {
     public boolean isOpened;
     public PlotMode plotMode;
     public CodeHandler handler;
+
+    public HashMap<String, Boolean> uniquePlayers = new LinkedHashMap<>();
 
     public Set<DynamicLimit> limits = new LinkedHashSet<>();
     private int lastModifiedBlocksAmount;
@@ -142,6 +146,7 @@ public class Plot {
 
         dev.load();
         handler.parseCodeBlocks();
+        loadUniquePlayers();
 
         applyGameRules();
         LimitManager.createIfNotExist(this);
@@ -184,6 +189,7 @@ public class Plot {
         dev.load();
         handler.parseCodeBlocks();
         handler.loadDynamicVars();
+        loadUniquePlayers();
 
         if (needToInitWorld) {
             initWorld();
@@ -295,6 +301,7 @@ public class Plot {
                 awaitTeleport.remove(user);
                 user.clear();
                 user.player().teleport(this.world.getSpawnLocation());
+                uniquePlayers.putIfAbsent(user.name(), false);
 
                 if (this.plotMode == PlotMode.BUILD) {
                     if (user.name().equalsIgnoreCase(owner) || allowedBuilders.contains(user.name())) {
@@ -383,7 +390,7 @@ public class Plot {
             if (world != null) {
                 if (worldName.equals(plotName())) {
                     for (Player player : online()) {
-                        player.teleport(Bukkit.getWorld(worldName).getSpawnLocation());
+                        player.teleport(Bukkit.getWorld("world").getSpawnLocation());
                         User.asUser(player).sendMessage("info.plot-offline", true, "");
                     }
                 }
@@ -399,6 +406,7 @@ public class Plot {
         }
 
         if (!onlyWorld) {
+            saveUniquePlayers();
             plots.remove(plotName());
         }
     }
@@ -596,6 +604,44 @@ public class Plot {
 
     public int getLastRedstoneOperationsAmount() {
         return lastRedstoneOperationsAmount;
+    }
+
+    public void saveUniquePlayers() {
+        File file = new File(Bukkit.getWorldContainer() + File.separator + plotName() + File.separator + "uniquePlayers.txt");
+        if (!file.exists() || !file.isFile()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+            objectOutputStream.writeObject(uniquePlayers);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void loadUniquePlayers() {
+        File file = new File(Bukkit.getWorldContainer() + File.separator + plotName() + File.separator + "uniquePlayers.txt");
+        if (!file.exists() || !file.isFile() || file.length() == 0) return;
+
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            uniquePlayers.putAll((Map<String, Boolean>) objectInputStream.readObject());
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int countLikes() {
+        Map<String, Boolean> copyOf = new LinkedHashMap<>(uniquePlayers);
+        return copyOf.values().stream().filter(v -> v).toList().size();
     }
 
 }
