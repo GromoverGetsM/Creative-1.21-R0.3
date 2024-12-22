@@ -48,7 +48,7 @@ public class DynamicLimit {
     }
 
     public int calculateLimit (Plot plot) {
-        return value + plot.online().size() * perPlayerModifier;
+        return value + (name.equalsIgnoreCase("variables") ? plot.uniquePlayers.size() : plot.online().size()) * perPlayerModifier;
     }
 
     @Override
