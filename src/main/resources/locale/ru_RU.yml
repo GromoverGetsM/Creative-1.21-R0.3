@@ -158,6 +158,10 @@ coding:
     vars: "Переменные"
     dynvarsaved: "&dСОХРАНЕНО"
     values: "Игровые значения"
+    var-item:
+      name: "&eПеременные"
+      lore:
+        - "&7Открывает меню с переменными"
 
   values:
     category:

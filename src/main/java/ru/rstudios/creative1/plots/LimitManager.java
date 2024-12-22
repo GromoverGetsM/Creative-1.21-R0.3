@@ -94,7 +94,7 @@ public class LimitManager {
     }
 
     public static boolean checkLimit (Plot plot, String limit, int valueToCheck) {
-        return getLimitValue(plot, limit) <= 0 || getLimitValue(plot, limit) <= valueToCheck;
+        return getLimitValue(plot, limit) <= 0 || getLimitValue(plot, limit) >= valueToCheck;
     }
 
 }

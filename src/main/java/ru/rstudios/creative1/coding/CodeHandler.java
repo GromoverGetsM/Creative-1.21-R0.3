@@ -187,12 +187,10 @@ public class CodeHandler {
     public void sendStarter (GameEvent event, StarterCategory sct) {
         if (plot.plotMode == Plot.PlotMode.PLAY) {
             if (this.starters != null && !this.starters.isEmpty()) {
-
                 if (!LimitManager.checkLimit(plot, "code_operations", callsAmount)) {
                     for (Player player1 : plot.online()) {
                         User.asUser(player1).sendMessage("info.plot-set-mode-build", true, "");
                         plot.throwException("code_operations", String.valueOf(callsAmount), String.valueOf(LimitManager.getLimitValue(plot, "code_operations")));
-                        plot.handler.sendStarter(new PlayerQuit.Event(player1, plot, new PlayerChangedWorldEvent(player1, player1.getWorld())), StarterCategory.PLAYER_QUIT);
                     }
                     plot.handler.stopCycles();
                     plot.plotMode = Plot.PlotMode.BUILD;
@@ -202,6 +200,7 @@ public class CodeHandler {
                             starter.setSelection(Collections.singletonList(event.getDefaultEntity()));
                             starter.execute(event);
                             increaseCalls();
+                            for (Action action : starter.getActions()) increaseCalls();
                         }
                     }
                 }

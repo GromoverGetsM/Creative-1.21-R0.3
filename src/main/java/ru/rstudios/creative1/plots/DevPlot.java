@@ -5,10 +5,20 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import ru.rstudios.creative1.user.LocaleManages;
+import ru.rstudios.creative1.user.User;
+import ru.rstudios.creative1.utils.Development;
 import ru.rstudios.creative1.utils.FileUtil;
+import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
@@ -54,6 +64,22 @@ public class DevPlot {
         CuboidRegion region = new CuboidRegion(pos1, pos2);
 
         return region.contains(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+    }
+
+    public void buildDevInventory(User user) {
+        Inventory inventory = Bukkit.createInventory(null, 36);
+        List<Integer> slots = new LinkedList<>(List.of(0, 1, 2, 9, 10, 11, 18, 19, 20, 27, 28, 29));
+        List<ItemStack> blocks = new LinkedList<>();
+        Arrays.stream(Development.BlockTypes.values()).forEach(type -> blocks.add(type.getIcon(user)));
+
+        for (int i = 0; (i < (slots.size() - 1) || i < (blocks.size() - 1)); i++) {
+            inventory.setItem(slots.get(i), blocks.get(i));
+        }
+
+        ItemStack item = ItemUtil.item(Material.IRON_INGOT, LocaleManages.getLocaleMessage(user.getLocale(), "coding.tech.var-item.name", false, ""), LocaleManages.getLocaleMessagesS(user.getLocale(), "coding.tech.var-item.lore", new LinkedHashMap<>()));
+        inventory.setItem(8, item);
+
+        user.player().getInventory().setContents(inventory.getContents());
     }
 
     public static Material getMainBlock() {

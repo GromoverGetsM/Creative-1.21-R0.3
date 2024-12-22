@@ -159,6 +159,10 @@ coding:
     vars: "Variables"
     dynvarsaved: "&dSAVED"
     values: "Game values"
+    var-item:
+      name: "&eVariables"
+      lore:
+        - "&7Opens the variables menu"
 
   values:
     category:

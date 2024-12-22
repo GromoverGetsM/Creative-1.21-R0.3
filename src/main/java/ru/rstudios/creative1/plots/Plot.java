@@ -327,9 +327,7 @@ public class Plot {
             user.player().setGameMode(GameMode.CREATIVE);
             user.player().teleport(dev().world().getSpawnLocation());
 
-            for (Development.BlockTypes type : Development.BlockTypes.values()) {
-                user.player().getInventory().addItem(type.getIcon(user));
-            }
+            dev.buildDevInventory(user);
         }
     }
 

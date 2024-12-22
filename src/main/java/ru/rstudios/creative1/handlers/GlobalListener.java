@@ -38,6 +38,7 @@ import ru.rstudios.creative1.menu.ProtectedMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
 import ru.rstudios.creative1.menu.selector.CodingMultipagesMenu;
 import ru.rstudios.creative1.menu.selector.ValuesMenu;
+import ru.rstudios.creative1.menu.selector.VariablesSelector;
 import ru.rstudios.creative1.plots.LimitManager;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
@@ -323,6 +324,9 @@ public class GlobalListener implements Listener {
 
         if (p != null) {
             if (p.isUserInDev(user)) {
+                if (event.getAction().isRightClick() && event.getItem() != null && event.getItem().getType() == Material.IRON_INGOT) {
+                    new VariablesSelector(user).open(user);
+                }
                 if ((event.getAction() == Action.RIGHT_CLICK_AIR || (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getTargetBlockExact(5) != null && event.getPlayer().getTargetBlockExact(5).getType() != Material.CHEST)) && event.getItem() != null && event.getItem().getType() == Material.APPLE) {
                     new ValuesMenu(user).open(user);
                 }

@@ -27,13 +27,13 @@ public class limitsCommand implements CommandExecutor, TabCompleter {
                 Player target = Bukkit.getPlayerExact(args[0]);
                 String limitName = args[1];
 
+                DynamicLimit limit = LimitManager.getLimit(user.getCurrentPlot(), limitName);
+
                 if (target == null) {
-                    if (args.length == 2 && args[0].equalsIgnoreCase("get")) {
-                        user.player().sendMessage("Current limit=" + LimitManager.getLimit(user.getCurrentPlot(), limitName).toString());
+                    if (args.length == 2 && args[0].equalsIgnoreCase("get") && limit != null) {
+                        user.player().sendMessage("Current limit=" + limit);
                     } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
                         int limitValue = Integer.parseInt(args[2]);
-
-                        DynamicLimit limit = LimitManager.getLimit(user.getCurrentPlot(), limitName);
 
                         if (limit != null) {
                             limit.setValue(limitValue);
