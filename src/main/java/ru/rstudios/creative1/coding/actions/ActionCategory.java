@@ -140,6 +140,7 @@ public enum ActionCategory {
     VAR_DECREMENT(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarDecrement::new, Material.COPPER_INGOT, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
     // Работа с переменными - операции с текстом
+    PARSE_NUMBER(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, ParseNumber::new, Material.ANVIL, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     GET_TEXT_LEN(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, GetTextLength::new, Material.BOOK, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
     // Если переменная - условия чисел

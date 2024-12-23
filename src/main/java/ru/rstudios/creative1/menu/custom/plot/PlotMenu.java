@@ -16,10 +16,11 @@ import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PlotMenu extends ProtectedMenu {
 
-    private SwitchItem closeable;
+    private final SwitchItem closeable;
 
     public PlotMenu (User user) {
         super(LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.title", false, ""), (byte) 6);
@@ -30,13 +31,16 @@ public class PlotMenu extends ProtectedMenu {
 
     @Override
     public void fillItems(User user) {
-        setItem((byte) 36, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
+        setItem((byte) 47, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.dangerzone-filler.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.dangerzone-filler.lore", new LinkedHashMap<>())));
-        setItem((byte) 37, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
+        setItem((byte) 51, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.dangerzone-filler.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.dangerzone-filler.lore", new LinkedHashMap<>())));
         setItem((byte) 38, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
+                LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.dangerzone-filler.name", false, ""),
+                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.dangerzone-filler.lore", new LinkedHashMap<>())));
+        setItem((byte) 42, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.dangerzone-filler.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.dangerzone-filler.lore", new LinkedHashMap<>())));
         setItem((byte) 39, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
@@ -48,18 +52,10 @@ public class PlotMenu extends ProtectedMenu {
         setItem((byte) 41, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.dangerzone-filler.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.dangerzone-filler.lore", new LinkedHashMap<>())));
-        setItem((byte) 42, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
-                LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.dangerzone-filler.name", false, ""),
-                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.dangerzone-filler.lore", new LinkedHashMap<>())));
-        setItem((byte) 43, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
-                LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.dangerzone-filler.name", false, ""),
-                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.dangerzone-filler.lore", new LinkedHashMap<>())));
-        setItem((byte) 44, ItemUtil.item(Material.RED_STAINED_GLASS_PANE,
-                LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.dangerzone-filler.name", false, ""),
-                LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.dangerzone-filler.lore", new LinkedHashMap<>())));
         setItem((byte) 48, ItemUtil.item(Material.ENDER_EYE,
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.shutdown-plot.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.shutdown-plot.lore", new LinkedHashMap<>())));
+        setItem((byte) 49, buildStaticticsItem(user));
         setItem((byte) 50, ItemUtil.head("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjMyYzE0NzJhN2JjNjk3NWRlZDdjMGM1MTY5Njk1OWI4OWFmNjFiNzVhZTk1NGNjNDAzNmJjMzg0YjNiODMwMSJ9fX0=",
                 LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.delete-plot.name", false, ""),
                 LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.delete-plot.lore", new LinkedHashMap<>())));
@@ -156,5 +152,16 @@ public class PlotMenu extends ProtectedMenu {
     @Override
     public void onOpen(InventoryOpenEvent event) {
 
+    }
+
+    private ItemStack buildStaticticsItem (User user) {
+        List<String> lore = LocaleManages.getLocaleMessagesS(user.getLocale(), "menus.plot.items.statictics.lore", new LinkedHashMap<>(Map.of(0, String.valueOf(user.getCurrentPlot().uniquePlayers.size()), 1, String.valueOf(user.getCurrentPlot().countLikes()))));
+        if (!user.getCurrentPlot().iconLore.isEmpty()) {
+            lore.add("§7");
+            lore.addAll(user.getCurrentPlot().iconLore);
+        }
+
+        return ItemUtil.item(Material.DIAMOND,
+                LocaleManages.getLocaleMessage(user.getLocale(), "menus.plot.items.statictics.name", false, user.getCurrentPlot().iconName), lore);
     }
 }

@@ -1359,6 +1359,11 @@ menus:
   plot:
     title: "Управление плотом"
     items:
+      statictics:
+        name: "&r%s"
+        lore:
+          - "&7Уникальные посетители: &e%s"
+          - "&7Лайки: &e%s"
       dangerzone-filler:
         name: "&cОпасная зона"
         lore:

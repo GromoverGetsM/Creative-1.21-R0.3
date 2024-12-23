@@ -1323,6 +1323,11 @@ menus:
   plot:
     title: "Plot Management"
     items:
+      statictics:
+        name: "&r%s"
+        lore:
+          - "&7Unique players: &e%s"
+          - "&7Likes: &e%s"
       gamerule-management:
         name: "&eGame Rule Management"
         lore:
