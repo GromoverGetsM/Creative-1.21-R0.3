@@ -252,7 +252,7 @@ coding:
         lore:
           - "&7Returns the entity's location"
       entity_opened_inv_title:
-        name: "&eOpened inventory"
+        name: "&eName of Open Inventory"
         lore:
           - "&7Returns the title of the opened inventory"
 
@@ -283,6 +283,8 @@ coding:
     player_right_click: "Right Click"
     player_physical_interact: "Physical Interaction"
     player_inv_click: "Inventory Click"
+    player_opened_inventory: "Opened Inventory"
+    player_closed_inventory: "Closed Inventory"
     player_chatted: "Chat Event"
 
     function: "Function"
@@ -653,6 +655,16 @@ menus:
         lore:
           - "&7Triggered when a player clicks"
           - "&7on the inventory."
+      player_opened_inventory:
+        name: "&eOpened Inventory"
+        lore:
+          - "&7Triggered when a player opens"
+          - "&7any inventory"
+      player_closed_inventory:
+        name: "&eClosed Inventory"
+        lore:
+          - "&7Triggered when a player closes"
+          - "&7any inventory"
       player_chatted:
         name: "&eChat Event"
         lore:
@@ -1145,6 +1157,14 @@ menus:
           - "&7- &6Dynamic Variable: &7The variable to modify &e(1)"
           - "&7- &cNumber: &7The amount to subtract &e(1)"
 
+      parse_number:
+        name: "&eParse Number"
+        lore:
+          - "&7Converts a text value into a number"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &bText: &7Text to parse &e(1)"
       get_text_len:
         name: "&eGet Text Length"
         lore:

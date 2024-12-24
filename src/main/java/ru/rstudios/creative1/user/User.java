@@ -13,6 +13,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.potion.PotionEffect;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
@@ -207,7 +208,7 @@ public class User {
     public void clear() {
         Player player = player();
 
-        player.closeInventory();
+        if (!List.of(InventoryType.CREATIVE, InventoryType.CRAFTING, InventoryType.PLAYER).contains(player.getOpenInventory().getType())) player.closeInventory();
         player.getInventory().clear();
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());

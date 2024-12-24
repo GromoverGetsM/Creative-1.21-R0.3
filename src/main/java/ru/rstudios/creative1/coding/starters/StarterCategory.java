@@ -33,6 +33,8 @@ public enum StarterCategory {
     PLAYER_RIGHT_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerRightClicked::new, PlayerRightClicked.Event.class, Material.DIAMOND_PICKAXE),
     PLAYER_PHYSICAL_INTERACT(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerPhysicalInteract::new, PlayerPhysicalInteract.Event.class, Material.GOLDEN_PICKAXE),
     PLAYER_INV_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.INVENTORY, PlayerClickedInventory::new, PlayerClickedInventory.Event.class, Material.PAINTING),
+    PLAYER_OPENED_INVENTORY(Development.BlockTypes.PLAYER_EVENT, MenuCategory.INVENTORY, PlayerOpenInventory::new, PlayerOpenInventory.Event.class, Material.LIME_GLAZED_TERRACOTTA),
+    PLAYER_CLOSED_INVENTORY(Development.BlockTypes.PLAYER_EVENT, MenuCategory.INVENTORY, PlayerCloseInventory::new, PlayerCloseInventory.Event.class, Material.RED_GLAZED_TERRACOTTA),
     PLAYER_CHATTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, PlayerChatted::new, PlayerChatted.Event.class, Material.WRITABLE_BOOK),
 
 

@@ -14,6 +14,8 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
@@ -490,6 +492,10 @@ public class GlobalListener implements Listener {
             }
 
             user.datastore().remove("chestBlockActive");
+        } else if (!(inv instanceof ProtectedMenu)) {
+            if (user.isOnPlayingWorld()) {
+                user.getCurrentPlot().handler.sendStarter(new PlayerCloseInventory.Event((Player) event.getPlayer(), user.getCurrentPlot(), event), StarterCategory.PLAYER_CLOSED_INVENTORY);
+            }
         }
     }
 
@@ -549,6 +555,8 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onInventoryOpen (InventoryOpenEvent event) {
+        User user = User.asUser(event.getPlayer());
+
         if (event.getInventory().getHolder() instanceof CodingMenu) {
             Player player = (Player) event.getPlayer();
             Block target = player.getTargetBlockExact(5);
@@ -558,6 +566,10 @@ public class GlobalListener implements Listener {
 
                 chest.getPersistentDataContainer().set(new NamespacedKey(plugin, "openedName"), PersistentDataType.STRING, player.getName());
                 chest.update();
+            }
+        } else if (!(event.getInventory() instanceof ProtectedMenu)) {
+            if (user.isOnPlayingWorld()) {
+                user.getCurrentPlot().handler.sendStarter(new PlayerOpenInventory.Event((Player) event.getPlayer(), user.getCurrentPlot(), event), StarterCategory.PLAYER_OPENED_INVENTORY);
             }
         }
     }
@@ -613,6 +625,13 @@ public class GlobalListener implements Listener {
         }
     }
 
+    private void onDamage (Entity damager, Entity entity, Event event, Cancellable cancellable, double damage) {
+        User damagerUser;
+        User victimUser;
+
+        if (damager instanceof Player player) damagerUser = User.asUser(player);
+        if (entity instanceof Player player) victimUser = User.asUser(player);
 
 
+    }
 }
