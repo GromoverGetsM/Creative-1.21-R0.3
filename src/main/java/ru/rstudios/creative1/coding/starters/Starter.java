@@ -4,6 +4,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionSelect;
+import ru.rstudios.creative1.coding.actions.worldaction.lines.BreakLineExecute;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.Wait;
 import ru.rstudios.creative1.coding.events.GameEvent;
 
@@ -17,6 +18,7 @@ public abstract class Starter {
     private List<Action> actions = new LinkedList<>();
     private List<Entity> selection = new LinkedList<>();
     private boolean isExecuting = false;
+    private boolean isCancelled = false; // Флаг для прерывания
     private int currentIndex = 0; // Индекс текущего действия
 
     public Starter() {}
@@ -43,11 +45,21 @@ public abstract class Starter {
     public void execute(GameEvent event) {
         if (isExecuting) return; // Предотвращаем параллельное выполнение
         isExecuting = true;
-
+        isCancelled = false; // Сбрасываем флаг отмены
         executeNextAction(event);
     }
 
+    public void cancelExecution() {
+        isCancelled = true;
+    }
+
     private void executeNextAction(GameEvent event) {
+        if (isCancelled) {
+            isExecuting = false;
+            currentIndex = 0;
+            return;
+        }
+
         if (currentIndex >= actions.size()) {
             isExecuting = false;
             currentIndex = 0;
@@ -63,14 +75,21 @@ public abstract class Starter {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    executeNextAction(event);
+                    if (!isCancelled) { // Проверяем отмену перед выполнением следующего действия
+                        executeNextAction(event);
+                    }
                 }
             }.runTaskLater(plugin, waitAction.getWaitTimeTicks());
+        } else if (currentAction instanceof BreakLineExecute) {
+            isExecuting = false;
+            currentIndex = 0;
+            cancelExecution();
         } else {
             if (currentAction instanceof ActionSelect) {
                 ((ActionSelect) currentAction).execute(event);
+            } else {
+                currentAction.execute(event, getSelection());
             }
-            else currentAction.execute(event, getSelection());
             executeNextAction(event);
         }
     }

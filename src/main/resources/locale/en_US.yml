@@ -350,6 +350,7 @@ coding:
     launch_cycle: "Start loop"
     stop_cycle: "Stop loop"
     clear_cache_vars: "Clear cache"
+    break_line_execute: "Break code line"
 
     set_block: "Set block"
     set_world_name: "Set World Name"
@@ -372,6 +373,7 @@ coding:
 
     player_hold_item: "Holds Item"
     item_equals: "Item equals"
+    inv_title_equals: "InvTitleEquals"
 
     set_var: "Set (=)"
     set_item_var: "Set item"
@@ -1043,6 +1045,13 @@ menus:
         lore:
           - "&7Resets all unsaved variables to"
           - "&7a state as if they never existed"
+          - "&7"
+          - "&aNo arguments required"
+      break_line_execute:
+        name: "&eStop Line Execution"
+        lore:
+          - "&7Stops the execution of the current line. Any actions"
+          - "&7after this block will not be executed."
           - "&7"
           - "&aNo arguments required"
 

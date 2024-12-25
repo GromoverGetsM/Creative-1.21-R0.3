@@ -3,6 +3,7 @@ package ru.rstudios.creative1.coding.actions;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
+import ru.rstudios.creative1.coding.actions.worldaction.lines.BreakLineExecute;
 import ru.rstudios.creative1.coding.actions.worldaction.lines.Wait;
 import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.coding.starters.Starter;
@@ -78,6 +79,10 @@ public abstract class ActionIf extends ArrayAction {
                     executeNextAction(event, selection);
                 }
             }.runTaskLater(plugin, waitAction.getWaitTimeTicks());
+        } else if (currentAction instanceof BreakLineExecute) {
+            isExecuting = false;
+            currentIndex = 0;
+            getStarter().cancelExecution();
         } else {
             currentAction.execute(event, selection);
             executeNextAction(event, selection);

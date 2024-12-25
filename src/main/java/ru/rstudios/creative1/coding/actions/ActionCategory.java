@@ -101,6 +101,7 @@ public enum ActionCategory {
     LAUNCH_CYCLE(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, LaunchCycle::new, Material.POTATO, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     STOP_CYCLE(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, StopCycle::new, Material.POISONOUS_POTATO, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     CLEAR_CACHE_VARS(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, ClearCacheVars::new, Material.GLASS, false, null, null, null),
+    BREAK_LINE_EXECUTE(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, BreakLineExecute::new, Material.TNT, false, null, null, null),
 
     // Действия мира - Мир
     SET_BLOCK(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, PlaceBlock::new, Material.GRASS_BLOCK, true, CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.ITEMSTACK, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
@@ -129,6 +130,7 @@ public enum ActionCategory {
     PLAYER_HOLD_ITEM(Development.BlockTypes.IF_PLAYER, MenuCategory.INVENTORY, PlayerHoldItem::new, Material.SHIELD, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>(Map.of(49,
             new SwitchItem(List.of("hand", "off_hand"), "menus.switches.actions.player_hold_item", List.of(Material.BRICK, Material.NETHER_BRICK))))),
     ITEM_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.INVENTORY, ItemEquals::new, Material.CRAFTING_TABLE, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
+    INV_TITLE_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.INVENTORY, IfInventoryTitleEquals::new, Material.PAINTING, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
     // Работа с переменными - присвоение
     SET_VAR(Development.BlockTypes.ACTION_VAR, MenuCategory.VARS_ASSIGNMENT, SetVar::new, Material.IRON_INGOT, true, CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.ANY), new LinkedHashMap<>()),

@@ -50,9 +50,7 @@ public enum StarterCategory {
     PLAYER_MOVE_BODY(Development.BlockTypes.PLAYER_EVENT, MenuCategory.MOVEMENT, PlayerMoveBody::new, PlayerMoveBody.Event.class, Material.CHAINMAIL_BOOTS),
     PLAYER_MOVE_HEAD(Development.BlockTypes.PLAYER_EVENT, MenuCategory.MOVEMENT, PlayerMoveHead::new, PlayerMoveHead.Event.class, Material.IRON_BOOTS),
 
-    PLAYER_CHATTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, PlayerChatted::new, PlayerChatted.Event.class, Material.WRITABLE_BOOK),
-
-    BLOCK_EXPLODED(Development.BlockTypes.BLOCK_EVENT, MenuCategory.WORLD, null, null, Material.TNT);
+    PLAYER_CHATTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, PlayerChatted::new, PlayerChatted.Event.class, Material.WRITABLE_BOOK);
 
     private Development.BlockTypes type;
     private MenuCategory category;
