@@ -12,14 +12,16 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -35,6 +37,8 @@ import org.bukkit.util.Vector;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
 import ru.rstudios.creative1.coding.starters.playerevent.*;
+import ru.rstudios.creative1.handlers.customevents.main.EntityDamageByEntityMyEvent;
+import ru.rstudios.creative1.handlers.customevents.main.EntityDamageCommonEvent;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.ProtectedMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
@@ -53,6 +57,7 @@ import ru.rstudios.creative1.utils.Development;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -625,13 +630,58 @@ public class GlobalListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void on(EntityDamageEvent event) {
+        if(event.getEntity().getType() == EntityType.PLAYER) {
+            final Plot plot = PlotManager.byWorld(event.getEntity().getWorld());
+            if (plot == null) { return; }
+
+            if (Objects.requireNonNull(plot.plotMode) == Plot.PlotMode.PLAY) {
+                plot.handler.sendStarter(new PlayerDamaged.Event((Player) event.getEntity(), plot, event), StarterCategory.PLAYER_DAMAGED);
+
+                if (event.getCause() == EntityDamageEvent.DamageCause.FALL) plot.handler.sendStarter(new PlayerFallDamaged.Event((Player) event.getEntity(), plot, event), StarterCategory.PLAYER_FALL_DAMAGED);
+            }
+        }
+        else if (!(event instanceof EntityDamageByEntityEvent)) {
+            this.onDamage(event.getEntity(), event.getEntity(), event, event, event.getDamage());
+        }
+    }
+
+    @EventHandler
+    public void on(EntityDamageByEntityMyEvent event) {
+        this.onDamage(event.getDamager(), event.getEntity(), event, event, event.getDamage());
+    }
+
+    @EventHandler
+    public void on(HangingBreakByEntityEvent event) {
+        this.onDamage(event.getRemover(), event.getEntity(), event, event, 0);
+    }
+
     private void onDamage (Entity damager, Entity entity, Event event, Cancellable cancellable, double damage) {
-        User damagerUser;
-        User victimUser;
+        User damagerUser = null;
 
         if (damager instanceof Player player) damagerUser = User.asUser(player);
-        if (entity instanceof Player player) victimUser = User.asUser(player);
 
+        Plot plot = PlotManager.byWorld(damager.getWorld());
+        if (plot == null) return;
 
+        switch (plot.plotMode) {
+            case BUILD -> {
+                if (damagerUser != null) {
+                    if (damagerUser.player().getGameMode() != GameMode.CREATIVE) cancellable.setCancelled(true);
+                }
+            }
+            case PLAY -> {
+                var commonEvent = new EntityDamageCommonEvent(event, cancellable, entity, damager, damage);
+                if (entity.getType() == EntityType.PLAYER) {
+                    if (damager instanceof Player) plot.handler.sendStarter(new PlayerDamagePlayer.Event((Player) damager, plot, commonEvent), StarterCategory.PLAYER_DAMAGE_PLAYER);
+                    else if (damager instanceof Projectile) plot.handler.sendStarter(new PlayerDamagedByProjectile.Event((Player) entity, plot, commonEvent),StarterCategory.PLAYER_DAMAGED_BY_PROJECTILE);
+                    else if (damager instanceof LivingEntity) plot.handler.sendStarter(new PlayerDamagedByMob.Event((Player) entity, plot, commonEvent), StarterCategory.PLAYER_DAMAGED_BY_MOB);
+                } else if (damager.getType() == EntityType.PLAYER) plot.handler.sendStarter(new PlayerDamagedMob.Event((Player) damager, plot, commonEvent), StarterCategory.PLAYER_DAMAGED_MOB);
+                else if (damager instanceof Projectile projectile && projectile.getShooter() instanceof Player player) plot.handler.sendStarter(new PlayerProjectileDamage.Event(player, plot, commonEvent), StarterCategory.PLAYER_PROJECTILE_DAMAGE);
+
+                if (!(entity instanceof Player) && entity instanceof LivingEntity living) plot.handler.sendStarter(new EntityDamaged.Event(living, plot, commonEvent), StarterCategory.ENTITY_DAMAGED);
+            }
+        }
     }
 }

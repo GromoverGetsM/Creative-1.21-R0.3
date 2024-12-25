@@ -282,9 +282,20 @@ coding:
     player_left_click: "Left Click"
     player_right_click: "Right Click"
     player_physical_interact: "Physical Interaction"
+
+    entity_damaged: "Entity Damaged"
+    player_damaged: "Player Damaged"
+    player_damaged_by_mob: "Damaged by Mob"
+    player_damaged_by_projectile: "Damaged by Projectile"
+    player_damaged_mob: "Damaged a Mob"
+    player_damage_player: "Damaged a Player"
+    player_fall_damaged: "Fall Damage"
+    player_projectile_damage: "Projectile Damage"
+
     player_inv_click: "Inventory Click"
     player_opened_inventory: "Opened Inventory"
     player_closed_inventory: "Closed Inventory"
+
     player_chatted: "Chat Event"
 
     function: "Function"
@@ -650,6 +661,48 @@ menus:
           - "&7Triggered when a player interacts"
           - "&7with a button, pressure plate, lever,"
           - "&7opens a door, etc."
+
+      entity_damaged:
+        name: "&eEntity Damaged"
+        lore:
+          - "&7Triggered when an entity receives"
+          - "&7any damage. Does not trigger for &eplayers"
+      player_damaged:
+        name: "&ePlayer Damaged"
+        lore:
+          - "&7Triggered when a player receives"
+          - "&7any damage."
+      player_damaged_by_mob:
+        name: "&eDamaged by Mob"
+        lore:
+          - "&7Triggered when a mob deals"
+          - "&7damage to a player"
+      player_damaged_by_projectile:
+        name: "&eDamaged by Projectile"
+        lore:
+          - "&7Triggered when a player receives"
+          - "&7damage from a projectile"
+      player_damaged_mob:
+        name: "&eDamaged a Mob"
+        lore:
+          - "&7Triggered when a player deals"
+          - "&7damage to a mob"
+      player_damage_player:
+        name: "&eDamaged a Player"
+        lore:
+          - "&7Triggered when a player deals"
+          - "&7damage to another player"
+      player_fall_damaged:
+        name: "&eFall Damage"
+        lore:
+          - "&7Triggered when a player takes"
+          - "&7damage from falling"
+      player_projectile_damage:
+        name: "&eProjectile Damage"
+        lore:
+          - "&7Triggered when a player deals"
+          - "&7damage using a projectile to a player or mob"
+
       player_inv_click:
         name: "&eInventory Click"
         lore:
@@ -665,6 +718,7 @@ menus:
         lore:
           - "&7Triggered when a player closes"
           - "&7any inventory"
+
       player_chatted:
         name: "&eChat Event"
         lore:

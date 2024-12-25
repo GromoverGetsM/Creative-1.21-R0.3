@@ -281,9 +281,20 @@ coding:
     player_left_click: "Левый клик"
     player_right_click: "Правый клик"
     player_physical_interact: "Физическое взаимодействие"
+
+    entity_damaged: "Моб получил урон"
+    player_damaged: "Игрок получил урон"
+    player_damaged_by_mob: "Урон от моба"
+    player_damaged_by_projectile: "Урон от снаряда"
+    player_damaged_mob: "Нанёс урон мобу"
+    player_damage_player: "Нанёс урон игроку"
+    player_fall_damaged: "Урон от падения"
+    player_projectile_damage: "Нанёс урон снарядом"
+
     player_inv_click: "Клик по инвентарю"
     player_opened_inventory: "Открыл инвентарь"
     player_closed_inventory: "Закрыл инвентарь"
+
     player_chatted: "Событие чата"
 
     function: "Функция"
@@ -672,6 +683,48 @@ menus:
           - "&7Выполняется, когда игрок нажимает"
           - "&7на кнопку, нажимную плиту, рычаг,"
           - "&7открывает дверь и т.п."
+
+      entity_damaged:
+        name: "&eМоб получил урон"
+        lore:
+          - "&7Выполняется, когда моб получает"
+          - "&7любой урон. Не срабатывает на &eигрока"
+      player_damaged:
+        name: "&eИгрок получил урон"
+        lore:
+          - "&7Выполняется, когда игрок получает"
+          - "&7любой урон."
+      player_damaged_by_mob:
+        name: "&eМоб нанёс урон игроку"
+        lore:
+          - "&7Выполняется, когда моб наносит"
+          - "&7урон игроку"
+      player_damaged_by_projectile:
+        name: "&eИгрок получил урон от снаряда"
+        lore:
+          - "&7Выполняется, когда игрок получает"
+          - "&7урон от снаряда"
+      player_damaged_mob:
+        name: "&eИгрок нанёс урон мобу"
+        lore:
+          - "&7Выполняется, когда игрок наносит"
+          - "&7урон мобу"
+      player_damage_player:
+        name: "&eИгрок нанёс урон игроку"
+        lore:
+          - "&7Выполняется, когда игрок наносит"
+          - "&7урон другому игроку"
+      player_fall_damaged:
+        name: "&eИгрок получил урон от падения"
+        lore:
+          - "&7Выполняется, когда игрок получает"
+          - "&7урон от падения"
+      player_projectile_damage:
+        name: "&eИгрок нанёс урон снарядом"
+        lore:
+          - "&7Выполняется, когда игрок наносит"
+          - "&7урон снарядом игроку или мобу"
+
       player_inv_click:
         name: "&eКлик по инвентарю"
         lore:
@@ -687,6 +740,7 @@ menus:
         lore:
           - "&7Выполняется, когда игрок закрывает"
           - "&7какой-либо инвентарь"
+
       player_chatted:
         name: "&eСобытие чата"
         lore:
