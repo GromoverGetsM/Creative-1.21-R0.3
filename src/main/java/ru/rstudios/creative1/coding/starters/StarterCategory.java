@@ -46,6 +46,10 @@ public enum StarterCategory {
     PLAYER_FALL_DAMAGED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.FIGHTING, PlayerFallDamaged::new, PlayerFallDamaged.Event.class, Material.WIND_CHARGE),
     PLAYER_PROJECTILE_DAMAGE(Development.BlockTypes.PLAYER_EVENT, MenuCategory.FIGHTING, PlayerProjectileDamage::new, PlayerProjectileDamage.Event.class, Material.ARROW),
 
+    PLAYER_MOVE_GENERALIZED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.MOVEMENT, PlayerMoveGeneralized::new, PlayerMoveGeneralized.Event.class, Material.LEATHER_BOOTS),
+    PLAYER_MOVE_BODY(Development.BlockTypes.PLAYER_EVENT, MenuCategory.MOVEMENT, PlayerMoveBody::new, PlayerMoveBody.Event.class, Material.CHAINMAIL_BOOTS),
+    PLAYER_MOVE_HEAD(Development.BlockTypes.PLAYER_EVENT, MenuCategory.MOVEMENT, PlayerMoveHead::new, PlayerMoveHead.Event.class, Material.IRON_BOOTS),
+
     PLAYER_CHATTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, PlayerChatted::new, PlayerChatted.Event.class, Material.WRITABLE_BOOK),
 
     BLOCK_EXPLODED(Development.BlockTypes.BLOCK_EVENT, MenuCategory.WORLD, null, null, Material.TNT);
@@ -66,10 +70,6 @@ public enum StarterCategory {
 
     public static StarterCategory byName (String name) {
         return Arrays.stream(values()).filter(starterCat -> starterCat.name().equals(name.toUpperCase(Locale.ROOT))).findFirst().orElse(null);
-    }
-
-    public static @Nullable StarterCategory getByMaterial (Material m) {
-        return Arrays.stream(values()).filter(cat -> cat.icon == m).findFirst().orElse(null);
     }
 
     public static @Nullable StarterCategory get(Material m, Development.BlockTypes type, MenuCategory category) {

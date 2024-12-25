@@ -296,6 +296,10 @@ coding:
     player_opened_inventory: "Opened Inventory"
     player_closed_inventory: "Closed Inventory"
 
+    player_move_generalized: "Movement"
+    player_move_body: "Body Movement"
+    player_move_head: "Head Rotation"
+
     player_chatted: "Chat Event"
 
     function: "Function"
@@ -718,6 +722,22 @@ menus:
         lore:
           - "&7Triggered when a player closes"
           - "&7any inventory"
+
+      player_move_generalized:
+        name: "&eMovement"
+        lore:
+          - "&7Triggered when the player rotates their head or"
+          - "&7moves in space"
+      player_move_body:
+        name: "&eBody Movement"
+        lore:
+          - "&7Triggered when the player changes their coordinates,"
+          - "&7without changing their head position"
+      player_move_head:
+        name: "&eHead Rotation"
+        lore:
+          - "&7Triggered when the player only rotates their head and"
+          - "&7does not move from the spot"
 
       player_chatted:
         name: "&eChat Event"
