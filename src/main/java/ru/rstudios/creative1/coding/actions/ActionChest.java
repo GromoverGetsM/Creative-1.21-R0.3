@@ -151,6 +151,19 @@ public class ActionChest {
         return list;
     }
 
+    public List<String> getAsTexts (GameEvent event, Entity entity, int from, int to) {
+        List<String> list = new LinkedList<>();
+        ItemStack[] args = Arrays.copyOfRange(originalContents, from, to);
+
+        for (ItemStack item : args) {
+            if (!isNullOrAir(item)) {
+                list.add(parseTextPlus(item, "", event, entity));
+            }
+        }
+
+        return list;
+    }
+
     public List<ItemStack> getAsItemStacks (GameEvent event, Entity entity, int from, int to) {
         List<ItemStack> items = new LinkedList<>();
         ItemStack[] args = Arrays.copyOfRange(originalContents, from, to);

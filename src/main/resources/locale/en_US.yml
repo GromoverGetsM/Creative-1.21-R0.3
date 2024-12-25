@@ -345,6 +345,7 @@ coding:
     scoreboard_set_display: "Board name"
 
     cancel_event: "Cancel Event"
+    restore_event: "Restore Event"
     wait: "Wait"
     launch_function: "Call function"
     launch_cycle: "Start loop"
@@ -1008,6 +1009,12 @@ menus:
         name: "&eCancel Event"
         lore:
           - "&7Cancels the triggered event if possible"
+          - "&7"
+          - "&aNo arguments required"
+      restore_event:
+        name: "&eRestore Event"
+        lore:
+          - "&7Reverts the cancellation of a triggered event if possible."
           - "&7"
           - "&aNo arguments required"
       wait:
