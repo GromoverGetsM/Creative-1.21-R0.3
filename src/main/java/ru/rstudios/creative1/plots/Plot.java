@@ -528,6 +528,13 @@ public class Plot {
         this.paidPlayers = paidPlayers;
     }
 
+    /**
+     * Использовать, если что-то пошло не так во время выполнения действия
+     * Вызывает табличку для девов и овнера с предложением тп к блоку где произошел пиздец
+     *
+     * @param action экземпляр проблемного действия (если вызываете из действия, то тупо this)
+     * @param e что-нибудь из наследников Exception с описанием внутри кратко на русском в чем ошибка
+     */
     public void throwException (Action action, Exception e) {
         for (Player player : online()) {
             if (owner.equalsIgnoreCase(player.getName()) || allowedDevs.contains(player.getName())) {
@@ -551,6 +558,13 @@ public class Plot {
         }
     }
 
+    /**
+     * Использовать при выбросе исключений выхода за лимиты.
+     * Видно всем игрокам, сразу преобразовывается
+     *
+     * @param exception название исключения (идентично названию лимита)
+     * @param changes изменения для замены, в сообщении конфига - %s
+     */
     public void throwException(String exception, String... changes) {
         for (Player player : online()) {
             User user = User.asUser(player);
