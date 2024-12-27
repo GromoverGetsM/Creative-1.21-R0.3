@@ -152,6 +152,10 @@ coding:
       name: "&eNumber Operations"
       lore:
         - "&7Actions and operations related to numbers"
+    location_operations:
+      name: "&eLocation Operations"
+      lore:
+        - "&7Actions and operations on locations"
 
   tech:
     var-set: "&aValue Set"
@@ -380,10 +384,14 @@ coding:
     set_item_var: "Set item"
 
     var_multiply: "*"
+    var_divide: "/"
     var_increment: "+="
     var_decrement: "-="
 
+    parse_number: "Parse number"
     get_text_len: "Text Length"
+
+    get_locs_distance: "Get Distance"
 
     compare_num_ez: "Comparison (Easy)"
 
@@ -1227,6 +1235,16 @@ menus:
           - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
           - "&7- &cNumber: &7Number to multiply &e(1)"
           - "&7- &cNumber: &7Numbers to multiply by &e(27)"
+      var_divide:
+        name: "&eDivide (/)"
+        lore:
+          - "&7Divides the initial number by all the ones provided below"
+          - "&7and stores the result in a variable"
+          - "&7"
+          - "&7Arguments (29):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &cNumber: &7The number to be divided &e(1)"
+          - "&7- &cNumber: &7Numbers to divide by &e(27)"
       var_increment:
         name: "&eAdd (+=)"
         lore:
@@ -1263,6 +1281,17 @@ menus:
           - "&7Arguments (2):"
           - "&7- &6Dynamic variable: &7Variable for the result &e(1)"
           - "&7- &bText: &7Text to check &e(1)"
+
+      get_locs_distance:
+        name: "&eGet Distance Between Locations"
+        lore:
+          - "&7Calculates the distance between two locations."
+          - "&7Stores the result in a variable."
+          - "&7"
+          - "&7Arguments (3):"
+          - "&7- &6Dynamic Variable: &7Variable to store the result &e(1)"
+          - "&7- &fLocation: &7First location &e(1)"
+          - "&7- &fLocation: &7Second location &e(1)"
 
       compare_num_ez:
         name: "&eCompare Numbers (Easy)"

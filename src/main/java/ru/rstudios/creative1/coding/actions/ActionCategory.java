@@ -138,12 +138,16 @@ public enum ActionCategory {
 
     // Работа с переменными - операции с числом
     VAR_MULTIPLY(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarMultiply::new, Material.REINFORCED_DEEPSLATE, true, CodingMenu.MenuType.DUO_SET, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    VAR_DIVIDE(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarDivide::new, Material.DEEPSLATE, true, CodingMenu.MenuType.DUO_SET, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
     VAR_INCREMENT(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarIncrement::new, Material.IRON_INGOT, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
     VAR_DECREMENT(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarDecrement::new, Material.COPPER_INGOT, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
     // Работа с переменными - операции с текстом
     PARSE_NUMBER(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, ParseNumber::new, Material.ANVIL, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     GET_TEXT_LEN(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, GetTextLength::new, Material.BOOK, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+
+    // Работа с переменными - операции с местоположениями
+    GET_LOCS_DISTANCE(Development.BlockTypes.ACTION_VAR, MenuCategory.LOCATION_OPERATIONS, GetLocationsDistance::new, Material.REPEATER, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
 
     // Если переменная - условия чисел
     COMPARE_NUM_EZ(Development.BlockTypes.IF_VARIABLE, MenuCategory.NUMBER_OPERATIONS, IfVariableCompareNumberEasy::new, Material.SANDSTONE_STAIRS, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NULL, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>(Map.of(13,
