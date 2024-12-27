@@ -348,6 +348,12 @@ public class Development {
         }
     }
 
+    /**
+     * Проверяет, если сущность находится на плоте
+     * @param entity сущность для проверки
+     * @param plot плот, где должна быть сущность
+     * @return true если на плоте, false если где-то еще гуляет
+     */
     public static boolean checkPlot (Entity entity, Plot plot) {
         return entity.getWorld() == plot.world();
     }
@@ -374,6 +380,11 @@ public class Development {
         return entity;
     }
 
+    /**
+     * Проверка для облаков зелья (от оседающих) на содержание негативных эффектов
+     * @param cloud облако для проверки
+     * @return true если содержит негативку
+     */
     public static boolean containsNegativeEffects(AreaEffectCloud cloud) {
         for (PotionEffect effect : cloud.getCustomEffects()) {
             PotionEffectType effectType = effect.getType();
