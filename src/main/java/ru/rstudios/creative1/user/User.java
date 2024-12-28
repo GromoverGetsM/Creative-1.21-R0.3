@@ -53,14 +53,23 @@ public class User {
         users.add(this);
     }
 
+    /**
+     * @return возвращает экземпляр хэшкарты данных об юзере для хранения кастомных значений
+     */
     public Map<String, Object> datastore() {
         return datastore;
     }
 
+    /**
+     * @return возвращает игрока, связанного с юзером
+     */
     public Player player() {
         return player;
     }
 
+    /**
+     * @return возвращает имя пользователя. Совпадает с {@link Player#getName()}
+     */
     public String name() {
         return name;
     }
@@ -82,6 +91,9 @@ public class User {
         player().sendTitle(title, subtitle, fadeIn, duration, fadeOut);
     }
 
+    /**
+     * @return Возвращает локализацию игрока в формате язык_Страна, например ru_RU или en_US
+     */
     public String getLocale() {
         if (this.locale == null || this.locale.isEmpty()) {
             this.locale = LocaleManages.getLocale(player);
@@ -225,6 +237,9 @@ public class User {
         return PlotManager.plots.get(name);
     }
 
+    /**
+     * Сбрасывает инвентарь, здоровье, режим игры и любые другие характеристики до стандартных значений. Использовать при телепортах между плотами (пример: {@link Plot#teleportToPlot(User)})
+     */
     public void clear() {
         Player player = player();
 

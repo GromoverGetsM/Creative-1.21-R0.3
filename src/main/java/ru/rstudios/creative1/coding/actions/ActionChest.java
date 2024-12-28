@@ -51,10 +51,18 @@ public class ActionChest {
         this.chest = (Chest) chestBlock.getState();
     }
 
+    /**
+     * Метод для проверки на нулевой предмет
+     * @param item предмет для проверки
+     * @return Возвращает true если предмет пустой (null или материал предмета - воздух)
+     */
     public static boolean isNullOrAir(ItemStack item) {
         return item == null || item.getType() == Material.AIR;
     }
 
+    /**
+     * Инициализация сортировки инвентаря действия
+     */
     public void initInventorySort() {
         this.originalContents = this.chest.getPersistentDataContainer().get(new NamespacedKey(plugin, "inventory"), DataType.ITEM_STACK_ARRAY);
         this.nonNullItems = Arrays.stream(this.originalContents)
@@ -468,6 +476,15 @@ public class ActionChest {
         }
     }
 
+    /**
+     * Парсит динамическую переменную из предмета. Возвращает ЗНАЧЕНИЕ переменной
+     * @param item предмет для парсинга
+     * @param defaultValue значение, которое вернётся если что-то пойдёт не так
+     * @param checkTypeMatches проверка на тип предмета. Если != магмакрему, вернёт defaultValue
+     * @param event событие для плота и замены переменных
+     * @param entity сущность для замены переменных
+     * @return Возвращает значение переменной
+     */
     public static Object parseDynamicVariable (ItemStack item, Object defaultValue, boolean checkTypeMatches, GameEvent event, Entity entity) {
         if (item == null) {
             return defaultValue;
@@ -486,6 +503,13 @@ public class ActionChest {
         }
     }
 
+    /**
+     * Метод для конвертации предмета в динамическую переменную
+      * @param item предмет, предположительная переменная
+     * @param event событие, для получения плота, а также для замены плейсхолдеров
+     * @param entity сущность, для замены плейсхолдеров
+     * @return Возвращает экземпляр динамической переменной с пустым именем, если переменная не найдена или найденную переменную
+     */
     public static DynamicVariable asDynamicVariable (ItemStack item, GameEvent event, Entity entity) {
         ItemMeta meta = item.getItemMeta();
 
