@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class ParseNumber extends Action {
 
-    public final static Pattern NUMBER = Pattern.compile("-?[0-9]+\\.?[0-9]*");
+    public final static Pattern NUMBER = Pattern.compile("-?[0-9]+(\\.[0-9]*)?([eE][+-]?[0-9]+)?");
 
     @Override
     public void execute(GameEvent event, List<Entity> selection) {
