@@ -1,18 +1,16 @@
 package ru.rstudios.creative1.coding;
 
-import javassist.bytecode.Bytecode;
 import net.kyori.adventure.bossbar.BossBar;
-import org.apache.commons.lang3.SerializationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -42,6 +40,7 @@ public class CodeHandler {
     public Map<String, DynamicVariable> dynamicVariables = new LinkedHashMap<>();
     private final Map<String, BossBar> bossBars = new LinkedHashMap<>();
     private final Map<String, Scoreboard> scoreboards = new LinkedHashMap<>();
+    private final Map<String, WorldBorder> borders = new LinkedHashMap<>();
     public List<Cycle> cycles = new LinkedList<>();
 
     public int callsAmount = 0;
@@ -190,6 +189,7 @@ public class CodeHandler {
                 if (!LimitManager.checkLimit(plot, "code_operations", callsAmount)) {
                     for (Player player1 : plot.online()) {
                         User.asUser(player1).sendMessage("info.plot-set-mode-build", true, "");
+                        User.asUser(player1).clear();
                         plot.throwException("code_operations", String.valueOf(callsAmount), String.valueOf(LimitManager.getLimitValue(plot, "code_operations")));
                     }
                     plot.handler.stopCycles();
@@ -213,6 +213,7 @@ public class CodeHandler {
         if (!LimitManager.checkLimit(plot, "code_operations", callsAmount)) {
             for (Player player1 : plot.online()) {
                 User.asUser(player1).sendMessage("info.plot-set-mode-build", true, "");
+                User.asUser(player1).clear();
                 plot.throwException("code_operations", String.valueOf(callsAmount), String.valueOf(LimitManager.getLimitValue(plot, "code_operations")));
                 plot.handler.sendStarter(new PlayerQuit.Event(player1, plot, new PlayerChangedWorldEvent(player1, player1.getWorld())), StarterCategory.PLAYER_QUIT);
             }
@@ -300,5 +301,13 @@ public class CodeHandler {
 
     public void putDynamicVariable (String name, DynamicVariable variable) {
         if (LimitManager.checkLimit(plot, "variables", dynamicVariables.size())) dynamicVariables.put(name, variable);
+    }
+
+    public void tryAddWorldBorder (String name, WorldBorder border) {
+        if (LimitManager.checkLimit(plot, "worldborders", borders.size())) borders.put(name, border);
+    }
+
+    public Map<String, WorldBorder> getBorders() {
+        return borders;
     }
 }

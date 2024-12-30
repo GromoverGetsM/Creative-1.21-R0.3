@@ -20,8 +20,8 @@ public class ScoreboardResetScore extends Action {
         for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
 
-            String name = ActionChest.parseTextPlus(chest.getOriginalContents()[11], "", event, entity);
-            String object = ActionChest.parseTextPlus(chest.getOriginalContents()[15], "", event, entity);
+            String name = chest.parseTextPlus(chest.getOriginalContents()[11], "", event, entity);
+            String object = chest.parseTextPlus(chest.getOriginalContents()[15], "", event, entity);
 
             if (name.isEmpty()) {
                 event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно изменить скорборд с пустым именем!"));

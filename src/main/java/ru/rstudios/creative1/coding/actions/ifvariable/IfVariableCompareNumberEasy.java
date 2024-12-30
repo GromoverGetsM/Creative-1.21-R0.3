@@ -24,8 +24,8 @@ public class IfVariableCompareNumberEasy extends ActionIf {
                 continue;
             }
 
-            double first = ActionChest.parseNumberPlus(chest.getOriginalContents()[10], 0.0, event, entity);
-            double second = ActionChest.parseNumberPlus(chest.getOriginalContents()[16], 0.0, event, entity);
+            double first = chest.parseNumberPlus(chest.getOriginalContents()[10], 0.0, event, entity);
+            double second = chest.parseNumberPlus(chest.getOriginalContents()[16], 0.0, event, entity);
 
             switch (switchItem.getCurrentValue()) {
                 case "more" -> {

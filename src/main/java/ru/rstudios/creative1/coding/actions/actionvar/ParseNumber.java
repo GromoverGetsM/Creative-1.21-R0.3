@@ -29,7 +29,7 @@ public class ParseNumber extends Action {
                 return;
             }
 
-            String text = ActionChest.parseTextPlus(chest.getOriginalContents()[15], "0", event, entity);
+            String text = chest.parseTextPlus(chest.getOriginalContents()[15], "0", event, entity);
 
             if (NUMBER.matcher(text).matches()) {
                 variable.setValue(event.getPlot(), Double.parseDouble(text), DynamicVariable.isVarSaved(chest.getOriginalContents()[11]));

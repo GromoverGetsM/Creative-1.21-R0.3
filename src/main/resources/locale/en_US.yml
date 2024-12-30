@@ -33,6 +33,17 @@ errors:
   plot-crit-filler: "&8==============================================="
   already-liked: "You have &6already liked&f this game!"
 
+  exceptions:
+    entities: "Entity limit exceeded in the area! &6%s&f/&6%s"
+    code_operations: "Code operation limit exceeded in a single time unit! &6%s&f/&6%s"
+    scoreboards: "Scoreboard limit exceeded for the plot! &6%s&f/&6%s"
+    bossbars: "Bossbar limit exceeded for the plot! &6%s&f/&6%s"
+    redstone_operations: "Redstone operation limit exceeded! &6%s&f/&6%s"
+    opening_inventories: "Opening inventories limit exceeded in a single time unit! &6%s&f/&6%s"
+    variables: "Variable limit exceeded! &6%s&f/&6%s"
+    modifying_blocks: "Block modification limit exceeded in a single time unit! &6%s&f/&6%s"
+    worldborders: "Custom border limit exceeded for the plot! &6%s&f/&6%s"
+
 global-items:
   menu-not-filled:
     name: "&cNo Items"
@@ -341,6 +352,8 @@ coding:
 
     show_scoreboard: "Show board"
     hide_scoreboard: "Hide board"
+    set_border: "Set Border"
+    reset_border: "Reset Border"
 
     create_scoreboard: "Create board"
     delete_scoreboard: "Delete board"
@@ -968,6 +981,35 @@ menus:
           - "&7"
           - "&7Arguments (1):"
           - "&7- &6Toggle: &7Invincibility &e(1)"
+
+      hide_scoreboard:
+        name: "&eHide Scoreboard"
+        lore:
+          - "&7Hides the current scoreboard panel"
+          - "&7"
+          - "&aNo arguments required"
+      show_scoreboard:
+        name: "&eShow Scoreboard"
+        lore:
+          - "&7Displays the specified scoreboard panel to the player"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Name of the panel"
+      set_border:
+        name: "&eSet Local Border"
+        lore:
+          - "&7The player will use a locally created border"
+          - "&7instead of the global world border"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Name of the border"
+      reset_border:
+        name: "&eReset Local Border"
+        lore:
+          - "&7Resets the local border for the player. They"
+          - "&7will now follow the global world border"
+          - "&7"
+          - "&aNo arguments required"
 
       create_scoreboard:
         name: "&eCreate board"

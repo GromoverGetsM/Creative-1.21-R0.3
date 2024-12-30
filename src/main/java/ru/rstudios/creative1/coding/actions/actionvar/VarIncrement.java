@@ -30,7 +30,7 @@ public class VarIncrement extends Action {
             if (variableValue instanceof Number) variableAsInt = (double) variableValue;
             else variableAsInt = 0;
 
-            incrementer = ActionChest.parseNumberPlus(chest.getOriginalContents()[15], 0.0, event, entity);
+            incrementer = chest.parseNumberPlus(chest.getOriginalContents()[15], 0.0, event, entity);
 
             variable.setValue(event.getPlot(), variableAsInt + incrementer, DynamicVariable.isVarSaved(chest.getOriginalContents()[11]));
         }

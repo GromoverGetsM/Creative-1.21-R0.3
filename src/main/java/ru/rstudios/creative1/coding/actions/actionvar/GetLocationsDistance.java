@@ -28,8 +28,8 @@ public class GetLocationsDistance extends Action {
                 return;
             }
 
-            Location pos1 = ActionChest.parseLocationPlus(chest.getOriginalContents()[13], event.getPlot().world().getSpawnLocation(), event, entity);
-            Location pos2 = ActionChest.parseLocationPlus(chest.getOriginalContents()[16], event.getPlot().world().getSpawnLocation(), event, entity);
+            Location pos1 = chest.parseLocationPlus(chest.getOriginalContents()[13], event.getPlot().world().getSpawnLocation(), event, entity);
+            Location pos2 = chest.parseLocationPlus(chest.getOriginalContents()[16], event.getPlot().world().getSpawnLocation(), event, entity);
 
             double distance = pos1.distance(pos2);
             variable.setValue(event.getPlot(), distance, saved);

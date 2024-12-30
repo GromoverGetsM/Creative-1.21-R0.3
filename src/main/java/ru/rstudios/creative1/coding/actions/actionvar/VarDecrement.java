@@ -30,7 +30,7 @@ public class VarDecrement extends Action {
             if (variableValue instanceof Number) variableAsInt = (double) variableValue;
             else variableAsInt = 0;
 
-            decrementer = ActionChest.parseNumberPlus(chest.getOriginalContents()[15], 0.0, event, entity);
+            decrementer = chest.parseNumberPlus(chest.getOriginalContents()[15], 0.0, event, entity);
 
             variable.setValue(event.getPlot(), variableAsInt - decrementer, DynamicVariable.isVarSaved(chest.getOriginalContents()[11]));
         }

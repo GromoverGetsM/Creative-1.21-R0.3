@@ -28,14 +28,14 @@ public class GetTextLength extends Action {
                 return;
             }
 
-            Object o = ActionChest.parseItem(chest.getOriginalContents()[15], event, entity);
+            Object o = chest.parseItem(chest.getOriginalContents()[15], event, entity);
 
             if (o == null) {
                 event.getPlot().throwException(this, new IllegalStateException("Не удалось обработать текст"));
                 return;
             }
 
-            String text = String.valueOf(ActionChest.parseItem(chest.getOriginalContents()[15], event, entity));
+            String text = String.valueOf(chest.parseItem(chest.getOriginalContents()[15], event, entity));
             boolean saved = DynamicVariable.isVarSaved(chest.getOriginalContents()[11]);
 
             variable.setValue(event.getPlot(), text.length(), saved);

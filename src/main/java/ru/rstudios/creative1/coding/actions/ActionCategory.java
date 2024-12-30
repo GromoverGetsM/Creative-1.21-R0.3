@@ -10,6 +10,8 @@ import ru.rstudios.creative1.coding.actions.actionvar.*;
 import ru.rstudios.creative1.coding.actions.ifplayer.*;
 import ru.rstudios.creative1.coding.actions.ifvariable.*;
 import ru.rstudios.creative1.coding.actions.playeraction.appearence.HideScoreboard;
+import ru.rstudios.creative1.coding.actions.playeraction.appearence.ResetWorldBorder;
+import ru.rstudios.creative1.coding.actions.playeraction.appearence.SetWorldBorder;
 import ru.rstudios.creative1.coding.actions.playeraction.appearence.ShowScoreboard;
 import ru.rstudios.creative1.coding.actions.playeraction.communication.*;
 import ru.rstudios.creative1.coding.actions.playeraction.inventory.*;
@@ -85,6 +87,8 @@ public enum ActionCategory {
 
     SHOW_SCOREBOARD(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, ShowScoreboard::new, Material.LANTERN, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     HIDE_SCOREBOARD(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, HideScoreboard::new, Material.GLASS, false, null, null, null),
+    SET_BORDER(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, SetWorldBorder::new, Material.SHIELD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    RESET_BORDER(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, ResetWorldBorder::new, Material.IRON_NUGGET, false, null, null, null),
 
     // Действия мира - внешний вид
     CREATE_SCOREBOARD(Development.BlockTypes.WORLD_ACTION, MenuCategory.APPEARANCE, CreateScoreboard::new, Material.PAINTING, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
@@ -111,6 +115,10 @@ public enum ActionCategory {
     SET_WORLD_PRIVACY(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, SetWorldPrivacy::new, Material.IRON_DOOR, true, CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
             new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_world_privacy", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
     SET_WORLD_LORE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldLore::new, Material.BOOKSHELF, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    CREATE_WORLDBORDER(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, CreateWorldBorder::new, Material.HEART_OF_THE_SEA, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    DELETE_WORLDBORDER(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, DeleteWorldBorder::new, Material.END_CRYSTAL, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    SET_BORDER_CENTER(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, SetBorderCenter::new, Material.LIGHTNING_ROD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
+    SET_BORDER_SIZE(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, SetBorderSize::new, Material.WAXED_OXIDIZED_COPPER_BULB, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
     // Если игрок - общее
     NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),

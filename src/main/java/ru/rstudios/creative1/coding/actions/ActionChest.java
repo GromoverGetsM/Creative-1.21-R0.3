@@ -3,22 +3,20 @@ package ru.rstudios.creative1.coding.actions;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.coding.events.GameEvent;
-import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
-import ru.rstudios.creative1.coding.eventvalues.StringValue;
 import ru.rstudios.creative1.coding.eventvalues.ValueType;
 import ru.rstudios.creative1.coding.starters.Starter;
 import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
 import ru.rstudios.creative1.handlers.GlobalListener;
 import ru.rstudios.creative1.plots.PlotManager;
-import ru.rstudios.creative1.utils.Development;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -225,7 +223,7 @@ public class ActionChest {
         return numerics;
     }
 
-    public static Object parseItem (ItemStack item, @Nullable GameEvent event, @Nullable Entity entity) {
+    public Object parseItem(ItemStack item, @Nullable GameEvent event, @Nullable Entity entity) {
         if (item == null) {
             return null;
         }
@@ -273,7 +271,7 @@ public class ActionChest {
     }
 
 
-    public static Double parseNumberPlus (ItemStack item, double defValue, GameEvent event, Entity entity) {
+    public Double parseNumberPlus(ItemStack item, double defValue, GameEvent event, Entity entity) {
         if (item == null) {
             return defValue;
         }
@@ -284,7 +282,7 @@ public class ActionChest {
         return defValue;
     }
 
-    public static String parseTextPlus (ItemStack item, String defValue, GameEvent event, Entity entity) {
+    public String parseTextPlus(ItemStack item, String defValue, GameEvent event, Entity entity) {
         if (item == null) return defValue;
 
         Object o = parseItem(item, event, entity);
@@ -292,7 +290,7 @@ public class ActionChest {
         else return GlobalListener.parseColors(String.valueOf(o));
     }
 
-    public static Location parseLocationPlus (ItemStack item, Location defaultValue, GameEvent event, Entity entity) {
+    public Location parseLocationPlus(ItemStack item, Location defaultValue, GameEvent event, Entity entity) {
         if (item == null) return defaultValue;
 
         Object o = parseItem(item, event, entity);
@@ -377,11 +375,11 @@ public class ActionChest {
         }
     }
 
-    public static Location parseLocation(ItemStack itemStack, Location def) {
+    public Location parseLocation(ItemStack itemStack, Location def) {
         return parseLocation(itemStack, def, true);
     }
 
-    public static Location parseLocation(ItemStack itemStack, Location def, boolean checkType) {
+    public Location parseLocation(ItemStack itemStack, Location def, boolean checkType) {
         if (!isNullOrAir(itemStack)) {
             if (checkType && itemStack.getType() != Material.PAPER) {
                 return def;
@@ -461,16 +459,28 @@ public class ActionChest {
         return loc;
     }
 
-    public static Location toLocation(String code) {
+    public Location toLocation(String code) {
         if (code != null && !code.isEmpty()) {
             String[] loc = code.split(":");
-            if (loc.length == 3) {
-                return fixNan(new Location(Bukkit.getWorlds().get(0), Double.parseDouble(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2])));
-            } else if (loc.length == 4) {
-                return fixNan(new Location(Bukkit.getWorld(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2]), Double.parseDouble(loc[3])));
-            } else {
-                return loc.length == 6 ? fixNan(new Location(Bukkit.getWorld(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2]), Double.parseDouble(loc[3]), Float.parseFloat(loc[4]), Float.parseFloat(loc[5]))) : null;
+
+            double x = 0, y = 0, z = 0;
+            float yaw = 0, pitch = 0;
+
+            switch (loc.length) {
+                case 4 -> {
+                    x = Double.parseDouble(loc[1]);
+                    y = Double.parseDouble(loc[2]);
+                    z = Double.parseDouble(loc[3]);
+                }
+                case 5 -> {
+                    x = Double.parseDouble(loc[0]);
+                    y = Double.parseDouble(loc[1]);
+                    z = Double.parseDouble(loc[2]);
+                    yaw = Float.parseFloat(loc[3]);
+                    pitch = Float.parseFloat(loc[4]);
+                }
             }
+            return fixNan(new Location(getChestBlock().getWorld(), x, y, z, yaw, pitch));
         } else {
             return null;
         }

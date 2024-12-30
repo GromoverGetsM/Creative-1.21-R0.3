@@ -24,8 +24,8 @@ public class CreateScoreboard extends Action {
         for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
 
-            String name = ActionChest.parseTextPlus(chest.getOriginalContents()[11], "", event, entity);
-            String displayName = ActionChest.parseTextPlus(chest.getOriginalContents()[15], "", event, entity);
+            String name = chest.parseTextPlus(chest.getOriginalContents()[11], "", event, entity);
+            String displayName = chest.parseTextPlus(chest.getOriginalContents()[15], "", event, entity);
 
             if (name.isEmpty()) {
                 event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно создать скорборд с пустым именем!"));

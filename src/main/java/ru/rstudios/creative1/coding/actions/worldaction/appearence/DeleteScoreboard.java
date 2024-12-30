@@ -22,7 +22,7 @@ public class DeleteScoreboard extends Action {
         for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
 
-            String scoreboardName = ActionChest.parseTextPlus(chest.getOriginalContents()[13], "", event, entity);
+            String scoreboardName = chest.parseTextPlus(chest.getOriginalContents()[13], "", event, entity);
 
             if (scoreboardName.isEmpty()) {
                 event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно удалить скорборд с пустым именем!"));

@@ -1,9 +1,8 @@
 package ru.rstudios.creative1.coding.actions.playeraction.appearence;
 
-import org.bukkit.Bukkit;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
@@ -12,13 +11,11 @@ import ru.rstudios.creative1.utils.Development;
 
 import java.util.List;
 
-public class ShowScoreboard extends Action {
+public class SetWorldBorder extends Action {
     @Override
     public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
-
-        Scoreboard scoreboard;
 
         for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
@@ -27,23 +24,21 @@ public class ShowScoreboard extends Action {
                 String name = chest.parseTextPlus(chest.getOriginalContents()[13], "", event, entity);
 
                 if (name.isEmpty()) {
-                    event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно показать скорборд с пустым именем!"));
+                    event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно установить границу с пустым именем!"));
                     return;
                 }
 
-                scoreboard = event.getPlot().handler.getScoreboards().get(name.toLowerCase());
+                WorldBorder border = event.getPlot().handler.getBorders().get(name);
 
-                if (scoreboard == null) {
-                    scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+                if (border != null) {
+                    player.setWorldBorder(border);
                 }
-
-                player.setScoreboard(scoreboard);
             }
         }
     }
 
     @Override
     public ActionCategory getCategory() {
-        return ActionCategory.SHOW_SCOREBOARD;
+        return null;
     }
 }

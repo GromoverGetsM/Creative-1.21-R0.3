@@ -248,6 +248,7 @@ public class User {
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
         }
+        player.setWorldBorder(null);
         player.setFireTicks(0);
         player.setFreezeTicks(0);
         player.setNoDamageTicks(20);

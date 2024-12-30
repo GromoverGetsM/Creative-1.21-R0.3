@@ -20,7 +20,7 @@ public class SetWorldName extends Action {
                 continue;
             }
 
-            String name = ActionChest.parseTextPlus(chest.getOriginalContents()[13], "", event, entity);
+            String name = chest.parseTextPlus(chest.getOriginalContents()[13], "", event, entity);
 
             if (!name.isEmpty()) {
                 if (name.length() > 40) {

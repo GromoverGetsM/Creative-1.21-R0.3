@@ -20,9 +20,9 @@ public class ScoreboardSetScore extends Action {
         for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
 
-            String name = ActionChest.parseTextPlus(chest.getOriginalContents()[10], "", event, entity);
-            int score = ActionChest.parseNumberPlus(chest.getOriginalContents()[13], 0, event, entity).intValue();
-            String object = ActionChest.parseTextPlus(chest.getOriginalContents()[16], "", event, entity);
+            String name = chest.parseTextPlus(chest.getOriginalContents()[10], "", event, entity);
+            int score = chest.parseNumberPlus(chest.getOriginalContents()[13], 0, event, entity).intValue();
+            String object = chest.parseTextPlus(chest.getOriginalContents()[16], "", event, entity);
 
             if (name.isEmpty()) {
                 event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно изменить скорборд с пустым именем!"));

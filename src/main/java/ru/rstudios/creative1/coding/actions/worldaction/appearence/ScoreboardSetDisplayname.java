@@ -21,8 +21,8 @@ public class ScoreboardSetDisplayname extends Action {
         for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
 
-            String name = ActionChest.parseTextPlus(chest.getOriginalContents()[11], "", event, entity);
-            String display = ActionChest.parseTextPlus(chest.getOriginalContents()[15], "", event, entity);
+            String name = chest.parseTextPlus(chest.getOriginalContents()[11], "", event, entity);
+            String display = chest.parseTextPlus(chest.getOriginalContents()[15], "", event, entity);
 
             if (name.isEmpty()) {
                 event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно удалить скорборд с пустым именем!"));

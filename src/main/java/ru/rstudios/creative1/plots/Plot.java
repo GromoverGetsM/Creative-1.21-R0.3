@@ -568,7 +568,7 @@ public class Plot {
     public void throwException(String exception, String... changes) {
         for (Player player : online()) {
             User user = User.asUser(player);
-            user.sendMessage("errors.exceptions." + exception, false, changes);
+            user.sendMessage("errors.exceptions." + exception, true, changes);
         }
     }
 

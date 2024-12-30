@@ -22,9 +22,9 @@ public class IfLocationInRegion extends ActionIf {
                 continue;
             }
 
-            Location checkLoc = ActionChest.parseLocationPlus(chest.getOriginalContents()[10], event.getPlot().world().getSpawnLocation(), event, entity);
-            Location minLoc = ActionChest.parseLocationPlus(chest.getOriginalContents()[13], event.getPlot().world().getSpawnLocation(), event, entity);
-            Location maxLoc = ActionChest.parseLocationPlus(chest.getOriginalContents()[16], event.getPlot().world().getSpawnLocation(), event, entity);
+            Location checkLoc = chest.parseLocationPlus(chest.getOriginalContents()[10], event.getPlot().world().getSpawnLocation(), event, entity);
+            Location minLoc = chest.parseLocationPlus(chest.getOriginalContents()[13], event.getPlot().world().getSpawnLocation(), event, entity);
+            Location maxLoc = chest.parseLocationPlus(chest.getOriginalContents()[16], event.getPlot().world().getSpawnLocation(), event, entity);
 
             BlockVector3 min = BlockVector3.at(minLoc.x(), minLoc.y(), minLoc.z());
             BlockVector3 max = BlockVector3.at(maxLoc.x(), maxLoc.y(), maxLoc.z());

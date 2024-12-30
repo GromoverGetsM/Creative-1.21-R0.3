@@ -26,7 +26,7 @@ public class VarDivide extends Action {
 
             DynamicVariable variable = ActionChest.asDynamicVariable(varItem, event, entity);
 
-            double mainNumeric = ActionChest.parseNumberPlus(chest.getOriginalContents()[14], 1.0, event, entity);
+            double mainNumeric = chest.parseNumberPlus(chest.getOriginalContents()[14], 1.0, event, entity);
 
             List<Double> divisors = chest.getAsNumbers(event, entity, 26, 54);
 

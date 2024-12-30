@@ -81,6 +81,7 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onWorldChanged (PlayerChangedWorldEvent event) {
         User user = User.asUser(event.getPlayer());
+        event.getPlayer().setWorldBorder(null);
         String from = event.getFrom().getName();
         String destination = user.player().getWorld().getName();
 
@@ -623,7 +624,9 @@ public class GlobalListener implements Listener {
         Plot possible = PlotManager.byWorld(world);
 
         if (possible != null) {
-            if (world.getEntities().stream().filter(e -> !(e instanceof Player)).toList().size() < LimitManager.getLimitValue(possible, "entities")) {
+            List<Entity> parsed = world.getEntities().stream().filter(e -> !(e instanceof Player)).toList();
+            int limitValue = LimitManager.getLimitValue(possible, "entities");
+            if (limitValue < parsed.size()) {
                 event.setCancelled(true);
                 possible.throwException("entities", String.valueOf(world.getEntities().stream().filter(e -> !(e instanceof Player)).toList().size()), String.valueOf(LimitManager.getLimitValue(possible, "entities")));
             }
@@ -693,18 +696,20 @@ public class GlobalListener implements Listener {
         if (user.isOnPlayingWorld()) {
             Plot plot = user.getCurrentPlot();
 
-            plot.handler.sendStarter(new PlayerMoveGeneralized.Event(player, plot, event), StarterCategory.PLAYER_MOVE_GENERALIZED);
+            if (plot.world().getWorldBorder().isInside(user.player().getLocation())) {
+                plot.handler.sendStarter(new PlayerMoveGeneralized.Event(player, plot, event), StarterCategory.PLAYER_MOVE_GENERALIZED);
 
-            Location from = event.getFrom();
-            Location to = event.getTo();
+                Location from = event.getFrom();
+                Location to = event.getTo();
 
-            if (from.getWorld() != to.getWorld()) return;
+                if (from.getWorld() != to.getWorld()) return;
 
-            boolean isMovedBody = !(from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ());
-            boolean isMovedHead = !(from.getYaw() == to.getYaw() && from.getPitch() == to.getPitch());
+                boolean isMovedBody = !(from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ());
+                boolean isMovedHead = !(from.getYaw() == to.getYaw() && from.getPitch() == to.getPitch());
 
-            if (!isMovedBody && isMovedHead) plot.handler.sendStarter(new PlayerMoveHead.Event(player, plot, event), StarterCategory.PLAYER_MOVE_HEAD);
-            else if (isMovedBody && !isMovedHead) plot.handler.sendStarter(new PlayerMoveBody.Event(player, plot, event), StarterCategory.PLAYER_MOVE_BODY);
+                if (!isMovedBody && isMovedHead) plot.handler.sendStarter(new PlayerMoveHead.Event(player, plot, event), StarterCategory.PLAYER_MOVE_HEAD);
+                else if (isMovedBody && !isMovedHead) plot.handler.sendStarter(new PlayerMoveBody.Event(player, plot, event), StarterCategory.PLAYER_MOVE_BODY);
+            }
         }
     }
 }
