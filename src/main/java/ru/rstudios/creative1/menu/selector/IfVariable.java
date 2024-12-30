@@ -90,7 +90,6 @@ public class IfVariable extends CodingCategoriesMenu {
                 user.player().closeInventory();
                 Sign sign = (Sign) this.sign.getState();
                 int setterLine = sign.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.PURPUR_BLOCK ? 3 : 2;
-                System.out.println(setterLine);
                 sign.setLine(setterLine, "coding.actions." + category.name().toLowerCase(Locale.ROOT));
                 sign.update();
                 user.sendTranslatedSign(this.sign.getLocation());
