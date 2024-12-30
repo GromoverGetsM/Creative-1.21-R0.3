@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
 import ru.rstudios.creative1.coding.actions.actionvar.*;
+import ru.rstudios.creative1.coding.actions.entityaction.settings.SwitchAI;
 import ru.rstudios.creative1.coding.actions.ifplayer.*;
 import ru.rstudios.creative1.coding.actions.ifvariable.*;
 import ru.rstudios.creative1.coding.actions.playeraction.appearence.HideScoreboard;
@@ -159,6 +160,9 @@ public enum ActionCategory {
 
     // Работа с переменными - операции с местоположениями
     GET_LOCS_DISTANCE(Development.BlockTypes.ACTION_VAR, MenuCategory.LOCATION_OPERATIONS, GetLocationsDistance::new, Material.REPEATER, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
+    BLOCK_FROM_LOC(Development.BlockTypes.ACTION_VAR, MenuCategory.LOCATION_OPERATIONS, BlockFromLoc::new, Material.GRASS_BLOCK, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
+    VALUE_FROM_LOC(Development.BlockTypes.ACTION_VAR, MenuCategory.LOCATION_OPERATIONS, ValueFromLoc::new, Material.END_ROD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.NULL), new LinkedHashMap<>(Map.of(16,
+            new SwitchItem(List.of("x", "y", "z", "yaw", "pitch"), "menus.switches.actions.value_from_loc", List.of(Material.PINK_DYE, Material.LIGHT_BLUE_DYE, Material.PURPLE_DYE, Material.ENDER_PEARL, Material.ENDER_EYE))))),
 
     // Если переменная - условия чисел
     COMPARE_NUM_EZ(Development.BlockTypes.IF_VARIABLE, MenuCategory.NUMBER_OPERATIONS, IfVariableCompareNumberEasy::new, Material.SANDSTONE_STAIRS, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NULL, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>(Map.of(13,
@@ -185,7 +189,11 @@ public enum ActionCategory {
     SELECT_DEFAULT_ENTITY(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectDefaultEntity::new, Material.LEVER, false, null, null, null),
     SELECT_DEFAULT_PLAYER(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectDefaultPlayer::new, Material.REDSTONE_TORCH, false, null, null, null),
     SELECT_PLAYER_BY_COND(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectPlayerByCond::new, Material.PLAYER_HEAD, false, null, null, null),
-    SEND_SELECTION(Development.BlockTypes.SELECT, MenuCategory.OTHER, SendSelection::new, Material.WRITTEN_BOOK, false, null, null, null);
+    SEND_SELECTION(Development.BlockTypes.SELECT, MenuCategory.OTHER, SendSelection::new, Material.WRITTEN_BOOK, false, null, null, null),
+
+    // Действия сущности
+    SWITCH_AI(Development.BlockTypes.ENTITY_ACTION, MenuCategory.PARAMS, SwitchAI::new, Material.ZOMBIE_HEAD, true, CodingMenu.MenuType.DEFAULT, List.of(), new LinkedHashMap<>(Map.of(13,
+            new SwitchItem(List.of("true", "false"), "menus.switches.actions.switch_ai", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER)))));
 
 
     private Development.BlockTypes type;

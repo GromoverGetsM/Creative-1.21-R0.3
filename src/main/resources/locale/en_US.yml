@@ -418,6 +418,8 @@ coding:
     get_text_len: "Text Length"
 
     get_locs_distance: "Get Distance"
+    block_from_loc: "Block from loc."
+    value_from_loc: "Value from loc."
 
     compare_num_ez: "Comparison (Easy)"
 
@@ -428,6 +430,7 @@ coding:
     if_var_equals: "="
     if_var_exist: "Exists"
     if_loc_in_reg: "In Region"
+    if_loc_in_barrier: "Inside Border"
 
     select_all_players: "All players"
     select_all_entities: "All Entities"
@@ -435,6 +438,8 @@ coding:
     select_default_player: "Default Player"
     select_player_by_cond: "Players by cond"
     send_selection: "Send selection"
+
+    switch_ai: "Change entity's AI"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -660,6 +665,23 @@ menus:
         states:
           hand: "Main Hand"
           off_hand: "Off Hand"
+      switch_ai:
+        name: "&3Entity's AI state"
+        lore:
+          - ""
+        states:
+          true: "Enabled"
+          false: "Disabled"
+      value_from_loc:
+        name: "&3Value to get"
+        lore:
+          - ""
+        states:
+          x: "X"
+          y: "Y"
+          z: "Z"
+          yaw: "Yaw"
+          pitch: "Pitch"
 
   coding:
     player_event:
@@ -1419,6 +1441,25 @@ menus:
           - "&7- &6Dynamic Variable: &7Variable to store the result &e(1)"
           - "&7- &fLocation: &7First location &e(1)"
           - "&7- &fLocation: &7Second location &e(1)"
+      block_from_loc:
+        name: "&eGet Block from Location"
+        lore:
+          - "&7Retrieves the block from the specified location."
+          - "&7Saves the result into a variable."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &fLocation: &7Location of the block &e(1)"
+      value_from_loc:
+        name: "&eGet Value from Location"
+        lore:
+          - "&7Retrieves the specified value from the location."
+          - "&7Saves the result into a variable."
+          - "&7"
+          - "&7Arguments (3):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &fLocation: &7Location to retrieve the value from &e(1)"
+          - "&7- &6Toggle: &7Value to retrieve &e(1)"
 
       compare_num_ez:
         name: "&eCompare Numbers (Easy)"
@@ -1538,6 +1579,15 @@ menus:
           - "&7Outputs the current selection to chat"
           - "&7"
           - "&aNo arguments required"
+
+      switch_ai:
+        name: "&eToggle Entity's AI state"
+        lore:
+          - "&7Enables/disables entity's ai depends"
+          - "&7on choice"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &6Toggle: &7Enable or disable"
   worlds-option:
     title: "Choose an Option"
     items:
