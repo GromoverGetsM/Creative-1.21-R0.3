@@ -178,6 +178,12 @@ coding:
       name: "&eVariables"
       lore:
         - "&7Opens the variables menu"
+    not: "NOT"
+    arrow-not:
+      name: "&eArrow of Inversion"
+      lore:
+        - "&7When clicking on the sign with a condition"
+        - "&7it inverts the condition"
 
   values:
     category:
@@ -376,6 +382,13 @@ coding:
     set_world_lore: "Set World Lore"
     set_world_icon: "Set World Icon"
     set_world_custom_id: "Set Identifier"
+    create_worldborder: "Create Border"
+    delete_worldborder: "Delete Border"
+    set_border_center: "Set Border Center"
+    set_border_size: "Set Border Size"
+    set_border_damage: "Set Border Damage"
+    set_border_buffer: "Set Border Buffer"
+    set_border_warning: "Set Border Warning"
 
     name_equals: "Name equals"
     message_equals: "Message equals"
@@ -623,6 +636,13 @@ menus:
           survival: "Survival"
           adventure: "Adventure"
           spectator: "Spectator"
+      locinbarrier:
+        name: "&3Barrier for Check"
+        lore:
+          - "&fSelect which barrier to check"
+        states:
+          local: "Player's Local Barrier"
+          global: "World Barrier"
       compare_ez:
         name: "&3Comparison Condition"
         lore:
@@ -1053,7 +1073,72 @@ menus:
           - "&7Arguments (2):"
           - "&7- &bText: &7Board name &e(1)"
           - "&7- &bText: &7New display name &e(1)"
+      create_worldborder:
+        name: "&eCreate Local Border"
+        lore:
+          - "&7Adds a new local border to memory for"
+          - "&7further modification and setup"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Border Name"
+      delete_worldborder:
+        name: "&eDelete Local Border"
+        lore:
+          - "&7Removes a local border from memory by"
+          - "&7the given name"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Border Name"
+      set_border_center:
+        name: "&eSet Barrier Center"
+        lore:
+          - "&7Changes the center point of the border, from which"
+          - "&7the border radius will be calculated (&eSize/2&7)"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Border Name"
+          - "&7- &fLocation: &7New Border Center"
+      set_border_size:
+        name: "&eSet Border Size"
+        lore:
+          - "&7Changes the size of the border (distance from one"
+          - "&7side of the border to the other in blocks)."
+          - "&7Maximum size: &e1024 blocks."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Border Name"
+          - "&7- &cNumber: &7New Border Size"
+      set_border_damage:
+        name: "&eSet Border Damage"
+        lore:
+          - "&7Changes the damage dealt when a player goes"
+          - "&7beyond the border, including the buffer zone"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Name of the border"
+          - "&7- &cNumber: &7New damage dealt"
 
+      set_border_buffer:
+        name: "&eSet Border Buffer"
+        lore:
+          - "&7Changes the length of the buffer (safe) zone"
+          - "&7beyond the border. If the player goes beyond"
+          - "&7the buffer zone, they will start taking damage"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Name of the border"
+          - "&7- &cNumber: &7New buffer zone size"
+
+      set_border_warning:
+        name: "&eSet Border Warning"
+        lore:
+          - "&7Changes the distance within which a red warning"
+          - "&7border vignette will appear on the player's screen, indicating that they are"
+          - "&7very close to the border"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Name of the border"
+          - "&7- &cNumber: &7New distance"
 
       cancel_event:
         name: "&eCancel Event"

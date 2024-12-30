@@ -115,10 +115,13 @@ public enum ActionCategory {
     SET_WORLD_PRIVACY(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, SetWorldPrivacy::new, Material.IRON_DOOR, true, CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
             new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_world_privacy", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
     SET_WORLD_LORE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldLore::new, Material.BOOKSHELF, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
-    CREATE_WORLDBORDER(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, CreateWorldBorder::new, Material.HEART_OF_THE_SEA, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
-    DELETE_WORLDBORDER(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, DeleteWorldBorder::new, Material.END_CRYSTAL, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
-    SET_BORDER_CENTER(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, SetBorderCenter::new, Material.LIGHTNING_ROD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
-    SET_BORDER_SIZE(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, SetBorderSize::new, Material.WAXED_OXIDIZED_COPPER_BULB, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    CREATE_WORLDBORDER(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, CreateWorldBorder::new, Material.HEART_OF_THE_SEA, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    DELETE_WORLDBORDER(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, DeleteWorldBorder::new, Material.END_CRYSTAL, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    SET_BORDER_CENTER(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderCenter::new, Material.LIGHTNING_ROD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
+    SET_BORDER_SIZE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderSize::new, Material.WAXED_OXIDIZED_COPPER_BULB, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    SET_BORDER_DAMAGE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderDamage::new, Material.IRON_SWORD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    SET_BORDER_BUFFER(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderBuffer::new, Material.SHIELD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    SET_BORDER_WARNING(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderWarning::new, Material.GOAT_HORN, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
     // Если игрок - общее
     NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
@@ -173,6 +176,8 @@ public enum ActionCategory {
     IF_VAR_EQUALS(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfVariableEquals::new, Material.BRICK, true, CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.ANY, CodingMenu.ArgumentType.ANY), new LinkedHashMap<>()),
     IF_VAR_EXIST(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfVariableExist::new, Material.MAGMA_CREAM, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR), new LinkedHashMap<>()),
     IF_LOC_IN_REG(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfLocationInRegion::new, Material.HEAVY_CORE, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
+    IF_LOC_IN_BARRIER(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfLocationInBorder::new, Material.HEART_OF_THE_SEA, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.NULL), new LinkedHashMap<>(Map.of(15,
+            new SwitchItem(List.of("local", "global"), "menus.switches.actions.locinbarrier", List.of(Material.WHITE_DYE, Material.HEART_OF_THE_SEA))))),
 
     // Выбрать объект
     SELECT_ALL_PLAYERS(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectAllPlayers::new, Material.BEACON, false, null, null, null),

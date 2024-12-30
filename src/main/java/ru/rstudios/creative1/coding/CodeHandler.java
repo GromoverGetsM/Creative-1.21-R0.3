@@ -104,6 +104,8 @@ public class CodeHandler {
                 action.setActionBlock(actionBlock);
                 action.setStarter(starter);
 
+                boolean inverted = actionsSign.getLine(0).equalsIgnoreCase("coding.tech.not");
+
                 if (actionBlock.getType() == Material.PURPUR_BLOCK) {
                     if (!actionsSign.getLine(3).isEmpty()) {
                         ActionCategory selectCondition = ActionCategory.byName(actionsSign.getLine(3).replace("coding.actions.", ""));
@@ -111,6 +113,7 @@ public class CodeHandler {
                         if (selectCondition == null || selectCondition.getConstructor() == null) continue;
 
                         ActionIf selectCond = ((ActionIf) selectCondition.getConstructor().get());
+                        selectCond.setInverted(inverted);
                         if (selectCondition.hasChest()) {
                             ActionChest actionChest = new ActionChest(action, actionBlock.getRelative(BlockFace.UP));
                             selectCond.setChest(actionChest);
@@ -155,6 +158,7 @@ public class CodeHandler {
                         inConditionalActions.add(insideAction);
                     }
 
+                    ((ActionIf) action).setInverted(inverted);
                     ((ActionIf) action).setInConditionalActions(inConditionalActions);
                     dx = lastPiston.getX() + 1;
                 }

@@ -78,6 +78,8 @@ public class DevPlot {
 
         ItemStack item = ItemUtil.item(Material.IRON_INGOT, LocaleManages.getLocaleMessage(user.getLocale(), "coding.tech.var-item.name", false, ""), LocaleManages.getLocaleMessagesS(user.getLocale(), "coding.tech.var-item.lore", new LinkedHashMap<>()));
         inventory.setItem(8, item);
+        ItemStack notArrow = ItemUtil.item(Material.ARROW, LocaleManages.getLocaleMessage(user.getLocale(), "coding.tech.arrow-not.name", false, ""), LocaleManages.getLocaleMessagesS(user.getLocale(), "coding.tech.arrow-not.lore", new LinkedHashMap<>()));
+        inventory.setItem(7, notArrow);
 
         user.player().getInventory().setContents(inventory.getContents());
     }

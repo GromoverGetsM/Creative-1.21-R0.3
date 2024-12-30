@@ -343,6 +343,19 @@ public class GlobalListener implements Listener {
                         event.setCancelled(true);
 
                         Development.BlockTypes type = Development.BlockTypes.getByMainBlock(event.getClickedBlock().getRelative(BlockFace.SOUTH));
+
+                        if (event.getItem() != null && event.getItem().getType() == Material.ARROW) {
+                            if (type != null && type.isCondition() || type == Development.BlockTypes.SELECT) {
+                                Sign sign = (Sign) event.getClickedBlock().getState();
+
+                                String newLine = sign.getLine(0).isEmpty() ? "coding.tech.not" : "";
+                                sign.setLine(0, newLine);
+                                sign.update();
+                                user.sendTranslatedSign(event.getClickedBlock().getLocation());
+                                return;
+                            }
+                        }
+
                         if (type != null && type.hasConstructor()) {
                             ProtectedMenu menu = type.createMenuInstance(user);
                             menu.open(user);
