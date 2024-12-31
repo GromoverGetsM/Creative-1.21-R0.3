@@ -52,6 +52,8 @@ public enum ActionCategory {
             new LinkedHashMap<>(Map.of(13, new SwitchItem(List.of("workbench", "enchanting", "anvil", "cartography", "grindstone", "loom", "smith", "stonecutter"), "menus.switches.actions.oi", List.of(
                     Material.CRAFTING_TABLE, Material.ENCHANTING_TABLE, Material.ANVIL, Material.CARTOGRAPHY_TABLE, Material.GRINDSTONE, Material.LOOM, Material.SMITHING_TABLE, Material.STONECUTTER
             ))))),
+    OPEN_CONTAINER(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, OpenContainer::new, Material.TRAPPED_CHEST, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>(Map.of(22,
+            new SwitchItem(List.of("orig", "copy"), "menus.switches.actions.opencont", List.of(Material.CHEST, Material.ENDER_CHEST))))),
 
     // Действие игрока - Коммуникация с игроком
     SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendMessage::new, Material.WRITABLE_BOOK, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,

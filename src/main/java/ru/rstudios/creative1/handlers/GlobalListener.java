@@ -21,6 +21,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -724,5 +725,18 @@ public class GlobalListener implements Listener {
                 else if (isMovedBody && !isMovedHead) plot.handler.sendStarter(new PlayerMoveBody.Event(player, plot, event), StarterCategory.PLAYER_MOVE_BODY);
             }
         }
+    }
+
+    @EventHandler
+    public void onFoodLevelChanged (FoodLevelChangeEvent event) {
+        User user = User.asUser(event.getEntity());
+
+        if (!user.isOnPlot() || user.isInDev() || user.getCurrentPlot().plotMode == Plot.PlotMode.BUILD) {
+            user.player().setFoodLevel(20);
+            event.setCancelled(true);
+            return;
+        }
+
+        if (user.isOnPlayingWorld()) user.getCurrentPlot().handler.sendStarter(new FoodLevelChange.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.FOOD_LEVEL_CHANGE);
     }
 }

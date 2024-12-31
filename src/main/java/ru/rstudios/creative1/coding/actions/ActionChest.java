@@ -462,25 +462,13 @@ public class ActionChest {
     public Location toLocation(String code) {
         if (code != null && !code.isEmpty()) {
             String[] loc = code.split(":");
-
-            double x = 0, y = 0, z = 0;
-            float yaw = 0, pitch = 0;
-
-            switch (loc.length) {
-                case 4 -> {
-                    x = Double.parseDouble(loc[1]);
-                    y = Double.parseDouble(loc[2]);
-                    z = Double.parseDouble(loc[3]);
-                }
-                case 5 -> {
-                    x = Double.parseDouble(loc[0]);
-                    y = Double.parseDouble(loc[1]);
-                    z = Double.parseDouble(loc[2]);
-                    yaw = Float.parseFloat(loc[3]);
-                    pitch = Float.parseFloat(loc[4]);
-                }
+            if (loc.length == 3) {
+                return fixNan(new Location(getChestBlock().getWorld(), Double.parseDouble(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2])));
+            } else if (loc.length == 4) {
+                return fixNan(new Location(getChestBlock().getWorld(), Double.parseDouble(loc[1]), Double.parseDouble(loc[2]), Double.parseDouble(loc[3])));
+            } else {
+                return loc.length == 6 ? fixNan(new Location(getChestBlock().getWorld(), Double.parseDouble(loc[1]), Double.parseDouble(loc[2]), Double.parseDouble(loc[3]), Float.parseFloat(loc[4]), Float.parseFloat(loc[5]))) : null;
             }
-            return fixNan(new Location(getChestBlock().getWorld(), x, y, z, yaw, pitch));
         } else {
             return null;
         }

@@ -3,6 +3,7 @@ package ru.rstudios.creative1.coding.starters;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -50,7 +51,8 @@ public enum StarterCategory {
     PLAYER_MOVE_BODY(Development.BlockTypes.PLAYER_EVENT, MenuCategory.MOVEMENT, PlayerMoveBody::new, PlayerMoveBody.Event.class, Material.CHAINMAIL_BOOTS),
     PLAYER_MOVE_HEAD(Development.BlockTypes.PLAYER_EVENT, MenuCategory.MOVEMENT, PlayerMoveHead::new, PlayerMoveHead.Event.class, Material.IRON_BOOTS),
 
-    PLAYER_CHATTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, PlayerChatted::new, PlayerChatted.Event.class, Material.WRITABLE_BOOK);
+    PLAYER_CHATTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, PlayerChatted::new, PlayerChatted.Event.class, Material.WRITABLE_BOOK),
+    FOOD_LEVEL_CHANGE(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, FoodLevelChange::new, FoodLevelChange.Event.class, Material.COOKED_CHICKEN);
 
     private Development.BlockTypes type;
     private MenuCategory category;
