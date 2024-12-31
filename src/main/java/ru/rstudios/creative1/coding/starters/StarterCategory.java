@@ -14,6 +14,7 @@ import ru.rstudios.creative1.coding.starters.uncommon.Function;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
+import ru.rstudios.creative1.utils.ItemUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -138,7 +139,7 @@ public enum StarterCategory {
             icon.setItemMeta(meta);
         }
 
-        return icon;
+        return ItemUtil.clearItemFlags(icon);
     }
 
     public void setIcon(Material icon) {

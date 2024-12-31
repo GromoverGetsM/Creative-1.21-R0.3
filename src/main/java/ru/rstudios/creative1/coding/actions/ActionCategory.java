@@ -30,6 +30,7 @@ import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
+import ru.rstudios.creative1.utils.ItemUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -287,12 +288,10 @@ public enum ActionCategory {
             meta.displayName(Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "menus.coding.actions." + name().toLowerCase(Locale.ROOT) + ".name", false, "")));
             meta.lore(LocaleManages.getLocaleMessages(user.getLocale(), "menus.coding.actions." + name().toLowerCase(Locale.ROOT) + ".lore", new LinkedHashMap<>()));
 
-            meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP, ItemFlag.HIDE_ARMOR_TRIM, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_STORED_ENCHANTS, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_DYE, ItemFlag.HIDE_UNBREAKABLE);
-
             icon.setItemMeta(meta);
         }
 
-        return icon;
+        return ItemUtil.clearItemFlags(icon);
     }
 
     public void setIcon(Material icon) {
