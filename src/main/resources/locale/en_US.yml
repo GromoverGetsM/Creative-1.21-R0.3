@@ -257,6 +257,8 @@ coding:
           - "&7"
           - "&7Works with:"
           - "&c> &7Inventory Click"
+          - "&c> &7Emptied bucket"
+          - "&c> &7..."
 
       entity_health:
         name: "&eCurrent health"
@@ -305,6 +307,7 @@ coding:
     player_left_click: "Left Click"
     player_right_click: "Right Click"
     player_physical_interact: "Physical Interaction"
+    player_bucket_empty: "Emptied Bucket"
 
     entity_damaged: "Entity Damaged"
     player_damaged: "Player Damaged"
@@ -324,6 +327,7 @@ coding:
     player_move_head: "Head Rotation"
 
     player_chatted: "Chat Event"
+    food_level_change: "Hunger Level Change"
 
     function: "Function"
 
@@ -350,6 +354,8 @@ coding:
     open_interface: "Open Interface"
     give_random_item: "Random Item"
     remove_item: "Remove Item"
+    open_container: "Game Block Inventory"
+    get_player_item: "Item from Slot"
 
     teleport: "Teleport"
     to_other_plot: "To Another Plot"
@@ -684,6 +690,15 @@ menus:
           z: "Z"
           yaw: "Yaw"
           pitch: "Pitch"
+      opencont:
+        name: "&3Menu Opening Option"
+        lore:
+          - "&fChoose how to open the menu. With original, the container"
+          - "&fopens directly. With copy, the contents are copied"
+          - "&finto a new, unlinked menu."
+        states:
+          orig: "Original"
+          copy: "Copy"
 
   coding:
     player_event:
@@ -733,6 +748,11 @@ menus:
           - "&7Triggered when a player interacts"
           - "&7with a button, pressure plate, lever,"
           - "&7opens a door, etc."
+      player_bucket_empty:
+        name: "&eBucket Emptied"
+        lore:
+          - "&7Triggered when a player empties"
+          - "&7a bucket (e.g., with lava or water)"
 
       entity_damaged:
         name: "&eEntity Damaged"
@@ -812,6 +832,11 @@ menus:
         lore:
           - "&7Triggers when a player"
           - "&7sends a message in chat"
+      food_level_change:
+        name: "&eHunger Level Change"
+        lore:
+          - "&7Triggered when a player's"
+          - "&7hunger level changes"
 
     actions:
       send_message:
@@ -991,6 +1016,22 @@ menus:
           - "&7The item is removed in the same quantity as specified."
           - "&7Arguments (36):"
           - "&7- &eItem: &7The item to remove &e(36)"
+      open_container:
+        name: "&eOpen Game Block Inventory"
+        lore:
+          - "&7Opens the inventory of a container in the game world."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &fLocation: &7The container &e(1)"
+          - "&7- &6Toggle: &7Opening option &e(1)"
+      get_player_item:
+        name: "&eGet Item from Slot"
+        lore:
+          - "&7Retrieves the item from a player's inventory slot."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic Variable: &7Variable to store the result &e(1)"
+          - "&7- &cNumber: &7Slot number &e(1)"
 
       teleport:
         name: "&eTeleport"

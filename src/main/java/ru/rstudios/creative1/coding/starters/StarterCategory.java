@@ -34,6 +34,7 @@ public enum StarterCategory {
     PLAYER_LEFT_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerLeftClicked::new, PlayerLeftClicked.Event.class, Material.IRON_PICKAXE),
     PLAYER_RIGHT_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerRightClicked::new, PlayerRightClicked.Event.class, Material.DIAMOND_PICKAXE),
     PLAYER_PHYSICAL_INTERACT(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerPhysicalInteract::new, PlayerPhysicalInteract.Event.class, Material.GOLDEN_PICKAXE),
+    PLAYER_BUCKET_EMPTY(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerBucketEmpty::new, PlayerBucketEmpty.Event.class, Material.BUCKET),
 
     PLAYER_INV_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.INVENTORY, PlayerClickedInventory::new, PlayerClickedInventory.Event.class, Material.PAINTING),
     PLAYER_OPENED_INVENTORY(Development.BlockTypes.PLAYER_EVENT, MenuCategory.INVENTORY, PlayerOpenInventory::new, PlayerOpenInventory.Event.class, Material.LIME_GLAZED_TERRACOTTA),

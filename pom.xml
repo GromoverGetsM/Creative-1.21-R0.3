@@ -50,7 +50,6 @@
                 <include>**/*</include>
             </includes>
             <excludes>
-                <exclude>**/*.dat</exclude>
                 <exclude>**/*.png</exclude>
                 <exclude>**/*.jpg</exclude>
                 <exclude>**/*.jpeg</exclude>

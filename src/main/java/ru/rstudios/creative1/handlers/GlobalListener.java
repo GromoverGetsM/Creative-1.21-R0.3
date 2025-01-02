@@ -750,10 +750,12 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
-        Material bucketType = event.getBucket();
-
-        if (bucketType == Material.WATER_BUCKET || bucketType == Material.LAVA_BUCKET) {
-            if (event.getBlock().getWorld().getName().endsWith("_dev")) event.setCancelled(true);
+        if (event.getBlock().getWorld().getName().endsWith("_dev")) {
+            event.setCancelled(true);
+            return;
         }
+
+        User user = User.asUser(event.getPlayer());
+        if (user.isOnPlayingWorld()) user.getCurrentPlot().handler.sendStarter(new PlayerBucketEmpty.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_BUCKET_EMPTY); // todo
     }
 }
