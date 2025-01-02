@@ -261,7 +261,7 @@ public class ActionChest {
 
         Object value;
         if (item.getType() == Material.MAGMA_CREAM) {
-            String name = ChatColor.stripColor(meta.getDisplayName());
+            String name = Action.replacePlaceholders(ChatColor.stripColor(meta.getDisplayName()), event, entity);
             value = new DynamicVariable(name).getValue(event.getPlot());
         } else if (item.getType() == Material.APPLE) {
             value = parseGameValue(item, null).getValueInstance().get(event, entity);
