@@ -36,11 +36,24 @@ public class ChestMenuHook extends AbstractDelegateExtent {
         org.bukkit.World adapted = BukkitAdapter.adapt(world);
         Block adaptedBlock = adapted.getBlockAt(new Location(adapted, position.x(), position.y(), position.z()));
 
-        if (adaptedBlock.getType() == Material.CHEST) {
+        if (adaptedBlock.getType() == Material.CHEST || adaptedBlock.getType() == Material.OAK_WALL_SIGN) {
 
             String worldName = world.getName();
             if (worldName.endsWith("_dev")) {
                 Block bukkitBlock = adapted.getBlockAt(position.x(), position.y(), position.z());
+
+                if (bukkitBlock.getState() instanceof Sign) {
+                    if (bukkitBlock.hasMetadata("username")) {
+                        List<MetadataValue> data = bukkitBlock.getMetadata("username");
+                        Player player = Bukkit.getPlayerExact(data.get(0).asString());
+
+                        if (player != null) player.closeInventory();
+                        bukkitBlock.removeMetadata("username", plugin);
+
+                        super.setBlock(position, block);
+                        return true;
+                    }
+                }
 
                 if (bukkitBlock.getState() instanceof Chest) {
                     PersistentDataContainer dataContainer = ((Chest) bukkitBlock.getState()).getPersistentDataContainer();
@@ -57,16 +70,6 @@ public class ChestMenuHook extends AbstractDelegateExtent {
                         }
 
                         return true;
-                    }
-                }
-
-                if (bukkitBlock.getState() instanceof Sign) {
-                    if (bukkitBlock.hasMetadata("username")) {
-                        List<MetadataValue> data = bukkitBlock.getMetadata("username");
-                        Player player = Bukkit.getPlayerExact(data.get(0).asString());
-
-                        if (player != null) player.closeInventory();
-                        bukkitBlock.removeMetadata("username", plugin);
                     }
                 }
             }
