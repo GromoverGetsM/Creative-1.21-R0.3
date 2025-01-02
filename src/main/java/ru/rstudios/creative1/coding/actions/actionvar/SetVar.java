@@ -37,14 +37,14 @@ public class SetVar extends Action {
                 boolean saved = DynamicVariable.isVarSaved(dynamic);
 
                 if (nonnull.length == 1) {
-                    var.setValue(event.getPlot(), ActionChest.parseItem(nonnull[0], event, entity), saved);
+                    var.setValue(event.getPlot(), chest.parseItem(nonnull[0], event, entity), saved);
                 } else if (nonnull.length == 0) {
                     var.setValue(event.getPlot(), "", saved);
                 } else {
                     StringBuilder builder = new StringBuilder();
 
                     for (ItemStack item : nonnull) {
-                        builder.append(ActionChest.parseItem(item, event, entity));
+                        builder.append(chest.parseItem(item, event, entity));
                     }
 
                     String result = builder.toString();

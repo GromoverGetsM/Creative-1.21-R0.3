@@ -30,9 +30,9 @@ public class IfVariableEquals extends ActionIf {
                 continue;
             }
 
-            Object o = ActionChest.parseItem(chest.getOriginalContents()[13], event, entity);
+            Object o = chest.parseItem(chest.getOriginalContents()[13], event, entity);
             List<Object> objects = new LinkedList<>();
-            Arrays.stream(nonnull).toList().forEach(item -> objects.add(ActionChest.parseItem(item, event, entity)));
+            Arrays.stream(nonnull).toList().forEach(item -> objects.add(chest.parseItem(item, event, entity)));
 
             if (o == null) {
                 return objects.isEmpty();

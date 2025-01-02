@@ -16,11 +16,14 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.*;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionEffectTypeCategory;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.menu.ProtectedMenu;
 import ru.rstudios.creative1.menu.selector.*;
@@ -345,8 +348,50 @@ public class Development {
         }
     }
 
+    /**
+     * Проверяет, если сущность находится на плоте
+     * @param entity сущность для проверки
+     * @param plot плот, где должна быть сущность
+     * @return true если на плоте, false если где-то еще гуляет
+     */
     public static boolean checkPlot (Entity entity, Plot plot) {
         return entity.getWorld() == plot.world();
     }
 
+
+    public static Player getDamager (Entity entity) {
+        if (entity instanceof Player player) return player;
+
+        Object damager = getEntityDamager(entity);
+        if (damager == null) return null;
+        if (damager instanceof Player player) return player;
+
+        return null;
+    }
+
+    public static @Nullable Object getEntityDamager (Entity entity) {
+        if (entity instanceof Projectile p) return p.getShooter();
+        if (entity instanceof AreaEffectCloud cloud) {
+            if (!containsNegativeEffects(cloud)) return null;
+            return cloud.getSource();
+        }
+
+        if (entity instanceof TNTPrimed tnt) return tnt.getSource();
+        return entity;
+    }
+
+    /**
+     * Проверка для облаков зелья (от оседающих) на содержание негативных эффектов
+     * @param cloud облако для проверки
+     * @return true если содержит негативку
+     */
+    public static boolean containsNegativeEffects(AreaEffectCloud cloud) {
+        for (PotionEffect effect : cloud.getCustomEffects()) {
+            PotionEffectType effectType = effect.getType();
+            if (effectType.getCategory() == PotionEffectTypeCategory.HARMFUL) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

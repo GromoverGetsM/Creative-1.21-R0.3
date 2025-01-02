@@ -26,7 +26,7 @@ public class PlaySound extends Action {
         soundInstance.setCurrentState(soundInstance.getCurrentState(chest.getOriginalContents()[22]));
 
         SoundCategory category = SoundCategory.valueOf(soundInstance.getCurrentValue().toUpperCase(Locale.ROOT));
-        Location loc = ActionChest.parseLocation(chest.getOriginalContents()[16], event.getPlot().world().getSpawnLocation());
+        Location loc = chest.parseLocation(chest.getOriginalContents()[16], event.getPlot().world().getSpawnLocation());
         String definedSoundString = ActionChest.parseText(chest.getOriginalContents()[10]).toUpperCase(Locale.ROOT);
         Sound sound;
         try {
@@ -43,8 +43,8 @@ public class PlaySound extends Action {
             }
 
             if (e instanceof Player player) {
-                float volume = (float) Math.min(2.0, Math.max(0.5, ActionChest.parseNumberPlus(chest.getNumbers()[0], 0.0, event, e)));
-                float pitch = (float) Math.min(2.0, Math.max(0.5, ActionChest.parseNumberPlus(chest.getNumbers()[1], 0.0, event, e)));
+                float volume = (float) Math.min(2.0, Math.max(0.5, chest.parseNumberPlus(chest.getNumbers()[0], 0.0, event, e)));
+                float pitch = (float) Math.min(2.0, Math.max(0.5, chest.parseNumberPlus(chest.getNumbers()[1], 0.0, event, e)));
 
                 player.playSound(loc, sound, category, volume, pitch);
             }

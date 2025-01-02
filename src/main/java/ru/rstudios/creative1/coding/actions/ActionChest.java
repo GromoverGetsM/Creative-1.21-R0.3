@@ -3,22 +3,20 @@ package ru.rstudios.creative1.coding.actions;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.coding.events.GameEvent;
-import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
-import ru.rstudios.creative1.coding.eventvalues.StringValue;
 import ru.rstudios.creative1.coding.eventvalues.ValueType;
 import ru.rstudios.creative1.coding.starters.Starter;
 import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
 import ru.rstudios.creative1.handlers.GlobalListener;
 import ru.rstudios.creative1.plots.PlotManager;
-import ru.rstudios.creative1.utils.Development;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -51,10 +49,18 @@ public class ActionChest {
         this.chest = (Chest) chestBlock.getState();
     }
 
+    /**
+     * Метод для проверки на нулевой предмет
+     * @param item предмет для проверки
+     * @return Возвращает true если предмет пустой (null или материал предмета - воздух)
+     */
     public static boolean isNullOrAir(ItemStack item) {
         return item == null || item.getType() == Material.AIR;
     }
 
+    /**
+     * Инициализация сортировки инвентаря действия
+     */
     public void initInventorySort() {
         this.originalContents = this.chest.getPersistentDataContainer().get(new NamespacedKey(plugin, "inventory"), DataType.ITEM_STACK_ARRAY);
         this.nonNullItems = Arrays.stream(this.originalContents)
@@ -151,6 +157,19 @@ public class ActionChest {
         return list;
     }
 
+    public List<String> getAsTexts (GameEvent event, Entity entity, int from, int to) {
+        List<String> list = new LinkedList<>();
+        ItemStack[] args = Arrays.copyOfRange(originalContents, from, to);
+
+        for (ItemStack item : args) {
+            if (!isNullOrAir(item)) {
+                list.add(parseTextPlus(item, "", event, entity));
+            }
+        }
+
+        return list;
+    }
+
     public List<ItemStack> getAsItemStacks (GameEvent event, Entity entity, int from, int to) {
         List<ItemStack> items = new LinkedList<>();
         ItemStack[] args = Arrays.copyOfRange(originalContents, from, to);
@@ -204,7 +223,7 @@ public class ActionChest {
         return numerics;
     }
 
-    public static Object parseItem (ItemStack item, @Nullable GameEvent event, @Nullable Entity entity) {
+    public Object parseItem(ItemStack item, @Nullable GameEvent event, @Nullable Entity entity) {
         if (item == null) {
             return null;
         }
@@ -252,7 +271,7 @@ public class ActionChest {
     }
 
 
-    public static Double parseNumberPlus (ItemStack item, double defValue, GameEvent event, Entity entity) {
+    public Double parseNumberPlus(ItemStack item, double defValue, GameEvent event, Entity entity) {
         if (item == null) {
             return defValue;
         }
@@ -263,7 +282,7 @@ public class ActionChest {
         return defValue;
     }
 
-    public static String parseTextPlus (ItemStack item, String defValue, GameEvent event, Entity entity) {
+    public String parseTextPlus(ItemStack item, String defValue, GameEvent event, Entity entity) {
         if (item == null) return defValue;
 
         Object o = parseItem(item, event, entity);
@@ -271,7 +290,7 @@ public class ActionChest {
         else return GlobalListener.parseColors(String.valueOf(o));
     }
 
-    public static Location parseLocationPlus (ItemStack item, Location defaultValue, GameEvent event, Entity entity) {
+    public Location parseLocationPlus(ItemStack item, Location defaultValue, GameEvent event, Entity entity) {
         if (item == null) return defaultValue;
 
         Object o = parseItem(item, event, entity);
@@ -356,11 +375,11 @@ public class ActionChest {
         }
     }
 
-    public static Location parseLocation(ItemStack itemStack, Location def) {
+    public Location parseLocation(ItemStack itemStack, Location def) {
         return parseLocation(itemStack, def, true);
     }
 
-    public static Location parseLocation(ItemStack itemStack, Location def, boolean checkType) {
+    public Location parseLocation(ItemStack itemStack, Location def, boolean checkType) {
         if (!isNullOrAir(itemStack)) {
             if (checkType && itemStack.getType() != Material.PAPER) {
                 return def;
@@ -440,21 +459,30 @@ public class ActionChest {
         return loc;
     }
 
-    public static Location toLocation(String code) {
+    public Location toLocation(String code) {
         if (code != null && !code.isEmpty()) {
             String[] loc = code.split(":");
             if (loc.length == 3) {
-                return fixNan(new Location(Bukkit.getWorlds().get(0), Double.parseDouble(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2])));
+                return fixNan(new Location(getChestBlock().getWorld(), Double.parseDouble(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2])));
             } else if (loc.length == 4) {
-                return fixNan(new Location(Bukkit.getWorld(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2]), Double.parseDouble(loc[3])));
+                return fixNan(new Location(getChestBlock().getWorld(), Double.parseDouble(loc[1]), Double.parseDouble(loc[2]), Double.parseDouble(loc[3])));
             } else {
-                return loc.length == 6 ? fixNan(new Location(Bukkit.getWorld(loc[0]), Double.parseDouble(loc[1]), Double.parseDouble(loc[2]), Double.parseDouble(loc[3]), Float.parseFloat(loc[4]), Float.parseFloat(loc[5]))) : null;
+                return loc.length == 6 ? fixNan(new Location(getChestBlock().getWorld(), Double.parseDouble(loc[1]), Double.parseDouble(loc[2]), Double.parseDouble(loc[3]), Float.parseFloat(loc[4]), Float.parseFloat(loc[5]))) : null;
             }
         } else {
             return null;
         }
     }
 
+    /**
+     * Парсит динамическую переменную из предмета. Возвращает ЗНАЧЕНИЕ переменной
+     * @param item предмет для парсинга
+     * @param defaultValue значение, которое вернётся если что-то пойдёт не так
+     * @param checkTypeMatches проверка на тип предмета. Если != магмакрему, вернёт defaultValue
+     * @param event событие для плота и замены переменных
+     * @param entity сущность для замены переменных
+     * @return Возвращает значение переменной
+     */
     public static Object parseDynamicVariable (ItemStack item, Object defaultValue, boolean checkTypeMatches, GameEvent event, Entity entity) {
         if (item == null) {
             return defaultValue;
@@ -473,6 +501,13 @@ public class ActionChest {
         }
     }
 
+    /**
+     * Метод для конвертации предмета в динамическую переменную
+      * @param item предмет, предположительная переменная
+     * @param event событие, для получения плота, а также для замены плейсхолдеров
+     * @param entity сущность, для замены плейсхолдеров
+     * @return Возвращает экземпляр динамической переменной с пустым именем, если переменная не найдена или найденную переменную
+     */
     public static DynamicVariable asDynamicVariable (ItemStack item, GameEvent event, Entity entity) {
         ItemMeta meta = item.getItemMeta();
 

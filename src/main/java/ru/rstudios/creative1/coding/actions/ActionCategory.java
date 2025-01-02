@@ -7,9 +7,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
 import ru.rstudios.creative1.coding.actions.actionvar.*;
+import ru.rstudios.creative1.coding.actions.entityaction.settings.SwitchAI;
 import ru.rstudios.creative1.coding.actions.ifplayer.*;
 import ru.rstudios.creative1.coding.actions.ifvariable.*;
 import ru.rstudios.creative1.coding.actions.playeraction.appearence.HideScoreboard;
+import ru.rstudios.creative1.coding.actions.playeraction.appearence.ResetWorldBorder;
+import ru.rstudios.creative1.coding.actions.playeraction.appearence.SetWorldBorder;
 import ru.rstudios.creative1.coding.actions.playeraction.appearence.ShowScoreboard;
 import ru.rstudios.creative1.coding.actions.playeraction.communication.*;
 import ru.rstudios.creative1.coding.actions.playeraction.inventory.*;
@@ -27,6 +30,7 @@ import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
+import ru.rstudios.creative1.utils.ItemUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -49,6 +53,8 @@ public enum ActionCategory {
             new LinkedHashMap<>(Map.of(13, new SwitchItem(List.of("workbench", "enchanting", "anvil", "cartography", "grindstone", "loom", "smith", "stonecutter"), "menus.switches.actions.oi", List.of(
                     Material.CRAFTING_TABLE, Material.ENCHANTING_TABLE, Material.ANVIL, Material.CARTOGRAPHY_TABLE, Material.GRINDSTONE, Material.LOOM, Material.SMITHING_TABLE, Material.STONECUTTER
             ))))),
+    OPEN_CONTAINER(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, OpenContainer::new, Material.TRAPPED_CHEST, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>(Map.of(22,
+            new SwitchItem(List.of("orig", "copy"), "menus.switches.actions.opencont", List.of(Material.CHEST, Material.ENDER_CHEST))))),
 
     // Действие игрока - Коммуникация с игроком
     SEND_MESSAGE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.COMMUNICATION, SendMessage::new, Material.WRITABLE_BOOK, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(49,
@@ -85,6 +91,8 @@ public enum ActionCategory {
 
     SHOW_SCOREBOARD(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, ShowScoreboard::new, Material.LANTERN, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     HIDE_SCOREBOARD(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, HideScoreboard::new, Material.GLASS, false, null, null, null),
+    SET_BORDER(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, SetWorldBorder::new, Material.SHIELD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    RESET_BORDER(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, ResetWorldBorder::new, Material.IRON_NUGGET, false, null, null, null),
 
     // Действия мира - внешний вид
     CREATE_SCOREBOARD(Development.BlockTypes.WORLD_ACTION, MenuCategory.APPEARANCE, CreateScoreboard::new, Material.PAINTING, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
@@ -101,6 +109,7 @@ public enum ActionCategory {
     LAUNCH_CYCLE(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, LaunchCycle::new, Material.POTATO, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     STOP_CYCLE(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, StopCycle::new, Material.POISONOUS_POTATO, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     CLEAR_CACHE_VARS(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, ClearCacheVars::new, Material.GLASS, false, null, null, null),
+    BREAK_LINE_EXECUTE(Development.BlockTypes.WORLD_ACTION, MenuCategory.LINES, BreakLineExecute::new, Material.TNT, false, null, null, null),
 
     // Действия мира - Мир
     SET_BLOCK(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, PlaceBlock::new, Material.GRASS_BLOCK, true, CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.ITEMSTACK, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
@@ -110,6 +119,13 @@ public enum ActionCategory {
     SET_WORLD_PRIVACY(Development.BlockTypes.WORLD_ACTION,MenuCategory.WORLD, SetWorldPrivacy::new, Material.IRON_DOOR, true, CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
             new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_world_privacy", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
     SET_WORLD_LORE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetWorldLore::new, Material.BOOKSHELF, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    CREATE_WORLDBORDER(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, CreateWorldBorder::new, Material.HEART_OF_THE_SEA, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    DELETE_WORLDBORDER(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, DeleteWorldBorder::new, Material.END_CRYSTAL, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+    SET_BORDER_CENTER(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderCenter::new, Material.LIGHTNING_ROD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
+    SET_BORDER_SIZE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderSize::new, Material.WAXED_OXIDIZED_COPPER_BULB, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    SET_BORDER_DAMAGE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderDamage::new, Material.IRON_SWORD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    SET_BORDER_BUFFER(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderBuffer::new, Material.SHIELD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    SET_BORDER_WARNING(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderWarning::new, Material.GOAT_HORN, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
     // Если игрок - общее
     NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
@@ -129,6 +145,7 @@ public enum ActionCategory {
     PLAYER_HOLD_ITEM(Development.BlockTypes.IF_PLAYER, MenuCategory.INVENTORY, PlayerHoldItem::new, Material.SHIELD, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>(Map.of(49,
             new SwitchItem(List.of("hand", "off_hand"), "menus.switches.actions.player_hold_item", List.of(Material.BRICK, Material.NETHER_BRICK))))),
     ITEM_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.INVENTORY, ItemEquals::new, Material.CRAFTING_TABLE, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
+    INV_TITLE_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.INVENTORY, IfInventoryTitleEquals::new, Material.PAINTING, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
     // Работа с переменными - присвоение
     SET_VAR(Development.BlockTypes.ACTION_VAR, MenuCategory.VARS_ASSIGNMENT, SetVar::new, Material.IRON_INGOT, true, CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.ANY), new LinkedHashMap<>()),
@@ -136,11 +153,19 @@ public enum ActionCategory {
 
     // Работа с переменными - операции с числом
     VAR_MULTIPLY(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarMultiply::new, Material.REINFORCED_DEEPSLATE, true, CodingMenu.MenuType.DUO_SET, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    VAR_DIVIDE(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarDivide::new, Material.DEEPSLATE, true, CodingMenu.MenuType.DUO_SET, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
     VAR_INCREMENT(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarIncrement::new, Material.IRON_INGOT, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
     VAR_DECREMENT(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarDecrement::new, Material.COPPER_INGOT, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
     // Работа с переменными - операции с текстом
+    PARSE_NUMBER(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, ParseNumber::new, Material.ANVIL, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     GET_TEXT_LEN(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, GetTextLength::new, Material.BOOK, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
+
+    // Работа с переменными - операции с местоположениями
+    GET_LOCS_DISTANCE(Development.BlockTypes.ACTION_VAR, MenuCategory.LOCATION_OPERATIONS, GetLocationsDistance::new, Material.REPEATER, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
+    BLOCK_FROM_LOC(Development.BlockTypes.ACTION_VAR, MenuCategory.LOCATION_OPERATIONS, BlockFromLoc::new, Material.GRASS_BLOCK, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
+    VALUE_FROM_LOC(Development.BlockTypes.ACTION_VAR, MenuCategory.LOCATION_OPERATIONS, ValueFromLoc::new, Material.END_ROD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.NULL), new LinkedHashMap<>(Map.of(16,
+            new SwitchItem(List.of("x", "y", "z", "yaw", "pitch"), "menus.switches.actions.value_from_loc", List.of(Material.PINK_DYE, Material.LIGHT_BLUE_DYE, Material.PURPLE_DYE, Material.ENDER_PEARL, Material.ENDER_EYE))))),
 
     // Если переменная - условия чисел
     COMPARE_NUM_EZ(Development.BlockTypes.IF_VARIABLE, MenuCategory.NUMBER_OPERATIONS, IfVariableCompareNumberEasy::new, Material.SANDSTONE_STAIRS, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NULL, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>(Map.of(13,
@@ -158,6 +183,8 @@ public enum ActionCategory {
     IF_VAR_EQUALS(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfVariableEquals::new, Material.BRICK, true, CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.ANY, CodingMenu.ArgumentType.ANY), new LinkedHashMap<>()),
     IF_VAR_EXIST(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfVariableExist::new, Material.MAGMA_CREAM, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR), new LinkedHashMap<>()),
     IF_LOC_IN_REG(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfLocationInRegion::new, Material.HEAVY_CORE, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
+    IF_LOC_IN_BARRIER(Development.BlockTypes.IF_VARIABLE, MenuCategory.OTHER, IfLocationInBorder::new, Material.HEART_OF_THE_SEA, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.NULL), new LinkedHashMap<>(Map.of(15,
+            new SwitchItem(List.of("local", "global"), "menus.switches.actions.locinbarrier", List.of(Material.WHITE_DYE, Material.HEART_OF_THE_SEA))))),
 
     // Выбрать объект
     SELECT_ALL_PLAYERS(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectAllPlayers::new, Material.BEACON, false, null, null, null),
@@ -165,7 +192,11 @@ public enum ActionCategory {
     SELECT_DEFAULT_ENTITY(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectDefaultEntity::new, Material.LEVER, false, null, null, null),
     SELECT_DEFAULT_PLAYER(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectDefaultPlayer::new, Material.REDSTONE_TORCH, false, null, null, null),
     SELECT_PLAYER_BY_COND(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectPlayerByCond::new, Material.PLAYER_HEAD, false, null, null, null),
-    SEND_SELECTION(Development.BlockTypes.SELECT, MenuCategory.OTHER, SendSelection::new, Material.WRITTEN_BOOK, false, null, null, null);
+    SEND_SELECTION(Development.BlockTypes.SELECT, MenuCategory.OTHER, SendSelection::new, Material.WRITTEN_BOOK, false, null, null, null),
+
+    // Действия сущности
+    SWITCH_AI(Development.BlockTypes.ENTITY_ACTION, MenuCategory.PARAMS, SwitchAI::new, Material.ZOMBIE_HEAD, true, CodingMenu.MenuType.DEFAULT, List.of(), new LinkedHashMap<>(Map.of(13,
+            new SwitchItem(List.of("true", "false"), "menus.switches.actions.switch_ai", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER)))));
 
 
     private Development.BlockTypes type;
@@ -257,12 +288,10 @@ public enum ActionCategory {
             meta.displayName(Component.text(LocaleManages.getLocaleMessage(user.getLocale(), "menus.coding.actions." + name().toLowerCase(Locale.ROOT) + ".name", false, "")));
             meta.lore(LocaleManages.getLocaleMessages(user.getLocale(), "menus.coding.actions." + name().toLowerCase(Locale.ROOT) + ".lore", new LinkedHashMap<>()));
 
-            meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP, ItemFlag.HIDE_ARMOR_TRIM, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_STORED_ENCHANTS, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_DYE, ItemFlag.HIDE_UNBREAKABLE);
-
             icon.setItemMeta(meta);
         }
 
-        return icon;
+        return ItemUtil.clearItemFlags(icon);
     }
 
     public void setIcon(Material icon) {

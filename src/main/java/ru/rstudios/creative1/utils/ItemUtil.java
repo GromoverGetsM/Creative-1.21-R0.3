@@ -56,24 +56,30 @@ public class ItemUtil {
             if (name != null && !name.isEmpty()) meta.setDisplayName(name);
             if (lore != null && !lore.isEmpty()) meta.setLore(lore);
 
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-            meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-            meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-            meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
-            meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
-            meta.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS);
-            meta.addItemFlags(ItemFlag.HIDE_DYE);
-
-            if (!meta.hasAttributeModifiers()) {
-                meta.addAttributeModifier(Attribute.GENERIC_ARMOR,new AttributeModifier(new NamespacedKey(plugin,"hide_attributes"),0.0d, AttributeModifier.Operation.ADD_NUMBER));
-
-            }
-
             item.setItemMeta(meta);
         }
 
-        return item;
+        return clearItemFlags(item);
     }
+
+    public static ItemStack clearItemFlags(ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES,
+                ItemFlag.HIDE_ADDITIONAL_TOOLTIP,
+                ItemFlag.HIDE_ARMOR_TRIM,
+                ItemFlag.HIDE_DESTROYS,
+                ItemFlag.HIDE_UNBREAKABLE,
+                ItemFlag.HIDE_ENCHANTS,
+                ItemFlag.HIDE_DYE,
+                ItemFlag.HIDE_PLACED_ON,
+                ItemFlag.HIDE_STORED_ENCHANTS,
+                ItemFlag.HIDE_ITEM_SPECIFICS
+        );
+        if (!meta.hasAttributeModifiers()) {
+            meta.addAttributeModifier(Attribute.GENERIC_ARMOR,new AttributeModifier(new NamespacedKey(plugin,"hide_attributes"),0.0d, AttributeModifier.Operation.ADD_NUMBER));
+        }
+        itemStack.setItemMeta(meta);
+        return itemStack;
+    }
+
 }

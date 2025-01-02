@@ -5,10 +5,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import ru.rstudios.creative1.coding.events.*;
 import ru.rstudios.creative1.coding.starters.Starter;
-import ru.rstudios.creative1.utils.Development;
+import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class Action {
 
@@ -24,7 +25,9 @@ public abstract class Action {
     }
 
 
-    public static String replacePlaceholders (String s, GameEvent event, Entity entity) {
+    public static String replacePlaceholders(String s, GameEvent event, Entity entity) {
+        String regex = "%var[^%]+%";
+
         if (s == null || s.isEmpty()) {
             return null;
         } else {
@@ -36,7 +39,20 @@ public abstract class Action {
             if (s.contains("%killer%")) s = StringUtils.replace(s, "%killer%", event instanceof KillEvent ? ((KillEvent) event).getKiller().getName() : "");
             if (s.contains("%shooter%")) s = StringUtils.replace(s, "%shooter%", event instanceof DamageEvent ? ((DamageEvent) event).getShooter().getName() : "");
             if (s.contains("%entity%")) s = StringUtils.replace(s, "%entity%", event instanceof EntityEvent ? ((EntityEvent) event).getEntity().getName() : "");
-            return s;
+
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(s);
+            StringBuilder result = new StringBuilder();
+
+            while (matcher.find()) {
+                String placeholder = matcher.group();
+                String variableName = placeholder.substring(1, placeholder.length() - 1);
+                String value = (String) new DynamicVariable(variableName).getValue(event.getPlot());
+                matcher.appendReplacement(result, value);
+            }
+            matcher.appendTail(result);
+
+            return result.toString();
         }
     }
 

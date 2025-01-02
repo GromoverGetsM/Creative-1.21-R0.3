@@ -31,6 +31,7 @@ import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.Development;
 import ru.rstudios.creative1.utils.FileUtil;
 import ru.rstudios.creative1.utils.WorldUtil;
+import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.io.*;
 import java.util.*;
@@ -327,9 +328,7 @@ public class Plot {
             user.player().setGameMode(GameMode.CREATIVE);
             user.player().teleport(dev().world().getSpawnLocation());
 
-            for (Development.BlockTypes type : Development.BlockTypes.values()) {
-                user.player().getInventory().addItem(type.getIcon(user));
-            }
+            dev.buildDevInventory(user);
         }
     }
 
@@ -462,7 +461,7 @@ public class Plot {
         iconMeta.setLore(lore);
         icon.setItemMeta(iconMeta);
 
-        return icon;
+        return ItemUtil.clearItemFlags(icon);
     }
 
     public List<String> allowedBuilders() {
@@ -530,6 +529,13 @@ public class Plot {
         this.paidPlayers = paidPlayers;
     }
 
+    /**
+     * Использовать, если что-то пошло не так во время выполнения действия.
+     * Вызывает табличку для девов и овнера с предложением тп к блоку где произошел пиздец
+     *
+     * @param action экземпляр проблемного действия (если вызываете из действия, то тупо this)
+     * @param e что-нибудь из наследников Exception с описанием внутри кратко на русском в чем ошибка
+     */
     public void throwException (Action action, Exception e) {
         for (Player player : online()) {
             if (owner.equalsIgnoreCase(player.getName()) || allowedDevs.contains(player.getName())) {
@@ -553,10 +559,17 @@ public class Plot {
         }
     }
 
+    /**
+     * Использовать при выбросе исключений выхода за лимиты.
+     * Видно всем игрокам, сразу преобразовывается
+     *
+     * @param exception название исключения (идентично названию лимита)
+     * @param changes изменения для замены, в сообщении конфига - %s
+     */
     public void throwException(String exception, String... changes) {
         for (Player player : online()) {
             User user = User.asUser(player);
-            user.sendMessage("errors.exceptions." + exception, false, changes);
+            user.sendMessage("errors.exceptions." + exception, true, changes);
         }
     }
 

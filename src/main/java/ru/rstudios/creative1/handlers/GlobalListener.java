@@ -12,12 +12,17 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -33,11 +38,14 @@ import org.bukkit.util.Vector;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
 import ru.rstudios.creative1.coding.starters.playerevent.*;
+import ru.rstudios.creative1.handlers.customevents.main.EntityDamageByEntityMyEvent;
+import ru.rstudios.creative1.handlers.customevents.main.EntityDamageCommonEvent;
 import ru.rstudios.creative1.menu.CodingMenu;
 import ru.rstudios.creative1.menu.ProtectedMenu;
 import ru.rstudios.creative1.menu.selector.CodingCategoriesMenu;
 import ru.rstudios.creative1.menu.selector.CodingMultipagesMenu;
 import ru.rstudios.creative1.menu.selector.ValuesMenu;
+import ru.rstudios.creative1.menu.selector.VariablesSelector;
 import ru.rstudios.creative1.plots.LimitManager;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
@@ -50,6 +58,7 @@ import ru.rstudios.creative1.utils.Development;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +82,7 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onWorldChanged (PlayerChangedWorldEvent event) {
         User user = User.asUser(event.getPlayer());
+        event.getPlayer().setWorldBorder(null);
         String from = event.getFrom().getName();
         String destination = user.player().getWorld().getName();
 
@@ -323,6 +333,9 @@ public class GlobalListener implements Listener {
 
         if (p != null) {
             if (p.isUserInDev(user)) {
+                if (event.getAction().isRightClick() && event.getItem() != null && event.getItem().getType() == Material.IRON_INGOT) {
+                    new VariablesSelector(user).open(user);
+                }
                 if ((event.getAction() == Action.RIGHT_CLICK_AIR || (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getTargetBlockExact(5) != null && event.getPlayer().getTargetBlockExact(5).getType() != Material.CHEST)) && event.getItem() != null && event.getItem().getType() == Material.APPLE) {
                     new ValuesMenu(user).open(user);
                 }
@@ -331,6 +344,19 @@ public class GlobalListener implements Listener {
                         event.setCancelled(true);
 
                         Development.BlockTypes type = Development.BlockTypes.getByMainBlock(event.getClickedBlock().getRelative(BlockFace.SOUTH));
+
+                        if (event.getItem() != null && event.getItem().getType() == Material.ARROW) {
+                            if (type != null && type.isCondition() || type == Development.BlockTypes.SELECT) {
+                                Sign sign = (Sign) event.getClickedBlock().getState();
+
+                                String newLine = sign.getLine(0).isEmpty() ? "coding.tech.not" : "";
+                                sign.setLine(0, newLine);
+                                sign.update();
+                                user.sendTranslatedSign(event.getClickedBlock().getLocation());
+                                return;
+                            }
+                        }
+
                         if (type != null && type.hasConstructor()) {
                             ProtectedMenu menu = type.createMenuInstance(user);
                             menu.open(user);
@@ -486,6 +512,10 @@ public class GlobalListener implements Listener {
             }
 
             user.datastore().remove("chestBlockActive");
+        } else if (!(inv instanceof ProtectedMenu)) {
+            if (user.isOnPlayingWorld()) {
+                user.getCurrentPlot().handler.sendStarter(new PlayerCloseInventory.Event((Player) event.getPlayer(), user.getCurrentPlot(), event), StarterCategory.PLAYER_CLOSED_INVENTORY);
+            }
         }
     }
 
@@ -545,6 +575,8 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onInventoryOpen (InventoryOpenEvent event) {
+        User user = User.asUser(event.getPlayer());
+
         if (event.getInventory().getHolder() instanceof CodingMenu) {
             Player player = (Player) event.getPlayer();
             Block target = player.getTargetBlockExact(5);
@@ -554,6 +586,10 @@ public class GlobalListener implements Listener {
 
                 chest.getPersistentDataContainer().set(new NamespacedKey(plugin, "openedName"), PersistentDataType.STRING, player.getName());
                 chest.update();
+            }
+        } else if (!(event.getInventory() instanceof ProtectedMenu)) {
+            if (user.isOnPlayingWorld()) {
+                user.getCurrentPlot().handler.sendStarter(new PlayerOpenInventory.Event((Player) event.getPlayer(), user.getCurrentPlot(), event), StarterCategory.PLAYER_OPENED_INVENTORY);
             }
         }
     }
@@ -602,13 +638,105 @@ public class GlobalListener implements Listener {
         Plot possible = PlotManager.byWorld(world);
 
         if (possible != null) {
-            if (world.getEntities().stream().filter(e -> !(e instanceof Player)).toList().size() < LimitManager.getLimitValue(possible, "entities")) {
+            List<Entity> parsed = world.getEntities().stream().filter(e -> !(e instanceof Player)).toList();
+            int limitValue = LimitManager.getLimitValue(possible, "entities");
+            if (limitValue < parsed.size()) {
                 event.setCancelled(true);
                 possible.throwException("entities", String.valueOf(world.getEntities().stream().filter(e -> !(e instanceof Player)).toList().size()), String.valueOf(LimitManager.getLimitValue(possible, "entities")));
             }
         }
     }
 
+    @EventHandler
+    public void on(EntityDamageEvent event) {
+        if(event.getEntity().getType() == EntityType.PLAYER) {
+            final Plot plot = PlotManager.byWorld(event.getEntity().getWorld());
+            if (plot == null) { return; }
 
+            if (Objects.requireNonNull(plot.plotMode) == Plot.PlotMode.PLAY) {
+                plot.handler.sendStarter(new PlayerDamaged.Event((Player) event.getEntity(), plot, event), StarterCategory.PLAYER_DAMAGED);
 
+                if (event.getCause() == EntityDamageEvent.DamageCause.FALL) plot.handler.sendStarter(new PlayerFallDamaged.Event((Player) event.getEntity(), plot, event), StarterCategory.PLAYER_FALL_DAMAGED);
+            }
+        }
+        else if (!(event instanceof EntityDamageByEntityEvent)) {
+            this.onDamage(event.getEntity(), event.getEntity(), event, event, event.getDamage());
+        }
+    }
+
+    @EventHandler
+    public void on(EntityDamageByEntityMyEvent event) {
+        this.onDamage(event.getDamager(), event.getEntity(), event, event, event.getDamage());
+    }
+
+    @EventHandler
+    public void on(HangingBreakByEntityEvent event) {
+        this.onDamage(event.getRemover(), event.getEntity(), event, event, 0);
+    }
+
+    private void onDamage (Entity damager, Entity entity, Event event, Cancellable cancellable, double damage) {
+        User damagerUser = null;
+
+        if (damager instanceof Player player) damagerUser = User.asUser(player);
+
+        Plot plot = PlotManager.byWorld(damager.getWorld());
+        if (plot == null) return;
+
+        switch (plot.plotMode) {
+            case BUILD -> {
+                if (damagerUser != null) {
+                    if (damagerUser.player().getGameMode() != GameMode.CREATIVE) cancellable.setCancelled(true);
+                }
+            }
+            case PLAY -> {
+                var commonEvent = new EntityDamageCommonEvent(event, cancellable, entity, damager, damage);
+                if (entity.getType() == EntityType.PLAYER) {
+                    if (damager instanceof Player) plot.handler.sendStarter(new PlayerDamagePlayer.Event((Player) damager, plot, commonEvent), StarterCategory.PLAYER_DAMAGE_PLAYER);
+                    else if (damager instanceof Projectile) plot.handler.sendStarter(new PlayerDamagedByProjectile.Event((Player) entity, plot, commonEvent),StarterCategory.PLAYER_DAMAGED_BY_PROJECTILE);
+                    else if (damager instanceof LivingEntity) plot.handler.sendStarter(new PlayerDamagedByMob.Event((Player) entity, plot, commonEvent), StarterCategory.PLAYER_DAMAGED_BY_MOB);
+                } else if (damager.getType() == EntityType.PLAYER) plot.handler.sendStarter(new PlayerDamagedMob.Event((Player) damager, plot, commonEvent), StarterCategory.PLAYER_DAMAGED_MOB);
+                else if (damager instanceof Projectile projectile && projectile.getShooter() instanceof Player player) plot.handler.sendStarter(new PlayerProjectileDamage.Event(player, plot, commonEvent), StarterCategory.PLAYER_PROJECTILE_DAMAGE);
+
+                if (!(entity instanceof Player) && entity instanceof LivingEntity living) plot.handler.sendStarter(new EntityDamaged.Event(living, plot, commonEvent), StarterCategory.ENTITY_DAMAGED);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerMoved (PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        User user = User.asUser(player);
+
+        if (user.isOnPlayingWorld()) {
+            Plot plot = user.getCurrentPlot();
+
+            if (plot.world().getWorldBorder().isInside(user.player().getLocation())) {
+                plot.handler.sendStarter(new PlayerMoveGeneralized.Event(player, plot, event), StarterCategory.PLAYER_MOVE_GENERALIZED);
+
+                Location from = event.getFrom();
+                Location to = event.getTo();
+
+                if (from.getWorld() != to.getWorld()) return;
+
+                boolean isMovedBody = !(from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ());
+                boolean isMovedHead = !(from.getYaw() == to.getYaw() && from.getPitch() == to.getPitch());
+
+                if (!isMovedBody && isMovedHead) plot.handler.sendStarter(new PlayerMoveHead.Event(player, plot, event), StarterCategory.PLAYER_MOVE_HEAD);
+                else if (isMovedBody && !isMovedHead) plot.handler.sendStarter(new PlayerMoveBody.Event(player, plot, event), StarterCategory.PLAYER_MOVE_BODY);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onFoodLevelChanged (FoodLevelChangeEvent event) {
+        User user = User.asUser(event.getEntity());
+
+        if (!user.isOnPlot() || user.isInDev() || user.getCurrentPlot().plotMode == Plot.PlotMode.BUILD) {
+            user.player().setFoodLevel(20);
+            event.setCancelled(true);
+            return;
+        }
+
+        if (user.isOnPlayingWorld()) user.getCurrentPlot().handler.sendStarter(new FoodLevelChange.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.FOOD_LEVEL_CHANGE);
+    }
 }

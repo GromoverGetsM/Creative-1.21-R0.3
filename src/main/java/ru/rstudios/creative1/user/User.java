@@ -13,6 +13,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.potion.PotionEffect;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
@@ -52,14 +53,23 @@ public class User {
         users.add(this);
     }
 
+    /**
+     * @return возвращает экземпляр хэшкарты данных об юзере для хранения кастомных значений
+     */
     public Map<String, Object> datastore() {
         return datastore;
     }
 
+    /**
+     * @return возвращает игрока, связанного с юзером
+     */
     public Player player() {
         return player;
     }
 
+    /**
+     * @return возвращает имя пользователя. Совпадает с {@link Player#getName()}
+     */
     public String name() {
         return name;
     }
@@ -81,6 +91,9 @@ public class User {
         player().sendTitle(title, subtitle, fadeIn, duration, fadeOut);
     }
 
+    /**
+     * @return Возвращает локализацию игрока в формате язык_Страна, например ru_RU или en_US
+     */
     public String getLocale() {
         if (this.locale == null || this.locale.isEmpty()) {
             this.locale = LocaleManages.getLocale(player);
@@ -140,9 +153,9 @@ public class User {
         return count;
     }
 
-
-
-
+    /**
+     * @return возвращает лист названий плотов, которыми владеет игрок, в формате world_plot_ID_CraftPlot
+     */
     public List<String> getPlotNames() {
         List<Integer> ids = getPlotIds();
         List<String> names = new ArrayList<>();
@@ -154,18 +167,34 @@ public class User {
         return names;
     }
 
+    /**
+     * Проверка если юзер находится вообще на каком-то плоте, а не, скажем, в хабе (world)
+     * @return true если на плоте, false если ни на каком из
+     */
     public boolean isOnPlot() {
         return player.getWorld().getName().endsWith("_CraftPlot") || player.getWorld().getName().endsWith("_dev");
     }
 
+    /**
+     * Проверяет, находится ли игрок в мире игры. Автоматически реализует метод {@link #isOnPlot()}, не требуется доппроверка
+     * @return true если в мире игры, false, соответственно, если в деве
+     */
     public boolean isOnPlayingWorld() {
         return isOnPlot() && player.getWorld().getName().endsWith("_CraftPlot");
     }
 
+    /**
+     * Проверяет, находится ли игрок в мире разработки. Автоматически реализует метод {@link #isOnPlot()}, не требуется доппроверка
+     * @return true если в мире разработки, false, соответственно, если в мире игры
+     */
     public boolean isInDev() {
         return isOnPlot() && player.getWorld().getName().endsWith("_dev");
     }
 
+    /**
+     * Утилита для перевода текста юзеру на табличке (на табличке должен быть код из конфига)
+     * @param signLocation местоположение таблички для перевода
+     */
     public void sendTranslatedSign(Location signLocation) {
         Block block = signLocation.getBlock();
 
@@ -194,6 +223,10 @@ public class User {
     }
 
 
+    /**
+     * Возвращает плот на котором находится юзер
+     * @return null если не на плоте, иначе - экземпляр плота
+     */
     public Plot getCurrentPlot() {
         if (!isOnPlot()) return null;
 
@@ -204,14 +237,18 @@ public class User {
         return PlotManager.plots.get(name);
     }
 
+    /**
+     * Сбрасывает инвентарь, здоровье, режим игры и любые другие характеристики до стандартных значений. Использовать при телепортах между плотами (пример: {@link Plot#teleportToPlot(User)})
+     */
     public void clear() {
         Player player = player();
 
-        player.closeInventory();
+        if (!List.of(InventoryType.CREATIVE, InventoryType.CRAFTING, InventoryType.PLAYER).contains(player.getOpenInventory().getType())) player.closeInventory();
         player.getInventory().clear();
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
         }
+        player.setWorldBorder(null);
         player.setFireTicks(0);
         player.setFreezeTicks(0);
         player.setNoDamageTicks(20);

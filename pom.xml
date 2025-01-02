@@ -119,6 +119,12 @@
           <version>3.30.2-GA</version>
       </dependency>
       <dependency>
+          <groupId>com.jeff-media.jefflib</groupId>
+          <artifactId>jefflib</artifactId>
+          <version>14.2.0</version>
+          <scope>compile</scope>
+      </dependency>
+      <dependency>
           <groupId>com.github.MilkBowl</groupId>
           <artifactId>VaultAPI</artifactId>
           <version>1.7</version>

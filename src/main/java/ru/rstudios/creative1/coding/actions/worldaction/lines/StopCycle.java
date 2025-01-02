@@ -19,7 +19,7 @@ public class StopCycle extends Action {
         for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
 
-            Object o = ActionChest.parseItem(chest.getOriginalContents()[13], event, entity);
+            Object o = chest.parseItem(chest.getOriginalContents()[13], event, entity);
             if (o == null) return;
 
             String text = String.valueOf(o);

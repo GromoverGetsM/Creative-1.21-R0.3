@@ -3,6 +3,7 @@ package ru.rstudios.creative1.coding.starters;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,6 +14,7 @@ import ru.rstudios.creative1.coding.starters.uncommon.Function;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
+import ru.rstudios.creative1.utils.ItemUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -32,11 +34,26 @@ public enum StarterCategory {
     PLAYER_LEFT_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerLeftClicked::new, PlayerLeftClicked.Event.class, Material.IRON_PICKAXE),
     PLAYER_RIGHT_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerRightClicked::new, PlayerRightClicked.Event.class, Material.DIAMOND_PICKAXE),
     PLAYER_PHYSICAL_INTERACT(Development.BlockTypes.PLAYER_EVENT, MenuCategory.WORLD, PlayerPhysicalInteract::new, PlayerPhysicalInteract.Event.class, Material.GOLDEN_PICKAXE),
+
     PLAYER_INV_CLICK(Development.BlockTypes.PLAYER_EVENT, MenuCategory.INVENTORY, PlayerClickedInventory::new, PlayerClickedInventory.Event.class, Material.PAINTING),
+    PLAYER_OPENED_INVENTORY(Development.BlockTypes.PLAYER_EVENT, MenuCategory.INVENTORY, PlayerOpenInventory::new, PlayerOpenInventory.Event.class, Material.LIME_GLAZED_TERRACOTTA),
+    PLAYER_CLOSED_INVENTORY(Development.BlockTypes.PLAYER_EVENT, MenuCategory.INVENTORY, PlayerCloseInventory::new, PlayerCloseInventory.Event.class, Material.RED_GLAZED_TERRACOTTA),
+
+    ENTITY_DAMAGED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.FIGHTING, EntityDamaged::new, EntityDamaged.Event.class, Material.PORKCHOP),
+    PLAYER_DAMAGED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.FIGHTING, PlayerDamaged::new, PlayerDamaged.Event.class, Material.REDSTONE),
+    PLAYER_DAMAGED_BY_MOB(Development.BlockTypes.PLAYER_EVENT, MenuCategory.FIGHTING, PlayerDamagedByMob::new, PlayerDamagedByMob.Event.class, Material.SWEET_BERRIES),
+    PLAYER_DAMAGED_BY_PROJECTILE(Development.BlockTypes.PLAYER_EVENT, MenuCategory.FIGHTING, PlayerDamagedByProjectile::new, PlayerDamagedByProjectile.Event.class, Material.BOW),
+    PLAYER_DAMAGED_MOB(Development.BlockTypes.PLAYER_EVENT, MenuCategory.FIGHTING, PlayerDamagedMob::new, PlayerDamagedMob.Event.class, Material.BEEF),
+    PLAYER_DAMAGE_PLAYER(Development.BlockTypes.PLAYER_EVENT, MenuCategory.FIGHTING, PlayerDamagePlayer::new, PlayerDamagePlayer.Event.class, Material.PLAYER_HEAD),
+    PLAYER_FALL_DAMAGED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.FIGHTING, PlayerFallDamaged::new, PlayerFallDamaged.Event.class, Material.WIND_CHARGE),
+    PLAYER_PROJECTILE_DAMAGE(Development.BlockTypes.PLAYER_EVENT, MenuCategory.FIGHTING, PlayerProjectileDamage::new, PlayerProjectileDamage.Event.class, Material.ARROW),
+
+    PLAYER_MOVE_GENERALIZED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.MOVEMENT, PlayerMoveGeneralized::new, PlayerMoveGeneralized.Event.class, Material.LEATHER_BOOTS),
+    PLAYER_MOVE_BODY(Development.BlockTypes.PLAYER_EVENT, MenuCategory.MOVEMENT, PlayerMoveBody::new, PlayerMoveBody.Event.class, Material.CHAINMAIL_BOOTS),
+    PLAYER_MOVE_HEAD(Development.BlockTypes.PLAYER_EVENT, MenuCategory.MOVEMENT, PlayerMoveHead::new, PlayerMoveHead.Event.class, Material.IRON_BOOTS),
+
     PLAYER_CHATTED(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, PlayerChatted::new, PlayerChatted.Event.class, Material.WRITABLE_BOOK),
-
-
-    BLOCK_EXPLODED(Development.BlockTypes.BLOCK_EVENT, MenuCategory.WORLD, null, null, Material.TNT);
+    FOOD_LEVEL_CHANGE(Development.BlockTypes.PLAYER_EVENT, MenuCategory.OTHER, FoodLevelChange::new, FoodLevelChange.Event.class, Material.COOKED_CHICKEN);
 
     private Development.BlockTypes type;
     private MenuCategory category;
@@ -54,10 +71,6 @@ public enum StarterCategory {
 
     public static StarterCategory byName (String name) {
         return Arrays.stream(values()).filter(starterCat -> starterCat.name().equals(name.toUpperCase(Locale.ROOT))).findFirst().orElse(null);
-    }
-
-    public static @Nullable StarterCategory getByMaterial (Material m) {
-        return Arrays.stream(values()).filter(cat -> cat.icon == m).findFirst().orElse(null);
     }
 
     public static @Nullable StarterCategory get(Material m, Development.BlockTypes type, MenuCategory category) {
@@ -126,7 +139,7 @@ public enum StarterCategory {
             icon.setItemMeta(meta);
         }
 
-        return icon;
+        return ItemUtil.clearItemFlags(icon);
     }
 
     public void setIcon(Material icon) {

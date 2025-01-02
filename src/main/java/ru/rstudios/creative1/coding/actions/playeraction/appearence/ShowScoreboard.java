@@ -24,7 +24,7 @@ public class ShowScoreboard extends Action {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
 
             if (entity instanceof Player player) {
-                String name = ActionChest.parseTextPlus(chest.getOriginalContents()[13], "", event, entity);
+                String name = chest.parseTextPlus(chest.getOriginalContents()[13], "", event, entity);
 
                 if (name.isEmpty()) {
                     event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно показать скорборд с пустым именем!"));

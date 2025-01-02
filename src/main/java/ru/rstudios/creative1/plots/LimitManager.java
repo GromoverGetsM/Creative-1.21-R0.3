@@ -65,6 +65,7 @@ public class LimitManager {
             limits.add(new DynamicLimit("opening_inventories", 10, 1).toString());
             limits.add(new DynamicLimit("variables", 1000000, 100).toString());
             limits.add(new DynamicLimit("modifying_blocks", 50000, 1000).toString());
+            limits.add(new DynamicLimit("worldborders", 30, 1).toString());
 
             config.set("limits", limits);
 
@@ -94,7 +95,7 @@ public class LimitManager {
     }
 
     public static boolean checkLimit (Plot plot, String limit, int valueToCheck) {
-        return getLimitValue(plot, limit) <= 0 || getLimitValue(plot, limit) <= valueToCheck;
+        return getLimitValue(plot, limit) <= 0 || getLimitValue(plot, limit) >= valueToCheck;
     }
 
 }

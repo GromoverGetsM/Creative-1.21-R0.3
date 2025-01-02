@@ -40,12 +40,12 @@ public class IfTextStartsWith extends ActionIf {
                 continue;
             }
 
-            String text = String.valueOf(ActionChest.parseItem(chest.getOriginalContents()[13], event, entity));
+            String text = String.valueOf(chest.parseItem(chest.getOriginalContents()[13], event, entity));
             List<String> texts = new LinkedList<>();
 
             if (nonnull.length == 0) return false;
 
-            Arrays.stream(nonnull).forEach(item -> texts.add(String.valueOf(ActionChest.parseItem(item, event, entity))));
+            Arrays.stream(nonnull).forEach(item -> texts.add(String.valueOf(chest.parseItem(item, event, entity))));
 
             for (String s : texts) {
                 if (caseI) {

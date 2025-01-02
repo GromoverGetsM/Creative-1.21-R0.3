@@ -77,7 +77,11 @@ public class SelectMenu extends CodingMultipagesMenu {
 
         if (!isFinalCategory) {
             switch (event.getSlot()) {
-                case 14 -> new PlayerConditions(user).open(user);
+                case 14 -> {
+                    PlayerConditions menu = new PlayerConditions(user);
+                    menu.setSign(this.sign);
+                    menu.open(user);
+                }
             }
         }
     }

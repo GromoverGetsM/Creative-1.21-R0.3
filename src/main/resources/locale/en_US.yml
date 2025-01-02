@@ -33,6 +33,17 @@ errors:
   plot-crit-filler: "&8==============================================="
   already-liked: "You have &6already liked&f this game!"
 
+  exceptions:
+    entities: "Entity limit exceeded in the area! &6%s&f/&6%s"
+    code_operations: "Code operation limit exceeded in a single time unit! &6%s&f/&6%s"
+    scoreboards: "Scoreboard limit exceeded for the plot! &6%s&f/&6%s"
+    bossbars: "Bossbar limit exceeded for the plot! &6%s&f/&6%s"
+    redstone_operations: "Redstone operation limit exceeded! &6%s&f/&6%s"
+    opening_inventories: "Opening inventories limit exceeded in a single time unit! &6%s&f/&6%s"
+    variables: "Variable limit exceeded! &6%s&f/&6%s"
+    modifying_blocks: "Block modification limit exceeded in a single time unit! &6%s&f/&6%s"
+    worldborders: "Custom border limit exceeded for the plot! &6%s&f/&6%s"
+
 global-items:
   menu-not-filled:
     name: "&cNo Items"
@@ -152,6 +163,10 @@ coding:
       name: "&eNumber Operations"
       lore:
         - "&7Actions and operations related to numbers"
+    location_operations:
+      name: "&eLocation Operations"
+      lore:
+        - "&7Actions and operations on locations"
 
   tech:
     var-set: "&aValue Set"
@@ -159,6 +174,16 @@ coding:
     vars: "Variables"
     dynvarsaved: "&dSAVED"
     values: "Game values"
+    var-item:
+      name: "&eVariables"
+      lore:
+        - "&7Opens the variables menu"
+    not: "NOT"
+    arrow-not:
+      name: "&eArrow of Inversion"
+      lore:
+        - "&7When clicking on the sign with a condition"
+        - "&7it inverts the condition"
 
   values:
     category:
@@ -248,7 +273,7 @@ coding:
         lore:
           - "&7Returns the entity's location"
       entity_opened_inv_title:
-        name: "&eOpened inventory"
+        name: "&eName of Open Inventory"
         lore:
           - "&7Returns the title of the opened inventory"
 
@@ -278,7 +303,24 @@ coding:
     player_left_click: "Left Click"
     player_right_click: "Right Click"
     player_physical_interact: "Physical Interaction"
+
+    entity_damaged: "Entity Damaged"
+    player_damaged: "Player Damaged"
+    player_damaged_by_mob: "Damaged by Mob"
+    player_damaged_by_projectile: "Damaged by Projectile"
+    player_damaged_mob: "Damaged a Mob"
+    player_damage_player: "Damaged a Player"
+    player_fall_damaged: "Fall Damage"
+    player_projectile_damage: "Projectile Damage"
+
     player_inv_click: "Inventory Click"
+    player_opened_inventory: "Opened Inventory"
+    player_closed_inventory: "Closed Inventory"
+
+    player_move_generalized: "Movement"
+    player_move_body: "Body Movement"
+    player_move_head: "Head Rotation"
+
     player_chatted: "Chat Event"
 
     function: "Function"
@@ -316,6 +358,8 @@ coding:
 
     show_scoreboard: "Show board"
     hide_scoreboard: "Hide board"
+    set_border: "Set Border"
+    reset_border: "Reset Border"
 
     create_scoreboard: "Create board"
     delete_scoreboard: "Delete board"
@@ -324,11 +368,13 @@ coding:
     scoreboard_set_display: "Board name"
 
     cancel_event: "Cancel Event"
+    restore_event: "Restore Event"
     wait: "Wait"
     launch_function: "Call function"
     launch_cycle: "Start loop"
     stop_cycle: "Stop loop"
     clear_cache_vars: "Clear cache"
+    break_line_execute: "Break code line"
 
     set_block: "Set block"
     set_world_name: "Set World Name"
@@ -336,6 +382,13 @@ coding:
     set_world_lore: "Set World Lore"
     set_world_icon: "Set World Icon"
     set_world_custom_id: "Set Identifier"
+    create_worldborder: "Create Border"
+    delete_worldborder: "Delete Border"
+    set_border_center: "Set Border Center"
+    set_border_size: "Set Border Size"
+    set_border_damage: "Set Border Damage"
+    set_border_buffer: "Set Border Buffer"
+    set_border_warning: "Set Border Warning"
 
     name_equals: "Name equals"
     message_equals: "Message equals"
@@ -351,15 +404,22 @@ coding:
 
     player_hold_item: "Holds Item"
     item_equals: "Item equals"
+    inv_title_equals: "InvTitleEquals"
 
     set_var: "Set (=)"
     set_item_var: "Set item"
 
     var_multiply: "*"
+    var_divide: "/"
     var_increment: "+="
     var_decrement: "-="
 
+    parse_number: "Parse number"
     get_text_len: "Text Length"
+
+    get_locs_distance: "Get Distance"
+    block_from_loc: "Block from loc."
+    value_from_loc: "Value from loc."
 
     compare_num_ez: "Comparison (Easy)"
 
@@ -370,6 +430,7 @@ coding:
     if_var_equals: "="
     if_var_exist: "Exists"
     if_loc_in_reg: "In Region"
+    if_loc_in_barrier: "Inside Border"
 
     select_all_players: "All players"
     select_all_entities: "All Entities"
@@ -377,6 +438,8 @@ coding:
     select_default_player: "Default Player"
     select_player_by_cond: "Players by cond"
     send_selection: "Send selection"
+
+    switch_ai: "Change entity's AI"
 
   player_event: "&b&lPlayer Event"
   block_event: "&3&lBlock Event"
@@ -578,6 +641,13 @@ menus:
           survival: "Survival"
           adventure: "Adventure"
           spectator: "Spectator"
+      locinbarrier:
+        name: "&3Barrier for Check"
+        lore:
+          - "&fSelect which barrier to check"
+        states:
+          local: "Player's Local Barrier"
+          global: "World Barrier"
       compare_ez:
         name: "&3Comparison Condition"
         lore:
@@ -595,6 +665,23 @@ menus:
         states:
           hand: "Main Hand"
           off_hand: "Off Hand"
+      switch_ai:
+        name: "&3Entity's AI state"
+        lore:
+          - ""
+        states:
+          true: "Enabled"
+          false: "Disabled"
+      value_from_loc:
+        name: "&3Value to get"
+        lore:
+          - ""
+        states:
+          x: "X"
+          y: "Y"
+          z: "Z"
+          yaw: "Yaw"
+          pitch: "Pitch"
 
   coding:
     player_event:
@@ -644,11 +731,80 @@ menus:
           - "&7Triggered when a player interacts"
           - "&7with a button, pressure plate, lever,"
           - "&7opens a door, etc."
+
+      entity_damaged:
+        name: "&eEntity Damaged"
+        lore:
+          - "&7Triggered when an entity receives"
+          - "&7any damage. Does not trigger for &eplayers"
+      player_damaged:
+        name: "&ePlayer Damaged"
+        lore:
+          - "&7Triggered when a player receives"
+          - "&7any damage."
+      player_damaged_by_mob:
+        name: "&eDamaged by Mob"
+        lore:
+          - "&7Triggered when a mob deals"
+          - "&7damage to a player"
+      player_damaged_by_projectile:
+        name: "&eDamaged by Projectile"
+        lore:
+          - "&7Triggered when a player receives"
+          - "&7damage from a projectile"
+      player_damaged_mob:
+        name: "&eDamaged a Mob"
+        lore:
+          - "&7Triggered when a player deals"
+          - "&7damage to a mob"
+      player_damage_player:
+        name: "&eDamaged a Player"
+        lore:
+          - "&7Triggered when a player deals"
+          - "&7damage to another player"
+      player_fall_damaged:
+        name: "&eFall Damage"
+        lore:
+          - "&7Triggered when a player takes"
+          - "&7damage from falling"
+      player_projectile_damage:
+        name: "&eProjectile Damage"
+        lore:
+          - "&7Triggered when a player deals"
+          - "&7damage using a projectile to a player or mob"
+
       player_inv_click:
         name: "&eInventory Click"
         lore:
           - "&7Triggered when a player clicks"
           - "&7on the inventory."
+      player_opened_inventory:
+        name: "&eOpened Inventory"
+        lore:
+          - "&7Triggered when a player opens"
+          - "&7any inventory"
+      player_closed_inventory:
+        name: "&eClosed Inventory"
+        lore:
+          - "&7Triggered when a player closes"
+          - "&7any inventory"
+
+      player_move_generalized:
+        name: "&eMovement"
+        lore:
+          - "&7Triggered when the player rotates their head or"
+          - "&7moves in space"
+      player_move_body:
+        name: "&eBody Movement"
+        lore:
+          - "&7Triggered when the player changes their coordinates,"
+          - "&7without changing their head position"
+      player_move_head:
+        name: "&eHead Rotation"
+        lore:
+          - "&7Triggered when the player only rotates their head and"
+          - "&7does not move from the spot"
+
       player_chatted:
         name: "&eChat Event"
         lore:
@@ -868,6 +1024,35 @@ menus:
           - "&7Arguments (1):"
           - "&7- &6Toggle: &7Invincibility &e(1)"
 
+      hide_scoreboard:
+        name: "&eHide Scoreboard"
+        lore:
+          - "&7Hides the current scoreboard panel"
+          - "&7"
+          - "&aNo arguments required"
+      show_scoreboard:
+        name: "&eShow Scoreboard"
+        lore:
+          - "&7Displays the specified scoreboard panel to the player"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Name of the panel"
+      set_border:
+        name: "&eSet Local Border"
+        lore:
+          - "&7The player will use a locally created border"
+          - "&7instead of the global world border"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Name of the border &e(1)"
+      reset_border:
+        name: "&eReset Local Border"
+        lore:
+          - "&7Resets the local border for the player. They"
+          - "&7will now follow the global world border"
+          - "&7"
+          - "&aNo arguments required"
+
       create_scoreboard:
         name: "&eCreate board"
         lore:
@@ -910,12 +1095,83 @@ menus:
           - "&7Arguments (2):"
           - "&7- &bText: &7Board name &e(1)"
           - "&7- &bText: &7New display name &e(1)"
+      create_worldborder:
+        name: "&eCreate Local Border"
+        lore:
+          - "&7Adds a new local border to memory for"
+          - "&7further modification and setup"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Border Name &e(1)"
+      delete_worldborder:
+        name: "&eDelete Local Border"
+        lore:
+          - "&7Removes a local border from memory by"
+          - "&7the given name"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &bText: &7Border Name &e(1)"
+      set_border_center:
+        name: "&eSet Barrier Center"
+        lore:
+          - "&7Changes the center point of the border, from which"
+          - "&7the border radius will be calculated (&eSize/2&7)"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Border Name &e(1)"
+          - "&7- &fLocation: &7New Border Center &e(1)"
+      set_border_size:
+        name: "&eSet Border Size"
+        lore:
+          - "&7Changes the size of the border (distance from one"
+          - "&7side of the border to the other in blocks)."
+          - "&7Maximum size: &e1024 blocks."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Border Name &e(1)"
+          - "&7- &cNumber: &7New Border Size &e(1)"
+      set_border_damage:
+        name: "&eSet Border Damage"
+        lore:
+          - "&7Changes the damage dealt when a player goes"
+          - "&7beyond the border, including the buffer zone"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Name of the border &e(1)"
+          - "&7- &cNumber: &7New damage dealt &e(1)"
 
+      set_border_buffer:
+        name: "&eSet Border Buffer"
+        lore:
+          - "&7Changes the length of the buffer (safe) zone"
+          - "&7beyond the border. If the player goes beyond"
+          - "&7the buffer zone, they will start taking damage"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Name of the border &e(1)"
+          - "&7- &cNumber: &7New buffer zone size &e(1)"
+
+      set_border_warning:
+        name: "&eSet Border Warning"
+        lore:
+          - "&7Changes the distance within which a red warning"
+          - "&7border vignette will appear on the player's screen, indicating that they are"
+          - "&7very close to the border"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &bText: &7Name of the border &e(1)"
+          - "&7- &cNumber: &7New distance &e(1)"
 
       cancel_event:
         name: "&eCancel Event"
         lore:
           - "&7Cancels the triggered event if possible"
+          - "&7"
+          - "&aNo arguments required"
+      restore_event:
+        name: "&eRestore Event"
+        lore:
+          - "&7Reverts the cancellation of a triggered event if possible."
           - "&7"
           - "&aNo arguments required"
       wait:
@@ -953,6 +1209,13 @@ menus:
         lore:
           - "&7Resets all unsaved variables to"
           - "&7a state as if they never existed"
+          - "&7"
+          - "&aNo arguments required"
+      break_line_execute:
+        name: "&eStop Line Execution"
+        lore:
+          - "&7Stops the execution of the current line. Any actions"
+          - "&7after this block will not be executed."
           - "&7"
           - "&aNo arguments required"
 
@@ -1121,6 +1384,16 @@ menus:
           - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
           - "&7- &cNumber: &7Number to multiply &e(1)"
           - "&7- &cNumber: &7Numbers to multiply by &e(27)"
+      var_divide:
+        name: "&eDivide (/)"
+        lore:
+          - "&7Divides the initial number by all the ones provided below"
+          - "&7and stores the result in a variable"
+          - "&7"
+          - "&7Arguments (29):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &cNumber: &7The number to be divided &e(1)"
+          - "&7- &cNumber: &7Numbers to divide by &e(27)"
       var_increment:
         name: "&eAdd (+=)"
         lore:
@@ -1141,6 +1414,14 @@ menus:
           - "&7- &6Dynamic Variable: &7The variable to modify &e(1)"
           - "&7- &cNumber: &7The amount to subtract &e(1)"
 
+      parse_number:
+        name: "&eParse Number"
+        lore:
+          - "&7Converts a text value into a number"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &bText: &7Text to parse &e(1)"
       get_text_len:
         name: "&eGet Text Length"
         lore:
@@ -1149,6 +1430,36 @@ menus:
           - "&7Arguments (2):"
           - "&7- &6Dynamic variable: &7Variable for the result &e(1)"
           - "&7- &bText: &7Text to check &e(1)"
+
+      get_locs_distance:
+        name: "&eGet Distance Between Locations"
+        lore:
+          - "&7Calculates the distance between two locations."
+          - "&7Stores the result in a variable."
+          - "&7"
+          - "&7Arguments (3):"
+          - "&7- &6Dynamic Variable: &7Variable to store the result &e(1)"
+          - "&7- &fLocation: &7First location &e(1)"
+          - "&7- &fLocation: &7Second location &e(1)"
+      block_from_loc:
+        name: "&eGet Block from Location"
+        lore:
+          - "&7Retrieves the block from the specified location."
+          - "&7Saves the result into a variable."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &fLocation: &7Location of the block &e(1)"
+      value_from_loc:
+        name: "&eGet Value from Location"
+        lore:
+          - "&7Retrieves the specified value from the location."
+          - "&7Saves the result into a variable."
+          - "&7"
+          - "&7Arguments (3):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &fLocation: &7Location to retrieve the value from &e(1)"
+          - "&7- &6Toggle: &7Value to retrieve &e(1)"
 
       compare_num_ez:
         name: "&eCompare Numbers (Easy)"
@@ -1216,6 +1527,15 @@ menus:
           - "&7- &fLocation: &7The location to check &e(1)"
           - "&7- &fLocation: &7Min point of the region &e(1)"
           - "&7- &fLocation: &7Max point of the region &e(1)"
+      if_loc_in_barrier:
+        name: "&eIf Location in Border"
+        lore:
+          - "&7Checks if the location"
+          - "&7is inside the specified border"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &fLocation: &7Location to check &e(1)"
+          - "&7- &6Toggle: &7Border to check &e(1)"
 
       select_all_players:
         name: "&eSelect All Players"
@@ -1259,6 +1579,15 @@ menus:
           - "&7Outputs the current selection to chat"
           - "&7"
           - "&aNo arguments required"
+
+      switch_ai:
+        name: "&eToggle Entity's AI state"
+        lore:
+          - "&7Enables/disables entity's ai depends"
+          - "&7on choice"
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &6Toggle: &7Enable or disable"
   worlds-option:
     title: "Choose an Option"
     items:
@@ -1319,6 +1648,11 @@ menus:
   plot:
     title: "Plot Management"
     items:
+      statictics:
+        name: "&r%s"
+        lore:
+          - "&7Unique players: &e%s"
+          - "&7Likes: &e%s"
       gamerule-management:
         name: "&eGame Rule Management"
         lore:

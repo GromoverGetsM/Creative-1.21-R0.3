@@ -22,7 +22,7 @@ public class SetWorldCustomId extends Action {
                 continue;
             }
 
-            String newId = ActionChest.parseTextPlus(chest.getOriginalContents()[13], "", event, entity);
+            String newId = chest.parseTextPlus(chest.getOriginalContents()[13], "", event, entity);
             String rawId = ChatColor.stripColor(newId);
 
             if (rawId.length() < 17) {

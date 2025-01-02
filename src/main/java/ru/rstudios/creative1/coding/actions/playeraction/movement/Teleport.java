@@ -18,7 +18,7 @@ public class Teleport extends Action {
         ActionChest chest = getChest();
         chest.initInventorySort();
 
-        Location toTp = ActionChest.parseLocation(chest.getOriginalContents()[13], event.getPlot().world().getSpawnLocation());
+        Location toTp = chest.parseLocation(chest.getOriginalContents()[13], event.getPlot().world().getSpawnLocation());
 
         SwitchItem item = getCategory().getCodingMenu().getSwitches().get(22);
         item.setCurrentState(item.getCurrentState(chest.getOriginalContents()[22]));
