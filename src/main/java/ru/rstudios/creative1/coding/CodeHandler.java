@@ -213,7 +213,7 @@ public class CodeHandler {
         }
     }
 
-    public void launchFunction (GameEvent event, String name, List<Entity> selection) {
+    public void launchFunction (Starter s, String name) {
         if (!LimitManager.checkLimit(plot, "code_operations", callsAmount)) {
             for (Player player1 : plot.online()) {
                 User.asUser(player1).sendMessage("info.plot-set-mode-build", true, "");
@@ -226,10 +226,8 @@ public class CodeHandler {
         } else {
             for (Starter starter : starters) {
                 if (starter instanceof Function function && function.getName().equals(name)) {
-                    function.setSelection(selection);
-                    function.execute(event);
-                    callsAmount++;
-                    increaseCalls();
+                    s.getActions().addAll(function.getActions());
+                    increaseCalls(function.getActions().size());
                 }
             }
         }
@@ -297,6 +295,11 @@ public class CodeHandler {
     public void increaseCalls() {
         callsAmount++;
         Bukkit.getScheduler().runTaskLater(plugin, () -> callsAmount--, 35L);
+    }
+
+    public void increaseCalls(int i) {
+        callsAmount += i;
+        Bukkit.getScheduler().runTaskLater(plugin, () -> callsAmount -= i, 35L);
     }
 
     public void putDynamicVariable (DynamicVariable variable) {

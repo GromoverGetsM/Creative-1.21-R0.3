@@ -24,7 +24,7 @@ public class LaunchFunction extends Action {
             String text = String.valueOf(o);
             if (text == null || text.isEmpty()) return;
 
-            event.getPlot().handler.launchFunction(event, text, selection);
+            event.getPlot().handler.launchFunction(getStarter(), text);
         }
     }
 

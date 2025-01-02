@@ -7,6 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.plots.DynamicLimit;
@@ -16,6 +18,8 @@ import ru.rstudios.creative1.utils.DatabaseUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class limitsCommand implements CommandExecutor, TabCompleter {
     @Override
@@ -42,7 +46,18 @@ public class limitsCommand implements CommandExecutor, TabCompleter {
                     }
                 } else {
                     if (args.length == 3 && limitName.equalsIgnoreCase("plot_limit")) {
-                        DatabaseUtil.updateValue("players", "plot_limit", Integer.parseInt(args[2]), "player_name", target.getName());
+                        String prefix = "creative.limits.plot_limit.";
+
+                        player.getEffectivePermissions().stream()
+                                .map(PermissionAttachmentInfo::getPermission)
+                                .filter(permission -> permission.startsWith(prefix))
+                                .forEach(permission -> {
+                                    PermissionAttachment attachment = player.addAttachment(plugin);
+                                    attachment.unsetPermission(permission);
+                                });
+
+                        PermissionAttachment attachment = player.addAttachment(plugin);
+                        attachment.setPermission(prefix + args[2], true);
                     }
                 }
             }

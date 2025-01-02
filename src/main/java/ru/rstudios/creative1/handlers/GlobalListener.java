@@ -106,7 +106,6 @@ public class GlobalListener implements Listener {
 
         if (!DatabaseUtil.isValueExist("players", "player_name", user.name())) {
             DatabaseUtil.insertValue("players", "player_name", user.name());
-            DatabaseUtil.updateValue("players", "plot_limit", 3, "player_name", user.name());
 
             String locale = event.getPlayer().getLocale().equalsIgnoreCase("ru_ru") ? "ru_RU" : "en_US";
 

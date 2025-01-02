@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.potion.PotionEffect;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
@@ -106,9 +107,13 @@ public class User {
     }
 
     public long getPlotLimit() {
-        Object value = DatabaseUtil.getValue("players", "plot_limit", "player_name", name());
-        if (value == null) value = 3;
-        return Long.parseLong(value.toString());
+        return player.getEffectivePermissions().stream()
+                .map(PermissionAttachmentInfo::getPermission)
+                .filter(permission -> permission.startsWith("creative.limits.plot_limit."))
+                .map(permission -> permission.replace("creative.limits.plot_limit.", "").trim())
+                .mapToInt(Integer::parseInt)
+                .findFirst()
+                .orElse(3);
     }
 
     public List<Integer> getPlotIds() {

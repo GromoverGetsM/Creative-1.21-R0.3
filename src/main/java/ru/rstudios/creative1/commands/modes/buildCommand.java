@@ -33,19 +33,18 @@ public class buildCommand implements CommandExecutor {
                     }
                     p.handler.stopCycles();
                     p.plotMode = Plot.PlotMode.BUILD;
-                }
 
-                for (Player player1 : p.online()) {
-                    User user1 = User.asUser(player1);
-                    user.datastore().remove("isCoding");
-                    if (p.isUserInDev(user1)) {
-                        if (user1.player() == player) {
+                    for (Player player1 : p.online()) {
+                        User user1 = User.asUser(player1);
+                        user1.datastore().remove("isCoding");
+
+                        if (!p.isUserInDev(user1) || user1.player() == player) {
                             p.teleportToPlot(user1);
                         }
-                    } else {
-                        p.teleportToPlot(user1);
                     }
                 }
+
+                p.teleportToPlot(user);
 
                 user.sendMessage("info.user-issued-build", true, "");
             }

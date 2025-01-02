@@ -28,8 +28,7 @@ public class DatabaseUtil {
             CREATE TABLE IF NOT EXISTS players (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 player_name VARCHAR(100) NOT NULL,
-                player_locale VARCHAR(100),
-                plot_limit INT
+                player_locale VARCHAR(100)
             );
         """;
 

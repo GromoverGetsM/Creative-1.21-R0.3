@@ -1,5 +1,6 @@
 package ru.rstudios.creative1.coding.actions.playeraction.inventory;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
@@ -33,7 +34,7 @@ public class GetPlayerItem extends Action {
                 }
                 int slot = chest.parseNumberPlus(chest.getOriginalContents()[15], 0, event, e).intValue();
                 ItemStack item = player.getInventory().getItem(slot);
-                variable.setValue(event.getPlot(), item, DynamicVariable.isVarSaved(chest.getOriginalContents()[11]));
+                variable.setValue(event.getPlot(), item == null ? new ItemStack(Material.AIR) : item, DynamicVariable.isVarSaved(chest.getOriginalContents()[11]));
             }
         }
 

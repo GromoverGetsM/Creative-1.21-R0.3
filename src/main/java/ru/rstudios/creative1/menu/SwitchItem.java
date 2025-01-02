@@ -11,6 +11,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
+import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.util.*;
 
@@ -84,7 +85,7 @@ public class SwitchItem {
             item.setItemMeta(meta);
         }
 
-        return item;
+        return ItemUtil.clearItemFlags(item);
     }
 
     private List<Component> generateStateLore(User user) {
