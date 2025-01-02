@@ -756,6 +756,6 @@ public class GlobalListener implements Listener {
         }
 
         User user = User.asUser(event.getPlayer());
-        if (user.isOnPlayingWorld()) user.getCurrentPlot().handler.sendStarter(new PlayerBucketEmpty.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_BUCKET_EMPTY); // todo
+        if (user.isOnPlayingWorld()) user.getCurrentPlot().handler.sendStarter(new PlayerBucketEmpty.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.PLAYER_BUCKET_EMPTY);
     }
 }
