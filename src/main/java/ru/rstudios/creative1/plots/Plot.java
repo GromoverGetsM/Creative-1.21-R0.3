@@ -302,6 +302,7 @@ public class Plot {
         if (canJoin) {
             if (isCorrupted) {
                 user.sendMessage("errors.plot-corrupted", true, String.valueOf(id));
+                return true;
             }
             if (this.world == null) {
                 if (!awaitTeleport.containsKey(user)) {
