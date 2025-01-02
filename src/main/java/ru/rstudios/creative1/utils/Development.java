@@ -394,4 +394,14 @@ public class Development {
         }
         return false;
     }
+
+    public static boolean containsNegativeEffects(ThrownPotion potion) {
+        for (PotionEffect effect : potion.getEffects()) {
+            PotionEffectType effectType = effect.getType();
+            if (effectType.getCategory() == PotionEffectTypeCategory.HARMFUL) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
