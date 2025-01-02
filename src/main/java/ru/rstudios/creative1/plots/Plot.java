@@ -31,6 +31,7 @@ import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.Development;
 import ru.rstudios.creative1.utils.FileUtil;
 import ru.rstudios.creative1.utils.WorldUtil;
+import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.io.*;
 import java.util.*;
@@ -460,7 +461,7 @@ public class Plot {
         iconMeta.setLore(lore);
         icon.setItemMeta(iconMeta);
 
-        return icon;
+        return ItemUtil.clearItemFlags(icon);
     }
 
     public List<String> allowedBuilders() {
