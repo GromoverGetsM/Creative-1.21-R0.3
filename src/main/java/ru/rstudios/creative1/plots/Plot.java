@@ -199,7 +199,7 @@ public class Plot {
             }
         } catch (Exception e) {
             isCorrupted = true;
-            unload(false, true);
+            unload(true, true);
             plugin.getLogger().warning("Плот " + id + " помечен corrupted - проблемы во время запуска");
         }
     }
