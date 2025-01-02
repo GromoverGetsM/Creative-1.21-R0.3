@@ -1,5 +1,6 @@
 package ru.rstudios.creative1.coding;
 
+import com.google.common.collect.Lists;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -165,7 +166,7 @@ public class CodeHandler {
                 actions.add(action);
             }
 
-            starter.setActions(actions);
+            starter.setOriginalActions(actions);
             starters.add(starter);
         }
         this.starters.addAll(starters);
@@ -226,7 +227,7 @@ public class CodeHandler {
         } else {
             for (Starter starter : starters) {
                 if (starter instanceof Function function && function.getName().equals(name)) {
-                    s.getActions().addAll(function.getActions());
+                    starter.getActions().addAll(s.getCurrentIndex() + 1, function.getActions());
                     increaseCalls(function.getActions().size());
                 }
             }

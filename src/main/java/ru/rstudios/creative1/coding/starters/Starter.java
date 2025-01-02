@@ -16,6 +16,7 @@ import static ru.rstudios.creative1.Creative_1.plugin;
 public abstract class Starter {
 
     private List<Action> actions = new LinkedList<>();
+    private List<Action> originalActions = new LinkedList<>();
     private List<Entity> selection = new LinkedList<>();
     private boolean isExecuting = false;
     private boolean isCancelled = false; // Флаг для прерывания
@@ -27,6 +28,14 @@ public abstract class Starter {
 
     public List<Action> getActions() {
         return actions;
+    }
+
+    public List<Action> getOriginalActions() {
+        return originalActions;
+    }
+
+    public void setOriginalActions(List<Action> originalActions) {
+        this.originalActions = originalActions;
     }
 
     public List<Entity> getSelection() {
@@ -43,9 +52,10 @@ public abstract class Starter {
     }
 
     public void execute(GameEvent event) {
-        if (isExecuting) return; // Предотвращаем параллельное выполнение
+        if (isExecuting) return;
         isExecuting = true;
-        isCancelled = false; // Сбрасываем флаг отмены
+        isCancelled = false;
+        actions = new LinkedList<>(originalActions);
         executeNextAction(event);
     }
 
@@ -92,5 +102,9 @@ public abstract class Starter {
             }
             executeNextAction(event);
         }
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
     }
 }

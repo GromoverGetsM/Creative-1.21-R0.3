@@ -32,6 +32,8 @@ errors:
   plot-crit-teleport: "&e&l[Click to teleport to the problematic block]&r"
   plot-crit-filler: "&8==============================================="
   already-liked: "You have &6already liked&f this game!"
+  plot-corrupted: "Access denied. Plot %s is unavailable for loading: &cmarked as corrupted"
+  chest-already-taken: "Someone &6is already interacting &fwith this chest"
 
   exceptions:
     entities: "Entity limit exceeded in the area! &6%s&f/&6%s"

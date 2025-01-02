@@ -65,6 +65,7 @@ public class Plot {
     public boolean isOpened;
     public PlotMode plotMode;
     public CodeHandler handler;
+    public boolean isCorrupted = false;
 
     public HashMap<String, Boolean> uniquePlayers = new LinkedHashMap<>();
 
@@ -158,42 +159,48 @@ public class Plot {
         init("world_plot_" + id + "_CraftPlot", needToInitWorld);
     }
     public void init (String plotName, boolean needToInitWorld) {
-        this.id = Integer.parseInt(plotName.replace("world_plot_", "").replace("_CraftPlot", "").trim());
-        this.customId = (String) DatabaseUtil.getValue("plots", "custom_id", "plot_name", plotName);
-        this.icon = Material.valueOf((String) DatabaseUtil.getValue("plots", "icon", "plot_name", plotName));
-        this.iconName = (String) DatabaseUtil.getValue("plots", "icon_name", "plot_name", plotName);
-        this.iconLore = DatabaseUtil.jsonToStringList((String) DatabaseUtil.getValue("plots", "icon_lore", "plot_name", plotName));
-        this.allowedBuilders = new LinkedList<>();
-        this.allowedDevs = new LinkedList<>();
-        this.flags = new LinkedHashMap<>();
-        this.paidPlayers = new LinkedList<>();
-        this.cost = Long.parseLong(String.valueOf(Objects.requireNonNull(DatabaseUtil.getValue("plots", "cost", "plot_name", plotName))));
-        this.dev = new DevPlot(this);
-        this.isOpened = Boolean.parseBoolean(String.valueOf(DatabaseUtil.getValue("plots", "openedState", "plot_name", plotName)));
-        this.plotMode = PlotMode.PLAY;
-        this.handler = new CodeHandler(this);
+        try {
+            this.id = Integer.parseInt(plotName.replace("world_plot_", "").replace("_CraftPlot", "").trim());
+            this.customId = (String) DatabaseUtil.getValue("plots", "custom_id", "plot_name", plotName);
+            this.icon = Material.valueOf((String) DatabaseUtil.getValue("plots", "icon", "plot_name", plotName));
+            this.iconName = (String) DatabaseUtil.getValue("plots", "icon_name", "plot_name", plotName);
+            this.iconLore = DatabaseUtil.jsonToStringList((String) DatabaseUtil.getValue("plots", "icon_lore", "plot_name", plotName));
+            this.allowedBuilders = new LinkedList<>();
+            this.allowedDevs = new LinkedList<>();
+            this.flags = new LinkedHashMap<>();
+            this.paidPlayers = new LinkedList<>();
+            this.cost = Long.parseLong(String.valueOf(Objects.requireNonNull(DatabaseUtil.getValue("plots", "cost", "plot_name", plotName))));
+            this.dev = new DevPlot(this);
+            this.isOpened = Boolean.parseBoolean(String.valueOf(DatabaseUtil.getValue("plots", "openedState", "plot_name", plotName)));
+            this.plotMode = PlotMode.PLAY;
+            this.handler = new CodeHandler(this);
 
-        plots.putIfAbsent(plotName, this);
+            plots.putIfAbsent(plotName, this);
 
-        File file = new File(Bukkit.getWorldContainer() + File.separator + plotName + File.separator + "config.yml");
-        if (file.exists()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            this.allowedBuilders = config.getStringList("allowedBuilders");
-            this.allowedDevs = config.getStringList("allowedDevs");
-            this.paidPlayers = config.getStringList("paidPlayers");
+            File file = new File(Bukkit.getWorldContainer() + File.separator + plotName + File.separator + "config.yml");
+            if (file.exists()) {
+                FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+                this.allowedBuilders = config.getStringList("allowedBuilders");
+                this.allowedDevs = config.getStringList("allowedDevs");
+                this.paidPlayers = config.getStringList("paidPlayers");
 
-            ConfigurationSection flags = config.getConfigurationSection("gameRules");
-            assert flags != null : "Невозможно получить секцию правил!";
-            this.flags = flags.getValues(false);
-        }
+                ConfigurationSection flags = config.getConfigurationSection("gameRules");
+                assert flags != null : "Невозможно получить секцию правил!";
+                this.flags = flags.getValues(false);
+            }
 
-        dev.load();
-        handler.parseCodeBlocks();
-        handler.loadDynamicVars();
-        loadUniquePlayers();
+            dev.load();
+            handler.parseCodeBlocks();
+            handler.loadDynamicVars();
+            loadUniquePlayers();
 
-        if (needToInitWorld) {
-            initWorld();
+            if (needToInitWorld) {
+                initWorld();
+            }
+        } catch (Exception e) {
+            isCorrupted = true;
+            unload(false, true);
+            plugin.getLogger().warning("Плот " + id + " помечен corrupted - проблемы во время запуска");
         }
     }
 
@@ -293,6 +300,9 @@ public class Plot {
                 user.player().hasPermission("creative.ignore-closed");
 
         if (canJoin) {
+            if (isCorrupted) {
+                user.sendMessage("errors.plot-corrupted", true, String.valueOf(id));
+            }
             if (this.world == null) {
                 if (!awaitTeleport.containsKey(user)) {
                     awaitTeleport.put(user, plotName());

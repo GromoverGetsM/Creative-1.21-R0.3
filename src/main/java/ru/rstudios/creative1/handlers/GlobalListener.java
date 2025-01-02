@@ -640,6 +640,11 @@ public class GlobalListener implements Listener {
         World world = entity.getWorld();
         Plot possible = PlotManager.byWorld(world);
 
+        if (entity.getWorld().getName().endsWith("_dev")) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (possible != null) {
             List<Entity> parsed = world.getEntities().stream().filter(e -> !(e instanceof Player)).toList();
             int limitValue = LimitManager.getLimitValue(possible, "entities");
@@ -743,5 +748,12 @@ public class GlobalListener implements Listener {
         if (user.isOnPlayingWorld()) user.getCurrentPlot().handler.sendStarter(new FoodLevelChange.Event(user.player(), user.getCurrentPlot(), event), StarterCategory.FOOD_LEVEL_CHANGE);
     }
 
+    @EventHandler
+    public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+        Material bucketType = event.getBucket();
 
+        if (bucketType == Material.WATER_BUCKET || bucketType == Material.LAVA_BUCKET) {
+            if (event.getBlock().getWorld().getName().endsWith("_dev")) event.setCancelled(true);
+        }
+    }
 }
