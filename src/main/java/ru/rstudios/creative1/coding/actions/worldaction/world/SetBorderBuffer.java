@@ -1,4 +1,4 @@
-package ru.rstudios.creative1.coding.actions.worldaction.appearence;
+package ru.rstudios.creative1.coding.actions.worldaction.world;
 
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Entity;

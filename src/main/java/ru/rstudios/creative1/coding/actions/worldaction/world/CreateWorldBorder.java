@@ -1,8 +1,9 @@
-package ru.rstudios.creative1.coding.actions.worldaction.appearence;
+package ru.rstudios.creative1.coding.actions.worldaction.world;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.actions.ActionCategory;
 import ru.rstudios.creative1.coding.actions.ActionChest;
@@ -10,8 +11,9 @@ import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.utils.Development;
 
 import java.util.List;
+import java.util.Locale;
 
-public class DeleteWorldBorder extends Action {
+public class CreateWorldBorder extends Action {
     @Override
     public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
@@ -21,25 +23,20 @@ public class DeleteWorldBorder extends Action {
             if (!Development.checkPlot(entity, event.getPlot())) continue;
 
             String borderName = chest.parseTextPlus(chest.getOriginalContents()[13], "", event, entity);
-
             if (borderName.isEmpty()) {
-                event.getPlot().throwException(this, new UnsupportedOperationException("Невозможно удалить границу с пустым именем!"));
-                return;
+                event.getPlot().throwException(this, new IllegalStateException("Имя границы не должно быть пустым!"));
             }
 
-            WorldBorder border = event.getPlot().handler.getBorders().get(borderName.toLowerCase());
+            WorldBorder border = Bukkit.createWorldBorder();
+            border.setSize(1024);
+            border.setCenter(new Location(event.getPlot().world(), 0, 0, 0));
 
-            if (border != null) {
-                for (Player player : event.getPlot().world().getPlayers()) {
-                    if (player.getWorldBorder() != null && player.getWorldBorder().equals(border)) player.setWorldBorder(null);
-                }
-                event.getPlot().handler.getBorders().remove(borderName.toLowerCase());
-            }
+            event.getPlot().handler.tryAddWorldBorder(borderName.toLowerCase(Locale.ROOT), border);
         }
     }
 
     @Override
     public ActionCategory getCategory() {
-        return ActionCategory.DELETE_WORLDBORDER;
+        return ActionCategory.CREATE_WORLDBORDER;
     }
 }

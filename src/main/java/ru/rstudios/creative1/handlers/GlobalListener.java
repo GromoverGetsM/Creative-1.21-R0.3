@@ -31,6 +31,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -344,10 +345,10 @@ public class GlobalListener implements Listener {
                         event.setCancelled(true);
 
                         Development.BlockTypes type = Development.BlockTypes.getByMainBlock(event.getClickedBlock().getRelative(BlockFace.SOUTH));
+                        Sign sign = (Sign) event.getClickedBlock().getState();
 
                         if (event.getItem() != null && event.getItem().getType() == Material.ARROW) {
                             if (type != null && type.isCondition() || type == Development.BlockTypes.SELECT) {
-                                Sign sign = (Sign) event.getClickedBlock().getState();
 
                                 String newLine = sign.getLine(0).isEmpty() ? "coding.tech.not" : "";
                                 sign.setLine(0, newLine);
@@ -360,20 +361,19 @@ public class GlobalListener implements Listener {
                         if (type != null && type.hasConstructor()) {
                             ProtectedMenu menu = type.createMenuInstance(user);
                             menu.open(user);
+                            event.getClickedBlock().setMetadata("username", new FixedMetadataValue(plugin, user.player().getName()));
                             if (menu instanceof CodingCategoriesMenu ccmenu) ccmenu.setSign(event.getClickedBlock());
                             else if (menu instanceof CodingMultipagesMenu cmmenu) cmmenu.setSign(event.getClickedBlock());
                         } else if ((type == Development.BlockTypes.FUNCTION || type == Development.BlockTypes.CYCLE) && event.getItem() != null && event.getItem().getType() == Material.BOOK) {
                             ItemStack book = event.getItem();
                             if (book.getItemMeta() == null || !book.getItemMeta().hasDisplayName()) return;
 
-                            Sign sign = (Sign) event.getClickedBlock().getState();
                             sign.setLine(2, book.getItemMeta().getDisplayName());
                             sign.update();
                         } else if (type == Development.BlockTypes.CYCLE && event.getItem() != null && event.getItem().getType() == Material.SLIME_BALL) {
                             ItemStack slime = event.getItem();
                             if (slime.getItemMeta() == null || !slime.getItemMeta().hasDisplayName()) return;
 
-                            Sign sign = (Sign) event.getClickedBlock().getState();
                             sign.setLine(3, slime.getItemMeta().getDisplayName());
                             sign.update();
                         }

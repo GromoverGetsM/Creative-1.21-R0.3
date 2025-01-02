@@ -1,4 +1,4 @@
-package ru.rstudios.creative1.coding.actions.worldaction.appearence;
+package ru.rstudios.creative1.coding.actions.worldaction.world;
 
 import org.bukkit.Location;
 import org.bukkit.WorldBorder;
@@ -11,7 +11,7 @@ import ru.rstudios.creative1.utils.Development;
 
 import java.util.List;
 
-public class SetBorderSize extends Action {
+public class SetBorderCenter extends Action {
     @Override
     public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
@@ -27,19 +27,18 @@ public class SetBorderSize extends Action {
                 return;
             }
 
-            double size = chest.parseNumberPlus(chest.getOriginalContents()[15], 1024, event, entity);
-            if (size > 1024) size = 1024;
+            Location loc = chest.parseLocationPlus(chest.getOriginalContents()[15], event.getPlot().world().getSpawnLocation(), event, entity);
 
             WorldBorder border = event.getPlot().handler.getBorders().get(name);
 
             if (border != null) {
-                border.setSize(size, 0);
+                border.setCenter(loc);
             }
         }
     }
 
     @Override
     public ActionCategory getCategory() {
-        return ActionCategory.SET_BORDER_SIZE;
+        return ActionCategory.SET_BORDER_CENTER;
     }
 }

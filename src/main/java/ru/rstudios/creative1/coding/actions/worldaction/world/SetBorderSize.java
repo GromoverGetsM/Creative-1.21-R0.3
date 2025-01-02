@@ -1,4 +1,4 @@
-package ru.rstudios.creative1.coding.actions.worldaction.appearence;
+package ru.rstudios.creative1.coding.actions.worldaction.world;
 
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Entity;
@@ -10,7 +10,7 @@ import ru.rstudios.creative1.utils.Development;
 
 import java.util.List;
 
-public class SetBorderWarning extends Action {
+public class SetBorderSize extends Action {
     @Override
     public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
@@ -26,18 +26,19 @@ public class SetBorderWarning extends Action {
                 return;
             }
 
-            int warningDistance = chest.parseNumberPlus(chest.getOriginalContents()[15], 1024, event, entity).intValue();
+            double size = chest.parseNumberPlus(chest.getOriginalContents()[15], 1024, event, entity);
+            if (size > 1024) size = 1024;
 
             WorldBorder border = event.getPlot().handler.getBorders().get(name);
 
             if (border != null) {
-                border.setWarningDistance(warningDistance);
+                border.setSize(size, 0);
             }
         }
     }
 
     @Override
     public ActionCategory getCategory() {
-        return ActionCategory.SET_BORDER_WARNING;
+        return ActionCategory.SET_BORDER_SIZE;
     }
 }

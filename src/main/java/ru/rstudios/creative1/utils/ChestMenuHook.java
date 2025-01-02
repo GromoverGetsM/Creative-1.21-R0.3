@@ -13,8 +13,12 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.persistence.PersistentDataContainer;
+
+import java.util.List;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
@@ -47,12 +51,22 @@ public class ChestMenuHook extends AbstractDelegateExtent {
 
                         super.setBlock(position, block);
 
-                        Player player = Bukkit.getPlayer(playerName);
+                        Player player = Bukkit.getPlayerExact(playerName);
                         if (player != null && player.isOnline()) {
                             player.closeInventory();
                         }
 
                         return true;
+                    }
+                }
+
+                if (bukkitBlock.getState() instanceof Sign) {
+                    if (bukkitBlock.hasMetadata("username")) {
+                        List<MetadataValue> data = bukkitBlock.getMetadata("username");
+                        Player player = Bukkit.getPlayerExact(data.get(0).asString());
+
+                        if (player != null) player.closeInventory();
+                        bukkitBlock.removeMetadata("username", plugin);
                     }
                 }
             }
