@@ -2,7 +2,6 @@ package ru.rstudios.creative1.coding.actions;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative1.coding.MenuCategory;
@@ -49,6 +48,7 @@ public enum ActionCategory {
     SET_ITEM_DELAY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, SetItemDelay::new, Material.CLOCK, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.ITEMSTACK, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
     REMOVE_ITEM(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, RemoveItem::new, Material.COBWEB, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
     GIVE_RANDOM_ITEM(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, GiveRandomItem::new, Material.BLUE_SHULKER_BOX, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
+    GET_PLAYER_ITEM(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, GetPlayerItem::new, Material.ITEM_FRAME, true,  CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
     OPEN_INTERFACE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, OpenInterface::new, Material.BROWN_SHULKER_BOX, true, CodingMenu.MenuType.DEFAULT, new LinkedList<>(),
             new LinkedHashMap<>(Map.of(13, new SwitchItem(List.of("workbench", "enchanting", "anvil", "cartography", "grindstone", "loom", "smith", "stonecutter"), "menus.switches.actions.oi", List.of(
                     Material.CRAFTING_TABLE, Material.ENCHANTING_TABLE, Material.ANVIL, Material.CARTOGRAPHY_TABLE, Material.GRINDSTONE, Material.LOOM, Material.SMITHING_TABLE, Material.STONECUTTER
