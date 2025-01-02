@@ -140,6 +140,7 @@ public enum ActionCategory {
     IF_PLAYER_SNEAKING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerSneaking::new, Material.CHAINMAIL_LEGGINGS, false, null, null, null),
     IF_PLAYER_SPRINTING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerSprinting::new, Material.GOLDEN_BOOTS, false, null, null, null),
     IF_PLAYER_SWIMMING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerSwiming::new, Material.WATER_BUCKET, false, null, null, null),
+    IF_PLAYER_ONLINE(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, ifPlayerOnline::new, Material.EMERALD, false, false, null, null, null),
 
     // Если игрок - предметы
     PLAYER_HOLD_ITEM(Development.BlockTypes.IF_PLAYER, MenuCategory.INVENTORY, PlayerHoldItem::new, Material.SHIELD, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>(Map.of(49,
