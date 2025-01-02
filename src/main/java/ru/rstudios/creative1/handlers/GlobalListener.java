@@ -512,6 +512,10 @@ public class GlobalListener implements Listener {
             }
 
             user.datastore().remove("chestBlockActive");
+        } else if (inv instanceof CodingMultipagesMenu || inv instanceof CodingCategoriesMenu) {
+            Block sign = (inv instanceof CodingMultipagesMenu menu) ? menu.getSign() : ((CodingCategoriesMenu) inv).getSign();
+
+            if (sign.hasMetadata("username"))  sign.removeMetadata("username", plugin);
         } else if (!(inv instanceof ProtectedMenu)) {
             if (user.isOnPlayingWorld()) {
                 user.getCurrentPlot().handler.sendStarter(new PlayerCloseInventory.Event((Player) event.getPlayer(), user.getCurrentPlot(), event), StarterCategory.PLAYER_CLOSED_INVENTORY);

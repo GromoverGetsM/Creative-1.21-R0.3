@@ -14,4 +14,8 @@ public abstract class CodingCategoriesMenu extends ProtectedMenu {
     public void setSign(Block sign) {
         this.sign = sign;
     }
+
+    public Block getSign() {
+        return sign;
+    }
 }
