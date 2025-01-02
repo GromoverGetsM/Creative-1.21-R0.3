@@ -57,6 +57,6 @@ public class Cycle extends Starter {
 
     @Override
     public StarterCategory getCategory() {
-        return null;
+        return StarterCategory.CYCLE;
     }
 }
