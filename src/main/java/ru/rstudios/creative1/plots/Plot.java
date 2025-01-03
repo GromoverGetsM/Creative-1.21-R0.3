@@ -161,6 +161,12 @@ public class Plot {
     }
     public void init (String plotName, boolean needToInitWorld) {
         try {
+            File plot = new File(Bukkit.getWorldContainer() + File.separator + plotName);
+            File devFile = new File(Bukkit.getWorldContainer() + File.separator + plotName.replace("_CraftPlot", "_dev"));
+
+            boolean exists = plot.exists() && plot.isDirectory() && devFile.exists() && devFile.isDirectory() && DatabaseUtil.isValueExist("plots", "plot_name", plotName);
+            if (!exists) return;
+
             this.id = Integer.parseInt(plotName.replace("world_plot_", "").replace("_CraftPlot", "").trim());
             this.customId = (String) DatabaseUtil.getValue("plots", "custom_id", "plot_name", plotName);
             this.icon = Material.valueOf((String) DatabaseUtil.getValue("plots", "icon", "plot_name", plotName));
