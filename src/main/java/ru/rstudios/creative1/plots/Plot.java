@@ -333,7 +333,9 @@ public class Plot {
     }
 
     public void teleportToDev(User user) {
-        if (owner().equalsIgnoreCase(user.name()) || allowedDevs().contains(user.name())) {
+        boolean canJoin = owner().equalsIgnoreCase(user.name()) || allowedDevs().contains(user.name()) || user.player().hasPermission("creative.admin");
+
+        if (canJoin) {
             handler.sendStarter(new PlayerQuit.Event(user.player(), this, new PlayerChangedWorldEvent(user.player(), world())), StarterCategory.PLAYER_QUIT);
             user.clear();
             user.player().setGameMode(GameMode.CREATIVE);
