@@ -1721,20 +1721,13 @@ menus:
           - "&7Different world types affect"
           - "&7the generation of the world itself"
         states:
-          normal: "Normal World"
+          void: "Empty World"
           flat: "Flat World"
-          large_biomes: "Large Biomes"
-          amplified: "Amplified Generation"
-      generate-structures:
-        name: "&eGenerate Structures"
+      create:
+        name: "&eCreate World"
         lore:
-          - "&7Structures like villages,"
-          - "&7End cities, Nether fortresses, and"
-          - "&7so on will (not) be generated,"
-          - "&7depending on the decision"
-        states:
-          true: "Generate structures"
-          false: "Do not generate structures"
+          - "&7Initiates the creation of a world with"
+          - "&7specified parameters"
 
   my-worlds:
     title: "My worlds"

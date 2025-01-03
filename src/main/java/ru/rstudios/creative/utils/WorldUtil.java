@@ -1,10 +1,13 @@
 package ru.rstudios.creative.utils;
 
+import lombok.SneakyThrows;
+
 import java.util.Collections;
 import java.util.List;
 
 public class WorldUtil {
 
+    @SneakyThrows
     public static long getLastWorldId() {
         List<Long> ids = DatabaseUtil.selectAllValues("plots", "id");
 

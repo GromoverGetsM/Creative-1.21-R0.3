@@ -116,7 +116,7 @@ public class Plot {
         DatabaseUtil.updateValue("plots", "generation", generation, "plot_name", plotName);
         DatabaseUtil.updateValue("plots", "gen_structures", genStructures, "plot_name", plotName);
 
-        generateWorld(environment, generation, genStructures);
+        generateWorld(environment, generation, genStructures, true);
         dev.load();
 
         File file = new File(Bukkit.getWorldContainer() + File.separator + plotName + File.separator + "config.yml");
@@ -166,6 +166,7 @@ public class Plot {
         init("world_plot_" + id + "_CraftPlot", needToInitWorld);
     }
     public void init (String plotName, boolean needToInitWorld) {
+        long start = System.currentTimeMillis();
         try {
             File plot = new File(Bukkit.getWorldContainer() + File.separator + plotName);
             File devFile = new File(Bukkit.getWorldContainer() + File.separator + plotName.replace("_CraftPlot", "_dev"));
@@ -219,15 +220,22 @@ public class Plot {
             plugin.getLogger().warning("Плот " + id + " помечен corrupted - проблемы во время запуска (" + e.getMessage() + ")");
             unload(true, true);
         }
+        long after = System.currentTimeMillis() - start;
+        if (after > 500) plugin.getLogger().warning("Генерация мира слишком долгая (" + after + "/500ms)");
     }
 
-    private void generateWorld (String environment, String generator, boolean generateStructures) {
+    @SneakyThrows
+    private void generateWorld (String environment, String generator, boolean generateStructures, boolean genOnCreate) {
         WorldCreator creator = new WorldCreator(plotName());
-        creator.type(WorldType.valueOf(generator.toUpperCase(Locale.ROOT)));
+        if (generator.equalsIgnoreCase("void")) creator.generator(new EmptyChunkGenerator());
+        else creator.type(WorldType.valueOf(generator.toUpperCase(Locale.ROOT)));
         creator.environment(World.Environment.valueOf(environment.toUpperCase(Locale.ROOT)));
         creator.generateStructures(generateStructures);
 
         this.world = creator.createWorld();
+        if (genOnCreate && generator.equalsIgnoreCase("void")) {
+            Development.setBlocks(world, world.getSpawnLocation().add(1, -1, 1), world.getSpawnLocation().add(-1, -1, -1), Material.STONE);
+        }
         applyGameRules();
         LimitManager.createIfNotExist(this);
         this.limits = LimitManager.loadLimits(this);
@@ -235,20 +243,21 @@ public class Plot {
         world.setAutoSave(true);
         world.setKeepSpawnInMemory(false);
         if (world.getEnvironment() == World.Environment.THE_END) {
-            if (world.getEnderDragonBattle() != null) {
-                world.getEnderDragonBattle().setPreviouslyKilled(true);
-                world.getEnderDragonBattle().getBossBar().setVisible(false);
-            }
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     for (Entity entity : world.getEntities()) {
                         if (entity instanceof EnderDragon dragon) {
                             dragon.setHealth(0);
+                            if (world.getEnderDragonBattle() != null) {
+                                world.getEnderDragonBattle().setPreviouslyKilled(true);
+                                world.getEnderDragonBattle().getBossBar().setVisible(false);
+                            }
+                            cancel();
                         }
                     }
                 }
-            }.runTaskLater(plugin,10L);
+            }.runTaskTimer(plugin,0L, 10L);
         }
 
         world.getWorldBorder().setSize(1024);
@@ -260,7 +269,7 @@ public class Plot {
         String generator = (String) DatabaseUtil.getValue("plots", "generation", "plot_name", plotName());
         boolean genStructures = Boolean.parseBoolean(String.valueOf(DatabaseUtil.getValue("plots", "gen_structures", "plot_name", plotName())));
 
-        generateWorld(environment, generator, genStructures);
+        generateWorld(environment, generator, genStructures, false);
         dev.load();
     }
 
@@ -379,9 +388,9 @@ public class Plot {
 
     public void delete() {
         unload(false, false);
+        DatabaseUtil.executeUpdate("DELETE FROM plots WHERE id = " + id());
         MillenniumScheduler.run(() -> {
             plugin.getLogger().warning("Удаляем плот id=" + id() + " (" + plotName() + ")");
-            DatabaseUtil.executeUpdate("DELETE FROM plots WHERE id = " + id());
 
             FileUtil.deleteDirectory(new File(Bukkit.getWorldContainer(), plotName()));
             FileUtil.deleteDirectory(new File(Bukkit.getWorldContainer(), plotName().replace("_CraftPlot", "_dev")));
@@ -395,7 +404,7 @@ public class Plot {
             handler.saveDynamicVars();
         }
 
-        if (MillenniumScheduler.run(this::plotInfoUpdate).get()) {
+        if (plotInfoUpdate()) {
             File file = new File(Bukkit.getWorldContainer() + File.separator + plotName() + File.separator + "config.yml");
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
@@ -406,21 +415,16 @@ public class Plot {
             config.save(file);
 
 
-            String[] worldNames = {
-                            plotName(),
-                            plotName().replace("_CraftPlot", "_dev")
-            };
+            String[] worldNames = {plotName(), plotName().replace("_CraftPlot", "_dev")};
 
             for (String worldName : worldNames) {
                 World world = Bukkit.getWorld(worldName);
                 if (world != null) {
-                    if (worldName.equals(plotName()) || worldName.equals(plotName().replace("_CraftPlot", "_dev"))) {
-                        for (Player player : online()) {
-                            player.teleport(Bukkit.getWorld("world").getSpawnLocation());
-                            User.asUser(player).sendMessage("info.plot-offline", true, "");
-                            User.asUser(player).clear();
-                        }
-                    }
+                    online().forEach(player -> {
+                        player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+                        User.asUser(player).sendMessage("info.plot-offline", true, "");
+                        User.asUser(player).clear();
+                    });
 
 
                     needSave = worldName.endsWith("_dev") || needSave;

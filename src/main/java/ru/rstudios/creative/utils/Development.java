@@ -5,10 +5,15 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockTypes;
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -58,11 +63,13 @@ public class Development {
         SELECT(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, SelectMenu::new, false, false);
 
 
-        private Material mainBlock;
-        private Material additionalBlock;
+        @Getter
+        private final Material mainBlock;
+        @Getter
+        private final Material additionalBlock;
         private final Function<User, ProtectedMenu> constructor;
-        private boolean isEvent;
-        private boolean isCondition;
+        private final boolean isEvent;
+        private final boolean isCondition;
 
         BlockTypes (Material mainBlock, Material additionalBlock, Function<User, ProtectedMenu> constructor, boolean isEvent, boolean isCondition) {
             this.mainBlock = mainBlock;
@@ -70,14 +77,6 @@ public class Development {
             this.constructor = constructor;
             this.isEvent = isEvent;
             this.isCondition = isCondition;
-        }
-
-        public Material getAdditionalBlock() {
-            return additionalBlock;
-        }
-
-        public Material getMainBlock() {
-            return mainBlock;
         }
 
         public boolean isEvent() {
@@ -318,6 +317,7 @@ public class Development {
         Runnable runnable = () -> {
             EditSession session = WorldEdit.getInstance().newEditSession(world);
 
+
             try {
                 session.moveRegion(region, BlockVector3.at(direction.getModX(), direction.getModY(), direction.getModZ()), distance, true, null);
             } catch (MaxChangedBlocksException e) {
@@ -343,6 +343,19 @@ public class Development {
         try (EditSession session = WorldEdit.getInstance().newEditSession(world)) {
             Region region = new CuboidRegion(pos1, pos2);
             session.setBlocks(region, com.sk89q.worldedit.world.block.BlockTypes.AIR.getDefaultState());
+        } catch (MaxChangedBlocksException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setBlocks (org.bukkit.World world, Location pos1, Location pos2, Material material) {
+        setBlocks(BukkitAdapter.adapt(world), BlockVector3.at(pos1.x(), pos1.y(), pos1.z()), BlockVector3.at(pos2.x(), pos2.y(), pos2.z()), material);
+    }
+
+    public static void setBlocks(World world, BlockVector3 pos1, BlockVector3 pos2, Material material) {
+        try (EditSession session = WorldEdit.getInstance().newEditSession(world)) {
+            Region region = new CuboidRegion(pos1, pos2);
+            session.setBlocks(region, com.sk89q.worldedit.world.block.BlockTypes.get(material.name().toLowerCase()).getDefaultState());
         } catch (MaxChangedBlocksException e) {
             e.printStackTrace();
         }
