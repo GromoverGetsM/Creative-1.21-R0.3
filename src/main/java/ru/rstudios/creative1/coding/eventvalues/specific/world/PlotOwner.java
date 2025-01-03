@@ -8,6 +8,6 @@ public class PlotOwner extends StringValue {
 
     @Override
     public String get(GameEvent event, Entity entity) {
-        return event.getPlot().owner;
+        return event.getPlot().getOwner();
     }
 }

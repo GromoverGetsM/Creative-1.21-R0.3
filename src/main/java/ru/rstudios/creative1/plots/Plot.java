@@ -1,7 +1,9 @@
 package ru.rstudios.creative1.plots;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -26,10 +28,7 @@ import ru.rstudios.creative1.coding.starters.playerevent.PlayerQuit;
 import ru.rstudios.creative1.handlers.GlobalListener;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
-import ru.rstudios.creative1.utils.DatabaseUtil;
-import ru.rstudios.creative1.utils.FileUtil;
-import ru.rstudios.creative1.utils.WorldUtil;
-import ru.rstudios.creative1.utils.ItemUtil;
+import ru.rstudios.creative1.utils.*;
 
 import java.io.*;
 import java.util.*;
@@ -38,6 +37,7 @@ import static ru.rstudios.creative1.CreativePlugin.plugin;
 import static ru.rstudios.creative1.plots.PlotManager.awaitTeleport;
 import static ru.rstudios.creative1.plots.PlotManager.plots;
 
+@Data
 public class Plot {
 
     public enum PlotMode {
@@ -46,34 +46,20 @@ public class Plot {
 
     }
 
-    public String owner;
-    public World world;
-    public long id;
+    protected String owner;
+    protected World world;
+    protected long id;
+    protected DevPlot dev;
+
     public String customId;
-    @Setter
     public Material icon;
-    @Setter
     public String iconName;
-    @Setter
     public List<String> iconLore;
-    @Getter
-    @Setter
     public List<String> allowedBuilders;
-    @Getter
-    @Setter
     public List<String> allowedDevs;
-    @Getter
-    @Setter
     public Map<String, Object> flags;
-    @Getter
-    @Setter
     public List<String> paidPlayers;
-    @Getter
-    @Setter
     public long cost;
-    @Getter
-    @Setter
-    public DevPlot dev;
     public boolean isOpened;
     public PlotMode plotMode;
     public CodeHandler handler;
@@ -82,17 +68,14 @@ public class Plot {
     public HashMap<String, Boolean> uniquePlayers = new LinkedHashMap<>();
 
     public Set<DynamicLimit> limits = new LinkedHashSet<>();
-    @Getter
-    @Setter
     private int lastModifiedBlocksAmount;
-    @Getter
-    @Setter
     private int lastRedstoneOperationsAmount;
 
     public Plot (String owner) {
         this.owner = owner;
     }
 
+    @SneakyThrows
     public void create(String environment, String generation, boolean genStructures) {
         Player player = Bukkit.getPlayerExact(owner);
 
@@ -138,8 +121,23 @@ public class Plot {
         dev.load();
 
         File file = new File(Bukkit.getWorldContainer() + File.separator + plotName + File.separator + "config.yml");
-        try {
-            file.createNewFile();
+        FileConfiguration config = AsyncScheduler.run(() -> createFile(file)).get();
+        if (config != null) {
+            this.flags = config.getConfigurationSection("gameRules").getValues(false);
+
+            dev.load();
+            handler.parseCodeBlocks();
+            loadUniquePlayers();
+
+            applyGameRules();
+            LimitManager.createIfNotExist(this);
+            this.limits = LimitManager.loadLimits(this);
+        }
+    }
+
+    @SneakyThrows
+    public FileConfiguration createFile(File file) {
+        if (file.createNewFile()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.createSection("allowedDevs");
             config.createSection("allowedBuilders");
@@ -159,17 +157,10 @@ public class Plot {
             config.set("gameRules.doMobSpawning", false);
 
             config.save(file);
-
-            this.flags = config.getConfigurationSection("gameRules").getValues(false);
-        } catch (IOException e) { throw new RuntimeException(e); }
-
-        dev.load();
-        handler.parseCodeBlocks();
-        loadUniquePlayers();
-
-        applyGameRules();
-        LimitManager.createIfNotExist(this);
-        this.limits = LimitManager.loadLimits(this);
+            return config;
+        } else {
+            return null;
+        }
     }
 
     public void init (long id, boolean needToInitWorld) {
@@ -389,71 +380,75 @@ public class Plot {
 
     public void delete() {
         unload(false, false);
-        plugin.getLogger().warning("Удаляем плот id=" + id() + " (" + plotName() + ")");
-        DatabaseUtil.executeUpdate("DELETE FROM plots WHERE id = " + id());
+        AsyncScheduler.run(() -> {
+            plugin.getLogger().warning("Удаляем плот id=" + id() + " (" + plotName() + ")");
+            DatabaseUtil.executeUpdate("DELETE FROM plots WHERE id = " + id());
 
-        FileUtil.deleteDirectory(new File(Bukkit.getWorldContainer(), plotName()));
-        FileUtil.deleteDirectory(new File(Bukkit.getWorldContainer(), plotName().replace("_CraftPlot", "_dev")));
+            FileUtil.deleteDirectory(new File(Bukkit.getWorldContainer(), plotName()));
+            FileUtil.deleteDirectory(new File(Bukkit.getWorldContainer(), plotName().replace("_CraftPlot", "_dev")));
+        });
     }
 
+    @SneakyThrows
     public void unload(boolean onlyWorld, boolean needSave) {
         if (handler != null) {
             handler.stopCycles();
             handler.saveDynamicVars();
         }
 
+        if (AsyncScheduler.run(this::plotInfoUpdate).get()) {
+            File file = new File(Bukkit.getWorldContainer() + File.separator + plotName() + File.separator + "config.yml");
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+            config.set("allowedDevs", allowedDevs);
+            config.set("allowedBuilders", allowedBuilders);
+            config.set("paidPlayers", paidPlayers);
+
+            config.save(file);
+
+
+            String[] worldNames = {
+                            plotName(),
+                            plotName().replace("_CraftPlot", "_dev")
+            };
+
+            for (String worldName : worldNames) {
+                World world = Bukkit.getWorld(worldName);
+                if (world != null) {
+                    if (worldName.equals(plotName()) || worldName.equals(plotName().replace("_CraftPlot", "_dev"))) {
+                        for (Player player : online()) {
+                            player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+                            User.asUser(player).sendMessage("info.plot-offline", true, "");
+                            User.asUser(player).clear();
+                        }
+                    }
+
+
+                    needSave = worldName.endsWith("_dev") || needSave;
+                    Bukkit.unloadWorld(world, needSave);
+
+                    if (worldName.equals(plotName())) {
+                        this.world = null;
+                    }
+                }
+            }
+
+            if (!onlyWorld) {
+                saveUniquePlayers();
+                plots.remove(plotName());
+            }
+        }
+    }
+
+    public boolean plotInfoUpdate() {
         DatabaseUtil.updateValue("plots", "icon", icon.toString(), "plot_name", plotName());
         DatabaseUtil.updateValue("plots", "icon_name", iconName, "plot_name", plotName());
         DatabaseUtil.updateValue("plots", "icon_lore", DatabaseUtil.stringsToJson(iconLore), "plot_name", plotName());
         DatabaseUtil.updateValue("plots", "cost", cost, "plot_name", plotName());
         DatabaseUtil.updateValue("plots", "openedState", isOpened, "plot_name", plotName());
         DatabaseUtil.updateValue("plots", "custom_id", customId(), "plot_name", plotName());
-
-        File file = new File(Bukkit.getWorldContainer() + File.separator + plotName() + File.separator + "config.yml");
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-
-        config.set("allowedDevs", allowedDevs);
-        config.set("allowedBuilders", allowedBuilders);
-        config.set("paidPlayers", paidPlayers);
-
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String[] worldNames = {
-                plotName(),
-                plotName().replace("_CraftPlot", "_dev")
-        };
-
-        for (String worldName : worldNames) {
-            World world = Bukkit.getWorld(worldName);
-            if (world != null) {
-                if (worldName.equals(plotName()) || worldName.equals(plotName().replace("_CraftPlot", "_dev"))) {
-                    for (Player player : online()) {
-                        player.teleport(Bukkit.getWorld("world").getSpawnLocation());
-                        User.asUser(player).sendMessage("info.plot-offline", true, "");
-                        User.asUser(player).clear();
-                    }
-                }
-
-
-                needSave = worldName.endsWith("_dev") || needSave;
-                Bukkit.unloadWorld(world, needSave);
-
-                if (worldName.equals(plotName())) {
-                    this.world = null;
-                }
-            }
-        }
-
-        if (!onlyWorld) {
-            saveUniquePlayers();
-            plots.remove(plotName());
-        }
+        return true;
     }
-
 
     public List<Player> online() {
         List<Player> players = new LinkedList<>();

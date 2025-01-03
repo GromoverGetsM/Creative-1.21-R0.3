@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.user.User;
+import ru.rstudios.creative1.utils.AsyncScheduler;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 
 import java.io.File;
@@ -23,13 +24,16 @@ public class PlotManager implements Listener {
     public static Map<User, String> awaitTeleport = new ConcurrentHashMap<>();
 
     public static void loadPlots() {
-        for (File file : Bukkit.getWorldContainer().listFiles()) {
-            if (file.isDirectory() && file.getName().endsWith("_CraftPlot")) {
-                String owner = (String) DatabaseUtil.getValue("plots", "owner_name", "plot_name", file.getName());
-
-                new Plot(owner).init(file.getName(), false);
+        AsyncScheduler.run(() -> {
+            for (File file : Bukkit.getWorldContainer().listFiles()) {
+                if (file.isDirectory() && file.getName().endsWith("_CraftPlot")) {
+                    String owner = (String) DatabaseUtil.getValue("plots", "owner_name", "plot_name", file.getName());
+                    Bukkit.getScheduler().runTask(plugin,
+                                    () -> new Plot(owner)
+                                    .init(file.getName(), false));
+                }
             }
-        }
+        });
     }
 
     public static void unloadPlots() {
@@ -62,15 +66,13 @@ public class PlotManager implements Listener {
             p.onPlotLoad();
 
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                Iterator<Map.Entry<User, String>> iterator = awaitTeleport.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Map.Entry<User, String> entry = iterator.next();
+                for (Map.Entry<User, String> entry : awaitTeleport.entrySet()) {
                     User user = entry.getKey();
                     String world = entry.getValue();
 
                     if (name.equalsIgnoreCase(world)) {
                         p.teleportToPlot(user);
-                        
+
                     }
                 }
             }, 20L);

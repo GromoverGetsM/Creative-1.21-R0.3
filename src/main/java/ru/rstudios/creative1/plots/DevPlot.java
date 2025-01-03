@@ -2,6 +2,8 @@ package ru.rstudios.creative1.plots;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import io.papermc.lib.PaperLib;
+import lombok.SneakyThrows;
 import org.bukkit.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -31,16 +33,12 @@ public class DevPlot {
         this.linked = plot;
     }
 
+    @SneakyThrows
     public void create() {
         File template = new File(plugin.getDataFolder() + File.separator + "templates" + File.separator + "dev" + File.separator);
         File dev = new File(Bukkit.getWorldContainer() + File.separator + linked.plotName().replace("_CraftPlot", "_dev"));
         FileUtil.copyFilesTo(template, dev);
-        try {
-            new File(Bukkit.getWorldContainer() + File.separator + linked.plotName().replace("_CraftPlot", "_dev") + File.separator + "DynamicVariables.yml").createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        new File(Bukkit.getWorldContainer() + File.separator + linked.plotName().replace("_CraftPlot", "_dev") + File.separator + "DynamicVariables.yml").createNewFile();
 
         this.world = Bukkit.createWorld(new WorldCreator(linked.plotName().replace("_CraftPlot", "_dev")));
         this.world.setSpawnLocation(new Location(world, 62, -59, 62));
