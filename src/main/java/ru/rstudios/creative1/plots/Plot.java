@@ -74,6 +74,7 @@ public class Plot {
     private int lastRedstoneOperationsAmount;
 
     public Plot (String owner) {
+        this.handler = new CodeHandler(this);
         this.owner = owner;
     }
 
