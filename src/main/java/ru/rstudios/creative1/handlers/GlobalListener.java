@@ -435,7 +435,7 @@ public class GlobalListener implements Listener {
                     switch (event.getAction()) {
                         case LEFT_CLICK_AIR -> {
                             user.datastore().remove("HandlingPaper");
-                            user.player().teleport(user.getCurrentPlot().dev().world().getSpawnLocation());
+                            user.player().teleport(user.getCurrentPlot().getDev().world().getSpawnLocation());
                         }
 
                         case RIGHT_CLICK_BLOCK, RIGHT_CLICK_AIR -> {

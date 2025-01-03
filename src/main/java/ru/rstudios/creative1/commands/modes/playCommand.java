@@ -21,7 +21,7 @@ public class playCommand implements CommandExecutor {
             if (user.isOnPlot()) {
                 Plot p = user.getCurrentPlot();
 
-                if (p.plotMode == Plot.PlotMode.BUILD && !user.name().equalsIgnoreCase(p.owner()) && !p.allowedBuilders().contains(user.name())) {
+                if (p.plotMode == Plot.PlotMode.BUILD && !user.name().equalsIgnoreCase(p.owner()) && !p.getAllowedBuilders().contains(user.name())) {
                     user.sendMessage("errors.plot-not-in-play-mode", true, "");
                     return true;
                 }

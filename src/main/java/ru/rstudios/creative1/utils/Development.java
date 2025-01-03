@@ -255,8 +255,8 @@ public class Development {
 
         Plot p = PlotManager.plots.get(dev.getName().replace("_dev", "_CraftPlot"));
 
-        if (p != null && dev == p.dev().world()) {
-            while (p.dev().inTerritory(main.getLocation())) {
+        if (p != null && dev == p.getDev().world()) {
+            while (p.getDev().inTerritory(main.getLocation())) {
                 main = main.getRelative(BlockFace.WEST, 2);
 
                 if (main.getType() == Material.PISTON) {

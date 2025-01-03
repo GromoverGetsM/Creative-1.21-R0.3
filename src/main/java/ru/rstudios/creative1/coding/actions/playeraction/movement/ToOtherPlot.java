@@ -27,7 +27,7 @@ public class ToOtherPlot extends Action {
         Plot to = plots.get("world_plot_" + id + "_CraftPlot");
 
         if (to != null) {
-            if (from.owner().equalsIgnoreCase(to.owner()) || to.allowedDevs().contains(from.owner())) {
+            if (from.owner().equalsIgnoreCase(to.owner()) || to.getAllowedDevs().contains(from.owner())) {
                 for (Entity e : selection) {
                     if (!Development.checkPlot(e, event.getPlot())) {
 

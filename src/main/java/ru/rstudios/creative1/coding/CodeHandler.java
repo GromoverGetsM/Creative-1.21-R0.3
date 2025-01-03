@@ -51,7 +51,7 @@ public class CodeHandler {
     }
 
     public void parseCodeBlocks() {
-        Location startBlock = new Location(plot.dev().world(), 60, -59, 60);
+        Location startBlock = new Location(plot.getDev().world(), 60, -59, 60);
         if (!this.starters.isEmpty()) this.starters.clear();
         List<Starter> starters = new LinkedList<>();
 
