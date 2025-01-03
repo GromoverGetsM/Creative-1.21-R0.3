@@ -9,63 +9,40 @@ import org.bukkit.persistence.PersistentDataType;
 import ru.rstudios.creative1.coding.eventvalues.Value;
 import ru.rstudios.creative1.coding.eventvalues.ValueType;
 import ru.rstudios.creative1.menu.ProtectedMenu;
+import ru.rstudios.creative1.menu.ProtectedMultipages;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class ValuesMenu extends ProtectedMenu {
-
-    protected boolean isCategorySelected = false;
-    protected Value.Category selectedCategory = null;
-
     public ValuesMenu(User user) {
         super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.tech.values", false, ""), (byte) 1);
     }
 
     @Override
     public void fillItems(User user) {
-        if (isCategorySelected) fillItemsPage(user);
-        else fillCategoryPage(user);
+        List<Value.Category> types = new LinkedList<>(ValueType.getCategories());
+
+        for (int i = 0; i < Math.min(9, types.size()); i++) {
+            setItem((byte) i, types.get(i).getIcon(user));
+        }
     }
 
     @Override
     public void onClick(InventoryClickEvent event) {
         User user = User.asUser(event.getWhoClicked());
-        event.setCancelled(true);
 
         if (event.getCurrentItem() != null) {
-            if (selectedCategory == null) {
-                selectedCategory = Value.Category.getByMaterial(event.getCurrentItem().getType());
-                isCategorySelected = true;
-                this.items.clear();
-                this.setRows((byte) 6);
-                user.player().closeInventory();
-                open(user);
-            } else {
-                ValueType type = ValueType.getByMaterial(event.getCurrentItem().getType());
+            event.setCancelled(true);
+            Value.Category category = Value.Category.getByMaterial(event.getCurrentItem().getType());
 
-                if (type != null) {
-                    user.player().closeInventory();
-
-                    ItemStack toUpdate = user.player().getInventory().getItemInMainHand();
-                    ItemMeta meta = toUpdate.getItemMeta();
-
-                    if (meta != null) {
-                        meta.setDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
-                        NamespacedKey valueType = new NamespacedKey(plugin, "valueType");
-                        meta.getPersistentDataContainer().set(new NamespacedKey(plugin, "variable"), PersistentDataType.BOOLEAN, true);
-                        meta.getPersistentDataContainer().set(valueType, PersistentDataType.STRING, type.name().toUpperCase());
-
-                        toUpdate.setItemMeta(meta);
-                    }
-
-                    user.player().setItemInHand(toUpdate);
-                }
+            if (category != null) {
+                ValuesMenu.Values menu = new Values(user, category);
+                menu.open(user);
             }
         }
     }
@@ -75,30 +52,55 @@ public class ValuesMenu extends ProtectedMenu {
 
     }
 
-    private void fillCategoryPage (User user) {
-        List<Value.Category> types = new LinkedList<>(ValueType.getCategories());
+    static class Values extends ProtectedMultipages {
 
-        for (int i = 0; i < Math.min(9, types.size()); i++) {
-            setItem((byte) i, types.get(i).getIcon(user));
+        private final Value.Category category;
+
+        public Values(User user, Value.Category category) {
+            super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.tech.values", false, ""), user);
+            this.category = category;
         }
-    }
 
-    private void fillItemsPage (User user) {
-        List<ValueType> types = ValueType.getByCategory(selectedCategory);
-        List<Byte> slots = new LinkedList<>();
-        addRange(slots, (byte) 10, (byte) 16);
-        addRange(slots, (byte) 19, (byte) 25);
-        addRange(slots, (byte) 28, (byte) 34);
-        addRange(slots, (byte) 37, (byte) 43);
+        @Override
+        public List<ItemStack> getMenuElements() {
+            List<ValueType> types = ValueType.getByCategory(category);
 
-        for (int i = 0; i < Math.min(types.size(), slots.size()); i++) {
-            setItem(slots.get(i), types.get(i).getIcon(user));
+            return types.stream()
+                    .map(type -> type.getIcon(user))
+                    .toList();
         }
-    }
 
-    protected void addRange(List<Byte> list, byte start, byte end) {
-        for (byte i = start; i <= end; i++) {
-            list.add(i);
+        @Override
+        public void onMenuElementClick(InventoryClickEvent event) {
+            ValueType type = ValueType.getByMaterial(event.getCurrentItem().getType());
+
+            if (type != null) {
+                user.player().closeInventory();
+
+                ItemStack toUpdate = user.player().getInventory().getItemInMainHand();
+                ItemMeta meta = toUpdate.getItemMeta();
+
+                if (meta != null) {
+                    meta.setDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+                    NamespacedKey valueType = new NamespacedKey(plugin, "valueType");
+                    meta.getPersistentDataContainer().set(new NamespacedKey(plugin, "variable"), PersistentDataType.BOOLEAN, true);
+                    meta.getPersistentDataContainer().set(valueType, PersistentDataType.STRING, type.name().toUpperCase());
+
+                    toUpdate.setItemMeta(meta);
+                }
+
+                user.player().setItemInHand(toUpdate);
+            }
+        }
+
+        @Override
+        public void fillOther() {
+
+        }
+
+        @Override
+        public void onOpen(InventoryOpenEvent event) {
+
         }
     }
 }

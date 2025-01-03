@@ -260,6 +260,32 @@ coding:
           - "&c> &7Emptied bucket"
           - "&c> &7..."
 
+      entity_helmet:
+        name: "&eEntity Helmet"
+        lore:
+          - "&7Returns the helmet worn by the entity"
+      entity_chestplate:
+        name: "&eEntity Chestplate"
+        lore:
+          - "&7Returns the chestplate worn by the entity"
+      entity_leggings:
+        name: "&eEntity Leggings"
+        lore:
+          - "&7Returns the leggings worn by the entity"
+      entity_boots:
+        name: "&eEntity Boots"
+        lore:
+          - "&7Returns the boots worn by the entity"
+      entity_main_item:
+        name: "&eEntity Main Hand Item"
+        lore:
+          - "&7Returns the item held by the entity"
+          - "&7in the main hand"
+      entity_off_item:
+        name: "&eEntity Off-Hand Item"
+        lore:
+          - "&7Returns the item held by the entity"
+          - "&7in the off-hand"
       entity_health:
         name: "&eCurrent health"
         lore:
@@ -280,6 +306,19 @@ coding:
         name: "&eName of Open Inventory"
         lore:
           - "&7Returns the title of the opened inventory"
+      entity_gamemode:
+        name: "&eGet Player's Game Mode"
+        lore:
+          - "&7Returns the game mode the player is in"
+          - "&7in the format SURVIVAL, CREATIVE"
+          - "&7"
+          - "&eOnly for players"
+      entity_explvl:
+        name: "&eGet Player's Experience Level"
+        lore:
+          - "&7Returns the current experience level of the player"
+          - "&7"
+          - "&eOnly for players"
 
       current_actions_counter:
         name: "&eRunning actions count"
@@ -295,6 +334,18 @@ coding:
         lore:
           - "&7Returns the number of players in the game world"
           - "&7Excludes players in the developer world"
+      plot_likes:
+        name: "&eWorld's Like Count"
+        lore:
+          - "&7Returns the number of likes the world has received"
+      plot_owner:
+        name: "&ePlot Owner"
+        lore:
+          - "&7Returns the name of the plot owner"
+      plot_unique_visitors:
+        name: "&eUnique Visitors Count"
+        lore:
+          - "&7Returns the number of unique visitors to the world"
 
 
   events:

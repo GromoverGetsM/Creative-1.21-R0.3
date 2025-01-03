@@ -9,6 +9,7 @@ import ru.rstudios.creative1.coding.eventvalues.specific.event.*;
 import ru.rstudios.creative1.coding.eventvalues.specific.world.*;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
+import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.util.*;
 import java.util.function.Function;
@@ -40,7 +41,6 @@ public enum ValueType {
     CURRENT_ACTIONS_COUNTER(Value.Category.WORLD, Material.SLIME_BALL, CurrentActionsCounter::new),
     PLOT_ID(Value.Category.WORLD, Material.COMPARATOR, PlotId::new),
     PLOT_LIKES(Value.Category.WORLD, Material.EMERALD, PlotLikes::new),
-    PlOT_NAME(Value.Category.WORLD, Material.BOOK, PlotName::new),
     PLOT_ONLINE(Value.Category.WORLD, Material.PLAYER_HEAD, PlotOnline::new),
     PLOT_OWNER(Value.Category.WORLD, Material.COAL, PlotOwner::new),
     PLOT_UNIQUE_VISITORS(Value.Category.WORLD, Material.LEATHER_BOOTS, PlotUniqueVisitors::new);
@@ -82,7 +82,7 @@ public enum ValueType {
             icon.setItemMeta(meta);
         }
 
-        return icon;
+        return ItemUtil.clearItemFlags(icon);
     }
 
     public static @Nullable ValueType byName (String name) {

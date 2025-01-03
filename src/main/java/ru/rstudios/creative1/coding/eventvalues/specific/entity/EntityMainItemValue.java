@@ -12,8 +12,8 @@ public class EntityMainItemValue extends ItemStackValue {
 
     @Override
     public ItemStack get(GameEvent event, Entity entity) {
-        if (entity instanceof Player player) {
-            return player.getInventory().getItemInMainHand();
+        if (entity instanceof LivingEntity living) {
+            return living.getEquipment() == null ? new ItemStack(Material.AIR) : living.getEquipment().getItemInMainHand();
         }
         return new ItemStack(Material.AIR);
     }
