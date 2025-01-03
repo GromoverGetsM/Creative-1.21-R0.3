@@ -52,6 +52,7 @@ import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
+import ru.rstudios.creative1.utils.AsyncScheduler;
 import ru.rstudios.creative1.utils.ChestMenuHook;
 import ru.rstudios.creative1.utils.DatabaseUtil;
 import ru.rstudios.creative1.utils.Development;
@@ -145,10 +146,9 @@ public class GlobalListener implements Listener {
                 int targetY = -59;
 
                 World world = player.getWorld();
+                List<Block> visibleSigns = new ArrayList<>();
 
-                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                    List<Block> visibleSigns = new ArrayList<>();
-
+                AsyncScheduler.run(() -> {
                     int minX = eyeLocation.getBlockX() - viewDistance;
                     int maxX = eyeLocation.getBlockX() + viewDistance;
                     int minZ = eyeLocation.getBlockZ() - viewDistance;
@@ -165,13 +165,10 @@ public class GlobalListener implements Listener {
                             }
                         }
                     }
-
-                    Bukkit.getScheduler().runTask(plugin, () -> {
-                        for (Block signBlock : visibleSigns) {
-                            user.sendTranslatedSign(signBlock.getLocation());
-                        }
-                    });
                 });
+
+                visibleSigns.forEach(b -> user.sendTranslatedSign(b.getLocation()));
+
                 user.datastore().put("lastSignTranslate", System.currentTimeMillis());
             }
         }

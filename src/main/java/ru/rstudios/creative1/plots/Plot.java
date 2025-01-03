@@ -1,5 +1,7 @@
 package ru.rstudios.creative1.plots;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -16,26 +18,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 import ru.rstudios.creative1.coding.CodeHandler;
 import ru.rstudios.creative1.coding.actions.Action;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
 import ru.rstudios.creative1.coding.starters.playerevent.PlayerJoin;
 import ru.rstudios.creative1.coding.starters.playerevent.PlayerQuit;
-import ru.rstudios.creative1.coding.supervariables.DynamicVariable;
 import ru.rstudios.creative1.handlers.GlobalListener;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.DatabaseUtil;
-import ru.rstudios.creative1.utils.Development;
 import ru.rstudios.creative1.utils.FileUtil;
 import ru.rstudios.creative1.utils.WorldUtil;
 import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 import static ru.rstudios.creative1.Creative_1.plugin;
 import static ru.rstudios.creative1.plots.PlotManager.awaitTeleport;
@@ -53,14 +50,29 @@ public class Plot {
     public World world;
     public long id;
     public String customId;
+    @Setter
     public Material icon;
+    @Setter
     public String iconName;
+    @Setter
     public List<String> iconLore;
+    @Getter
+    @Setter
     public List<String> allowedBuilders;
+    @Getter
+    @Setter
     public List<String> allowedDevs;
+    @Getter
+    @Setter
     public Map<String, Object> flags;
+    @Getter
+    @Setter
     public List<String> paidPlayers;
+    @Getter
+    @Setter
     public long cost;
+    @Getter
+    @Setter
     public DevPlot dev;
     public boolean isOpened;
     public PlotMode plotMode;
@@ -70,7 +82,11 @@ public class Plot {
     public HashMap<String, Boolean> uniquePlayers = new LinkedHashMap<>();
 
     public Set<DynamicLimit> limits = new LinkedHashSet<>();
+    @Getter
+    @Setter
     private int lastModifiedBlocksAmount;
+    @Getter
+    @Setter
     private int lastRedstoneOperationsAmount;
 
     public Plot (String owner) {
@@ -344,13 +360,13 @@ public class Plot {
     }
 
     public void teleportToDev(User user) {
-        boolean canJoin = owner().equalsIgnoreCase(user.name()) || allowedDevs().contains(user.name()) || user.player().hasPermission("creative.admin");
+        boolean canJoin = owner().equalsIgnoreCase(user.name()) || getAllowedDevs().contains(user.name()) || user.player().hasPermission("creative.admin");
 
         if (canJoin) {
             handler.sendStarter(new PlayerQuit.Event(user.player(), this, new PlayerChangedWorldEvent(user.player(), world())), StarterCategory.PLAYER_QUIT);
             user.clear();
             user.player().setGameMode(GameMode.CREATIVE);
-            user.player().teleport(dev().world().getSpawnLocation());
+            user.player().teleport(getDev().world().getSpawnLocation());
 
             dev.buildDevInventory(user);
         }
@@ -443,7 +459,7 @@ public class Plot {
         List<Player> players = new LinkedList<>();
 
         if (world() != null) players.addAll(world().getPlayers());
-        if (dev().world != null) players.addAll(dev().world.getPlayers());
+        if (getDev().world != null) players.addAll(getDev().world.getPlayers());
 
         return players;
     }
@@ -492,69 +508,9 @@ public class Plot {
         return ItemUtil.clearItemFlags(icon);
     }
 
-    public List<String> allowedBuilders() {
-        return allowedBuilders;
-    }
-
-    public List<String> allowedDevs() {
-        return allowedDevs;
-    }
-
-    public Map<String, Object> flags() {
-        return flags;
-    }
-
-    public List<String> paidPlayers() {
-        return paidPlayers;
-    }
-
-    public long cost() {
-        return cost;
-    }
-
-    public DevPlot dev() {
-        return dev;
-    }
-
-    public void setIcon(Material icon) {
-        this.icon = icon;
-    }
-
-    public void setCost(long cost) {
-        this.cost = cost;
-    }
-
-    public void setAllowedBuilders(List<String> allowedBuilders) {
-        this.allowedBuilders = allowedBuilders;
-    }
-
-    public void setAllowedDevs(List<String> allowedDevs) {
-        this.allowedDevs = allowedDevs;
-    }
-
     public void setCustomId(String customId) {
         this.customId = customId;
         DatabaseUtil.updateValue("plots", "custom_id", customId(), "plot_name", plotName());
-    }
-
-    public void setDev(DevPlot dev) {
-        this.dev = dev;
-    }
-
-    public void setFlags(Map<String, Object> flags) {
-        this.flags = flags;
-    }
-
-    public void setIconLore(List<String> iconLore) {
-        this.iconLore = iconLore;
-    }
-
-    public void setIconName(String iconName) {
-        this.iconName = iconName;
-    }
-
-    public void setPaidPlayers(List<String> paidPlayers) {
-        this.paidPlayers = paidPlayers;
     }
 
     /**
@@ -629,22 +585,6 @@ public class Plot {
         newText = newText.replace("io.papermc.paper.", "");
         newText = newText.replace("com.destroystokyo.paper.", "");
         return newText;
-    }
-
-    public void setLastModifiedBlocksAmount(int lastModifiedBlocksAmount) {
-        this.lastModifiedBlocksAmount = lastModifiedBlocksAmount;
-    }
-
-    public void setLastRedstoneOperationsAmount(int lastRedstoneOperationsAmount) {
-        this.lastRedstoneOperationsAmount = lastRedstoneOperationsAmount;
-    }
-
-    public int getLastModifiedBlocksAmount() {
-        return lastModifiedBlocksAmount;
-    }
-
-    public int getLastRedstoneOperationsAmount() {
-        return lastRedstoneOperationsAmount;
     }
 
     public void saveUniquePlayers() {
