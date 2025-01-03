@@ -8,6 +8,7 @@ import ru.rstudios.creative1.handlers.customevents.main.DatabaseUpdateEvent;
 
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,7 @@ public class DatabaseUtil {
 
         String createPlotTable = """
             CREATE TABLE IF NOT EXISTS plots (
-                id INT PRIMARY KEY AUTO_INCREMENT,
+                id INT PRIMARY KEY,
                 plot_name VARCHAR(100) NOT NULL,
                 custom_id VARCHAR(100),
                 owner_name VARCHAR(100) NOT NULL,
@@ -192,6 +193,27 @@ public class DatabaseUtil {
 
         return null;
     }
+
+    public static List<Long> selectAllValues(String tableName, String columnName) {
+        List<Long> values = new ArrayList<>();
+        String selectSQL = String.format("SELECT %s FROM %s", columnName, tableName);
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(selectSQL);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                values.add(rs.getLong(1));
+            }
+
+        } catch (SQLException e) {
+            plugin.getLogger().severe(e.getLocalizedMessage());
+        }
+
+        return values;
+    }
+
+
     public static boolean isValueExist (String tableName, String columnName, String providedValue) {
         String query = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", tableName, columnName);
 
@@ -239,6 +261,18 @@ public class DatabaseUtil {
 
         return null;
     }
+
+    public static ResultSet executeQueryNoAutoClosed (String SQLQuery) {
+        try {
+            Connection conn = getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(SQLQuery);
+            return pstmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     public static void executeUpdate (String SQLQuery) {
         try (Connection conn = getConnection();

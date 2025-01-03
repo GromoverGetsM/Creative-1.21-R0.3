@@ -53,6 +53,8 @@ commands:
     permission: creative.setlimits
   like:
     aliases: дшлу
+  query:
+    permission: creative.query
   chat:
     aliases:
       - cc

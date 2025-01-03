@@ -107,7 +107,8 @@ public class Plot {
         this.plotMode = PlotMode.BUILD;
         this.handler = new CodeHandler(this);
 
-        DatabaseUtil.insertValue("plots", Arrays.asList("plot_name", "owner_name"), Arrays.asList(plotName, owner));
+        DatabaseUtil.insertValue("plots", Arrays.asList("id", "plot_name", "owner_name"),
+                Arrays.asList(id, plotName, owner));
         DatabaseUtil.updateValue("plots", "custom_id", "", "plot_name", plotName);
         DatabaseUtil.updateValue("plots", "icon", icon.toString(), "plot_name", plotName);
         DatabaseUtil.updateValue("plots", "icon_name", iconName, "plot_name", plotName);
@@ -166,11 +167,12 @@ public class Plot {
 
             boolean exists = plot.exists() && plot.isDirectory() && devFile.exists() && devFile.isDirectory() && DatabaseUtil.isValueExist("plots", "plot_name", plotName);
             if (!exists) {
+                plugin.getLogger().warning("Проверка значения в базе данных = " + DatabaseUtil.isValueExist("plots", "plot_name", plotName));
                 plugin.getLogger().warning("Попытка загрузки несуществующего плота " + plotName);
                 return;
             }
 
-            this.id = Integer.parseInt(plotName.replace("world_plot_", "").replace("_CraftPlot", "").trim());
+            this.id = (long) DatabaseUtil.getValue("plots", "id", "plot_name", plotName);
             this.customId = (String) DatabaseUtil.getValue("plots", "custom_id", "plot_name", plotName);
             this.icon = Material.valueOf((String) DatabaseUtil.getValue("plots", "icon", "plot_name", plotName));
             this.iconName = (String) DatabaseUtil.getValue("plots", "icon_name", "plot_name", plotName);
@@ -372,6 +374,7 @@ public class Plot {
 
     public void delete() {
         unload(false, false);
+        plugin.getLogger().warning("Удаляем плот id=" + id() + " (" + plotName() + ")");
         DatabaseUtil.executeUpdate("DELETE FROM plots WHERE id = " + id());
 
         FileUtil.deleteDirectory(new File(Bukkit.getWorldContainer(), plotName()));
@@ -410,7 +413,7 @@ public class Plot {
         for (String worldName : worldNames) {
             World world = Bukkit.getWorld(worldName);
             if (world != null) {
-                if (worldName.equals(plotName())) {
+                if (worldName.equals(plotName()) || worldName.equals(plotName().replace("_CraftPlot", "_dev"))) {
                     for (Player player : online()) {
                         player.teleport(Bukkit.getWorld("world").getSpawnLocation());
                         User.asUser(player).sendMessage("info.plot-offline", true, "");

@@ -2,17 +2,23 @@ package ru.rstudios.creative1.utils;
 
 import org.bukkit.GameRule;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class WorldUtil {
 
     public static long getLastWorldId() {
-        Object result = DatabaseUtil.selectValue("plots", "MAX(id) as max_id");
+        List<Long> ids = DatabaseUtil.selectAllValues("plots", "id");
 
-        if (result != null) {
-            return ((Number) result).longValue();
+        Collections.sort(ids);
+
+        for (long i = 0; i <= ids.size(); i++) {
+            if (!ids.contains(i)) {
+                return i;
+            }
         }
 
-        return 1;
+        return ids.size();
     }
 }
