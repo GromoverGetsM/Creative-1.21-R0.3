@@ -232,10 +232,10 @@ public class Plot {
         creator.generateStructures(generateStructures);
 
         this.world = creator.createWorld();
+        applyGameRules();
         if (genOnCreate && generator.equalsIgnoreCase("void")) {
             Development.setBlocks(world, world.getSpawnLocation().add(1, -1, 1), world.getSpawnLocation().add(-1, -1, -1), Material.STONE);
         }
-        applyGameRules();
         LimitManager.createIfNotExist(this);
         this.limits = LimitManager.loadLimits(this);
 
