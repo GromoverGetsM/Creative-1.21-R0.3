@@ -1,5 +1,6 @@
 package ru.rstudios.creative1.utils;
 
+import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,19 +29,16 @@ public class FileUtil {
         return YamlConfiguration.loadConfiguration(file);
     }
 
+    @SneakyThrows
     public static void save (FileConfiguration fc, File f) {
-        try {
-            fc.save(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        fc.save(f);
     }
 
     public static boolean moveFilesTo(File fromFolder, File destinationFolder) {
         File[] files = fromFolder.listFiles();
         boolean success = true;
 
-        if (files != null && files.length != 0) {
+        if (files != null) {
             for (File f : files) {
                 File dest = new File(destinationFolder + File.separator + f.getName());
 
@@ -88,7 +86,7 @@ public class FileUtil {
     public static void copyFilesTo (File fromFolder, File destinationFolder) {
         File[] files = fromFolder.listFiles();
 
-        if (files != null && files.length != 0) {
+        if (files != null) {
             for (File f : files) {
                 if (f.isDirectory()) {
                     try {
