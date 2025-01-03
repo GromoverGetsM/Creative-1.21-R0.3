@@ -31,6 +31,7 @@ public enum ValueType {
     ENTITY_OPENED_INV_TITLE(Value.Category.ENTITY, Material.PAINTING, EntityOpenedInvTitleValue::new),
     ENTITY_GAMEMODE(Value.Category.ENTITY, Material.DIAMOND, EntityGamemodeValue::new),
     ENTITY_EXPLVL(Value.Category.ENTITY, Material.SLIME_BALL, EntityExpLvlValue::new),
+    ENTITY_LASTDAMAGE(Value.Category.ENTITY, Material.REDSTONE, EntityLastDamageValue::new),
 
     PLAYER_MESSAGE(Value.Category.EVENT, Material.WRITABLE_BOOK, EventMessage::new),
     EVENT_BLOCK(Value.Category.EVENT, Material.GRASS_BLOCK, EventBlockValue::new),

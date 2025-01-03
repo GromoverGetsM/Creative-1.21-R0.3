@@ -2,6 +2,7 @@ name: Creative-1.21-R0.3
 version: '${project.version}'
 main: ru.rstudios.creative1.Creative_1
 api-version: '1.21'
+authors: [ GromoverGets, tea_with_sugar ]
 depend:
   - LuckPerms
   - WorldEdit
