@@ -1,0 +1,21 @@
+package ru.rstudios.creative.utils;
+
+import java.util.Collections;
+import java.util.List;
+
+public class WorldUtil {
+
+    public static long getLastWorldId() {
+        List<Long> ids = DatabaseUtil.selectAllValues("plots", "id");
+
+        Collections.sort(ids);
+
+        for (long i = 0; i <= ids.size(); i++) {
+            if (!ids.contains(i)) {
+                return i;
+            }
+        }
+
+        return ids.size();
+    }
+}

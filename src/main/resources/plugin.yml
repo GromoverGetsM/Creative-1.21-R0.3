@@ -1,6 +1,6 @@
 name: Creative-1.21-R0.3
 version: '${project.version}'
-main: ru.rstudios.creative1.Creative_1
+main: ru.rstudios.creative.CreativePlugin
 api-version: '1.21'
 depend:
   - LuckPerms
