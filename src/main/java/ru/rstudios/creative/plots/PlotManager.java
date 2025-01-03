@@ -1,5 +1,6 @@
 package ru.rstudios.creative.plots;
 
+import kireiko.dev.millennium.core.MillenniumScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
@@ -7,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative.user.User;
-import ru.rstudios.creative.utils.AsyncScheduler;
 import ru.rstudios.creative.utils.DatabaseUtil;
 
 import java.io.File;
@@ -23,7 +23,7 @@ public class PlotManager implements Listener {
     public static Map<User, String> awaitTeleport = new ConcurrentHashMap<>();
 
     public static void loadPlots() {
-        AsyncScheduler.run(() -> {
+        MillenniumScheduler.run(() -> {
             for (File file : Bukkit.getWorldContainer().listFiles()) {
                 if (file.isDirectory() && file.getName().endsWith("_CraftPlot")) {
                     String owner = (String) DatabaseUtil.getValue("plots", "owner_name", "plot_name", file.getName());

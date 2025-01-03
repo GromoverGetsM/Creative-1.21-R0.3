@@ -1,5 +1,6 @@
 package ru.rstudios.creative.plots;
 
+import kireiko.dev.millennium.core.MillenniumScheduler;
 import lombok.Data;
 import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
@@ -119,7 +120,7 @@ public class Plot {
         dev.load();
 
         File file = new File(Bukkit.getWorldContainer() + File.separator + plotName + File.separator + "config.yml");
-        FileConfiguration config = AsyncScheduler.run(() -> createFile(file)).get();
+        FileConfiguration config = MillenniumScheduler.run(() -> createFile(file)).get();
         if (config != null) {
             this.flags = config.getConfigurationSection("gameRules").getValues(false);
 
@@ -378,7 +379,7 @@ public class Plot {
 
     public void delete() {
         unload(false, false);
-        AsyncScheduler.run(() -> {
+        MillenniumScheduler.run(() -> {
             plugin.getLogger().warning("Удаляем плот id=" + id() + " (" + plotName() + ")");
             DatabaseUtil.executeUpdate("DELETE FROM plots WHERE id = " + id());
 
@@ -394,7 +395,7 @@ public class Plot {
             handler.saveDynamicVars();
         }
 
-        if (AsyncScheduler.run(this::plotInfoUpdate).get()) {
+        if (MillenniumScheduler.run(this::plotInfoUpdate).get()) {
             File file = new File(Bukkit.getWorldContainer() + File.separator + plotName() + File.separator + "config.yml");
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 

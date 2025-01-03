@@ -3,6 +3,7 @@ package ru.rstudios.creative.handlers;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import com.sk89q.worldedit.event.extent.EditSessionEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import kireiko.dev.millennium.core.MillenniumScheduler;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
@@ -50,7 +51,6 @@ import ru.rstudios.creative.plots.Plot;
 import ru.rstudios.creative.plots.PlotManager;
 import ru.rstudios.creative.user.LocaleManages;
 import ru.rstudios.creative.user.User;
-import ru.rstudios.creative.utils.AsyncScheduler;
 import ru.rstudios.creative.utils.ChestMenuHook;
 import ru.rstudios.creative.utils.DatabaseUtil;
 import ru.rstudios.creative.utils.Development;
@@ -146,7 +146,7 @@ public class GlobalListener implements Listener {
                 World world = player.getWorld();
                 List<Block> visibleSigns = new ArrayList<>();
 
-                AsyncScheduler.run(() -> {
+                MillenniumScheduler.run(() -> {
                     int minX = eyeLocation.getBlockX() - viewDistance;
                     int maxX = eyeLocation.getBlockX() + viewDistance;
                     int minZ = eyeLocation.getBlockZ() - viewDistance;
