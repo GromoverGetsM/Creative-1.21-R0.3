@@ -74,7 +74,6 @@ public class Plot {
     private int lastRedstoneOperationsAmount;
 
     public Plot (String owner) {
-        this.handler = new CodeHandler(this);
         this.owner = owner;
     }
 
@@ -172,7 +171,7 @@ public class Plot {
                 return;
             }
 
-            this.id = (long) DatabaseUtil.getValue("plots", "id", "plot_name", plotName);
+            this.id = ((Integer) DatabaseUtil.getValue("plots", "id", "plot_name", plotName)).longValue();
             this.customId = (String) DatabaseUtil.getValue("plots", "custom_id", "plot_name", plotName);
             this.icon = Material.valueOf((String) DatabaseUtil.getValue("plots", "icon", "plot_name", plotName));
             this.iconName = (String) DatabaseUtil.getValue("plots", "icon_name", "plot_name", plotName);
@@ -211,8 +210,8 @@ public class Plot {
             }
         } catch (Exception e) {
             isCorrupted = true;
+            plugin.getLogger().warning("Плот " + id + " помечен corrupted - проблемы во время запуска (" + e.getMessage() + ")");
             unload(true, true);
-            plugin.getLogger().warning("Плот " + id + " помечен corrupted - проблемы во время запуска");
         }
     }
 
@@ -382,8 +381,10 @@ public class Plot {
     }
 
     public void unload(boolean onlyWorld, boolean needSave) {
-        handler.stopCycles();
-        handler.saveDynamicVars();
+        if (handler != null) {
+            handler.stopCycles();
+            handler.saveDynamicVars();
+        }
 
         DatabaseUtil.updateValue("plots", "icon", icon.toString(), "plot_name", plotName());
         DatabaseUtil.updateValue("plots", "icon_name", iconName, "plot_name", plotName());
