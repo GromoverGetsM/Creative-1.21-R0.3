@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public class PlotManager implements Listener {
 

@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import ru.rstudios.creative1.coding.MenuCategory;
 import ru.rstudios.creative1.coding.starters.StarterCategory;
-import ru.rstudios.creative1.menu.ProtectedMultipages;
 import ru.rstudios.creative1.user.LocaleManages;
 import ru.rstudios.creative1.user.User;
 import ru.rstudios.creative1.utils.Development;
@@ -18,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public class PlayerEvent extends CodingCategoriesMenu {
     public PlayerEvent(User user) {

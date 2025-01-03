@@ -14,12 +14,11 @@ import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.user.User;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 import static ru.rstudios.creative1.user.LocaleManages.*;
 
 public class MyWorlds extends ProtectedMultipages {

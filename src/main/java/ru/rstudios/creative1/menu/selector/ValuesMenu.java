@@ -16,7 +16,7 @@ import ru.rstudios.creative1.user.User;
 import java.util.LinkedList;
 import java.util.List;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public class ValuesMenu extends ProtectedMenu {
     public ValuesMenu(User user) {

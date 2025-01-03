@@ -14,12 +14,11 @@ import ru.rstudios.creative1.coding.events.GameEvent;
 import ru.rstudios.creative1.menu.SwitchItem;
 import ru.rstudios.creative1.utils.Development;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public class SendAdvancementToast extends Action {
     @Override

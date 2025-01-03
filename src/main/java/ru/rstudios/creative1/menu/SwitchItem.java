@@ -15,7 +15,7 @@ import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.util.*;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public class SwitchItem {
 

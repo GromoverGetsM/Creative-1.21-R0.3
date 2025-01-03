@@ -1,6 +1,5 @@
 package ru.rstudios.creative1.coding;
 
-import com.google.common.collect.Lists;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -32,7 +31,7 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public class CodeHandler {
 

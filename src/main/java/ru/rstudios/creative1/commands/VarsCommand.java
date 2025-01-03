@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.rstudios.creative1.menu.selector.VariablesSelector;
 import ru.rstudios.creative1.user.User;
 
-public class varsCommand implements CommandExecutor {
+public class VarsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {

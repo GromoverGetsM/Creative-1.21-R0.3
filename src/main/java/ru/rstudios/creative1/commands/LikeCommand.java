@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.user.User;
 
-public class likeCommand implements CommandExecutor {
+public class LikeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {

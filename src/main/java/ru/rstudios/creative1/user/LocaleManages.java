@@ -11,7 +11,7 @@ import ru.rstudios.creative1.utils.DatabaseUtil;
 import java.io.File;
 import java.util.*;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public class LocaleManages {
 

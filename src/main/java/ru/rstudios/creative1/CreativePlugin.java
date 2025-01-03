@@ -3,7 +3,6 @@ package ru.rstudios.creative1;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.event.extent.EditSessionEvent;
 import com.sk89q.worldedit.util.eventbus.Subscribe;
-import lombok.Getter;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.rstudios.creative1.commands.*;
@@ -22,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-public final class Creative_1 extends JavaPlugin {
+public final class CreativePlugin extends JavaPlugin {
 
     public static JavaPlugin plugin;
     public static LuckPerms luckPerms;
@@ -67,22 +66,22 @@ public final class Creative_1 extends JavaPlugin {
 
         LocaleManages.loadLocales();
 
-        Objects.requireNonNull(getCommand("games")).setExecutor(new gamesCommand());
+        Objects.requireNonNull(getCommand("games")).setExecutor(new CamesCommand());
         Objects.requireNonNull(getCommand("world")).setExecutor(new WorldCommand());
         Objects.requireNonNull(getCommand("world")).setTabCompleter(new WorldCommand());
-        Objects.requireNonNull(getCommand("plot")).setExecutor(new plotCommand());
-        Objects.requireNonNull(getCommand("join")).setExecutor(new joinCommand());
-        Objects.requireNonNull(getCommand("locale")).setExecutor(new localeCommand());
+        Objects.requireNonNull(getCommand("plot")).setExecutor(new PlotCommand());
+        Objects.requireNonNull(getCommand("join")).setExecutor(new JoinCommand());
+        Objects.requireNonNull(getCommand("locale")).setExecutor(new LocaleCommand());
         Objects.requireNonNull(getCommand("play")).setExecutor(new playCommand());
         Objects.requireNonNull(getCommand("build")).setExecutor(new buildCommand());
         Objects.requireNonNull(getCommand("dev")).setExecutor(new devCommand());
-        Objects.requireNonNull(getCommand("troubleshooter")).setExecutor(new troubleshooterCommand());
-        Objects.requireNonNull(getCommand("vars")).setExecutor(new varsCommand());
-        Objects.requireNonNull(getCommand("limit")).setExecutor(new limitsCommand());
-        Objects.requireNonNull(getCommand("limit")).setTabCompleter(new limitsCommand());
-        Objects.requireNonNull(getCommand("like")).setExecutor(new likeCommand());
-        Objects.requireNonNull(getCommand("chat")).setExecutor(new chatCommand());
-        Objects.requireNonNull(getCommand("query")).setExecutor(new queryCommand());
+        Objects.requireNonNull(getCommand("troubleshooter")).setExecutor(new TroubleshooterCommand());
+        Objects.requireNonNull(getCommand("vars")).setExecutor(new VarsCommand());
+        Objects.requireNonNull(getCommand("limit")).setExecutor(new LimitsCommand());
+        Objects.requireNonNull(getCommand("limit")).setTabCompleter(new LimitsCommand());
+        Objects.requireNonNull(getCommand("like")).setExecutor(new LikeCommand());
+        Objects.requireNonNull(getCommand("chat")).setExecutor(new ChatCommand());
+        Objects.requireNonNull(getCommand("query")).setExecutor(new QueryCommand());
     }
 
     @Override

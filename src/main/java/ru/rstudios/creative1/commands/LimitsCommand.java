@@ -1,7 +1,6 @@
 package ru.rstudios.creative1.commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,14 +13,13 @@ import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative1.plots.DynamicLimit;
 import ru.rstudios.creative1.plots.LimitManager;
 import ru.rstudios.creative1.user.User;
-import ru.rstudios.creative1.utils.DatabaseUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
-public class limitsCommand implements CommandExecutor, TabCompleter {
+public class LimitsCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {

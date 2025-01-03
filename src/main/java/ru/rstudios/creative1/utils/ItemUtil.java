@@ -16,7 +16,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public class ItemUtil {
 

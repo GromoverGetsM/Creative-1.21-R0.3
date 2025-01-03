@@ -11,7 +11,7 @@ import ru.rstudios.creative1.coding.events.GameEvent;
 import java.util.LinkedList;
 import java.util.List;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public abstract class Starter {
 

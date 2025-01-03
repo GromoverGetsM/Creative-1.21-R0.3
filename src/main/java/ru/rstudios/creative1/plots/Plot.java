@@ -34,7 +34,7 @@ import ru.rstudios.creative1.utils.ItemUtil;
 import java.io.*;
 import java.util.*;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 import static ru.rstudios.creative1.plots.PlotManager.awaitTeleport;
 import static ru.rstudios.creative1.plots.PlotManager.plots;
 

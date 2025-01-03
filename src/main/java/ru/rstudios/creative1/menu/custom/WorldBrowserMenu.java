@@ -16,7 +16,7 @@ import ru.rstudios.creative1.user.User;
 import java.util.Comparator;
 import java.util.List;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public class WorldBrowserMenu extends ProtectedMultipages {
     public WorldBrowserMenu(User user) {

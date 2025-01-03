@@ -2,17 +2,14 @@ package ru.rstudios.creative1.coding;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import ru.rstudios.creative1.plots.DevPlot;
 import ru.rstudios.creative1.plots.Plot;
 import ru.rstudios.creative1.plots.PlotManager;
-import ru.rstudios.creative1.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public abstract class CreativeRunnable {
 

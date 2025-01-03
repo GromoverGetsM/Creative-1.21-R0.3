@@ -13,7 +13,7 @@ import ru.rstudios.creative1.user.User;
 
 import static ru.rstudios.creative1.plots.PlotManager.plots;
 
-public class joinCommand implements CommandExecutor {
+public class JoinCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {

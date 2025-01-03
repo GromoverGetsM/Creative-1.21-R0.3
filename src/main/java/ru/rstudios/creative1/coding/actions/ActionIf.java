@@ -10,7 +10,7 @@ import ru.rstudios.creative1.coding.starters.Starter;
 
 import java.util.List;
 
-import static ru.rstudios.creative1.Creative_1.plugin;
+import static ru.rstudios.creative1.CreativePlugin.plugin;
 
 public abstract class ActionIf extends ArrayAction {
 
