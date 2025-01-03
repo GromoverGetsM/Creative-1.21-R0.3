@@ -227,8 +227,7 @@ public class Plot {
     @SneakyThrows
     private void generateWorld (String environment, String generator, boolean generateStructures, boolean genOnCreate) {
         WorldCreator creator = new WorldCreator(plotName());
-        if (generator.equalsIgnoreCase("void")) creator.generator(new EmptyChunkGenerator());
-        else creator.type(WorldType.valueOf(generator.toUpperCase(Locale.ROOT)));
+        creator.generator(generator.equalsIgnoreCase("void") ? new EmptyChunkGenerator() : new FlatChunkGenerator());
         creator.environment(World.Environment.valueOf(environment.toUpperCase(Locale.ROOT)));
         creator.generateStructures(generateStructures);
 
