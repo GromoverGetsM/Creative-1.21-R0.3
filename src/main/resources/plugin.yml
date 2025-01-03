@@ -2,6 +2,9 @@ name: Creative-1.21-R0.3
 version: '${project.version}'
 main: ru.rstudios.creative1.Creative_1
 api-version: '1.21'
+depend:
+  - LuckPerms
+  - WorldEdit
 commands:
   games:
     aliases:
@@ -50,3 +53,16 @@ commands:
     permission: creative.setlimits
   like:
     aliases: дшлу
+  chat:
+    aliases:
+      - cc
+      - сс
+      - globalchat
+      - global
+      - пдщифд
+      - пдщифдсрфе
+      - срфе
+      - чат
+      - глобал
+      - creativechat
+      - скуфешмусрфе

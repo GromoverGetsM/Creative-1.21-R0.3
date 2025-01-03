@@ -8,8 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.block.TileState;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -26,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static ru.rstudios.creative1.Creative_1.luckPerms;
 import static ru.rstudios.creative1.Creative_1.plugin;
 
 public class User {
@@ -290,6 +289,13 @@ public class User {
 
     public void destroy() {
         users.remove(this);
+    }
+
+    public String getLuckPermsPrefix() {
+        net.luckperms.api.model.user.User user = luckPerms.getUserManager().getUser(player.getUniqueId());
+        if (user == null) return "";
+
+        return user.getCachedData().getMetaData().getPrefix();
     }
 
     @Override

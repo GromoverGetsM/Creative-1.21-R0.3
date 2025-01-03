@@ -3,12 +3,14 @@ package ru.rstudios.creative1;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.event.extent.EditSessionEvent;
 import com.sk89q.worldedit.util.eventbus.Subscribe;
+import net.luckperms.api.LuckPerms;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.rstudios.creative1.commands.*;
 import ru.rstudios.creative1.commands.modes.buildCommand;
 import ru.rstudios.creative1.commands.modes.devCommand;
 import ru.rstudios.creative1.commands.modes.playCommand;
 import ru.rstudios.creative1.handlers.GlobalListener;
+import ru.rstudios.creative1.handlers.SubListenerEntityDamage;
 import ru.rstudios.creative1.menu.ProtectedManager;
 import ru.rstudios.creative1.plots.PlotManager;
 import ru.rstudios.creative1.user.LocaleManages;
@@ -22,6 +24,7 @@ import java.util.Objects;
 public final class Creative_1 extends JavaPlugin {
 
     public static JavaPlugin plugin;
+    public static LuckPerms luckPerms;
 
     @Override
     public void onEnable() {
@@ -32,6 +35,7 @@ public final class Creative_1 extends JavaPlugin {
         }
 
         plugin = this;
+        luckPerms = getServer().getServicesManager().getRegistration(LuckPerms.class).getProvider();
         DatabaseUtil.createTables();
         PlotManager.loadPlots();
 
@@ -43,6 +47,7 @@ public final class Creative_1 extends JavaPlugin {
         });
 
         getServer().getPluginManager().registerEvents(new GlobalListener(), this);
+        getServer().getPluginManager().registerEvents(new SubListenerEntityDamage(), this);
         getServer().getPluginManager().registerEvents(new ProtectedManager(), this);
         getServer().getPluginManager().registerEvents(new PlotManager(), this);
 
@@ -75,6 +80,7 @@ public final class Creative_1 extends JavaPlugin {
         Objects.requireNonNull(getCommand("limit")).setExecutor(new limitsCommand());
         Objects.requireNonNull(getCommand("limit")).setTabCompleter(new limitsCommand());
         Objects.requireNonNull(getCommand("like")).setExecutor(new likeCommand());
+        Objects.requireNonNull(getCommand("chat")).setExecutor(new chatCommand());
     }
 
     @Override

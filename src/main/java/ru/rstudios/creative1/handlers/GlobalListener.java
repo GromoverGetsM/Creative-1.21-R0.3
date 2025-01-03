@@ -312,7 +312,8 @@ public class GlobalListener implements Listener {
         if (event.isCancelled()) return;
         event.setCancelled(true);
 
-        String formatted = parseColors("&f<%player%> &r" + message).replace("%player%", user.player().getName());
+        String rawMessage = user.getLuckPermsPrefix() + user.name() + "&7: &r" + message;
+        String formatted = parseColors(rawMessage);
 
         if (user.isOnPlot()) {
             if (formatted.startsWith("!")) {
