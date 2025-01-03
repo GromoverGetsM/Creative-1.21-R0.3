@@ -402,6 +402,7 @@ public class Plot {
                     for (Player player : online()) {
                         player.teleport(Bukkit.getWorld("world").getSpawnLocation());
                         User.asUser(player).sendMessage("info.plot-offline", true, "");
+                        User.asUser(player).clear();
                     }
                 }
 
