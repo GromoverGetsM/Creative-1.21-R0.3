@@ -26,8 +26,8 @@ public class SetBorderSize extends Action {
                 return;
             }
 
-            double size = chest.parseNumberPlus(chest.getOriginalContents()[15], 1024, event, entity);
-            if (size > 1024) size = 1024;
+            double size = chest.parseNumberPlus(chest.getOriginalContents()[15], 384, event, entity);
+            if (size > 384) size = 384;
 
             WorldBorder border = event.getPlot().handler.getBorders().get(name);
 

@@ -1219,7 +1219,7 @@ menus:
         lore:
           - "&7Changes the size of the border (distance from one"
           - "&7side of the border to the other in blocks)."
-          - "&7Maximum size: &e1024 blocks."
+          - "&7Maximum size: &e384 blocks."
           - "&7"
           - "&7Arguments (2):"
           - "&7- &bText: &7Border Name &e(1)"
@@ -1704,30 +1704,12 @@ menus:
 
   create-world:
     title: "World Creation"
-    items:
-      environment-parameter:
-        name: "&eEnvironment"
+    templates:
+      void:
+        name: "&eVoid"
         lore:
-          - "&7The game can exist in different"
-          - "&7world types. This affects"
-          - "&7game behavior and biomes in the world"
-        states:
-          normal: "Normal World"
-          nether: "The Nether"
-          the_end: "The End"
-      generation-parameter:
-        name: "&eWorld Type"
-        lore:
-          - "&7Different world types affect"
-          - "&7the generation of the world itself"
-        states:
-          void: "Empty World"
-          flat: "Flat World"
-      create:
-        name: "&eCreate World"
-        lore:
-          - "&7Initiates the creation of a world with"
-          - "&7specified parameters"
+          - "&7Creates an empty world with a platform"
+          - "&7in the center"
 
   my-worlds:
     title: "My worlds"

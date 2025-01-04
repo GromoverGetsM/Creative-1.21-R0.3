@@ -26,7 +26,7 @@ public class SetBorderWarning extends Action {
                 return;
             }
 
-            int warningDistance = chest.parseNumberPlus(chest.getOriginalContents()[15], 1024, event, entity).intValue();
+            int warningDistance = chest.parseNumberPlus(chest.getOriginalContents()[15], 384, event, entity).intValue();
 
             WorldBorder border = event.getPlot().handler.getBorders().get(name);
 

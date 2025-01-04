@@ -3,6 +3,8 @@ package ru.rstudios.creative;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.event.extent.EditSessionEvent;
 import com.sk89q.worldedit.util.eventbus.Subscribe;
+import kireiko.dev.millennium.core.MillenniumScheduler;
+import lombok.SneakyThrows;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.rstudios.creative.commands.*;
@@ -27,6 +29,7 @@ public final class CreativePlugin extends JavaPlugin {
     public static LuckPerms luckPerms;
 
     @Override
+    @SneakyThrows
     public void onEnable() {
         try {
             Class.forName("org.h2.Driver");
@@ -36,6 +39,7 @@ public final class CreativePlugin extends JavaPlugin {
 
         plugin = this;
         luckPerms = getServer().getServicesManager().getRegistration(LuckPerms.class).getProvider();
+        DatabaseUtil.getConnection();
         DatabaseUtil.createTables();
         PlotManager.loadPlots();
 
@@ -52,7 +56,7 @@ public final class CreativePlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlotManager(), this);
 
         try {
-            FileUtil.saveResourceFolder("dev", new File(getDataFolder() + File.separator + "templates" + File.separator + "dev"));
+            FileUtil.saveResourceFolder("templates", new File(getDataFolder() + File.separator + "templates"));
             FileUtil.saveResourceFolder("locale", new File(getDataFolder(), "locale"));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -87,6 +91,6 @@ public final class CreativePlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         PlotManager.unloadPlots();
-        DatabaseUtil.closeConnection();
+        MillenniumScheduler.run(DatabaseUtil::closeConnection);
     }
 }

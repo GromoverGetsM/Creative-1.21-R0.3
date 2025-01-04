@@ -28,7 +28,7 @@ public class CreateWorldBorder extends Action {
             }
 
             WorldBorder border = Bukkit.createWorldBorder();
-            border.setSize(1024);
+            border.setSize(384);
             border.setCenter(new Location(event.getPlot().world(), 0, 0, 0));
 
             event.getPlot().handler.tryAddWorldBorder(borderName.toLowerCase(Locale.ROOT), border);

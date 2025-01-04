@@ -1,18 +1,15 @@
 package ru.rstudios.creative.utils;
 
+import com.fastasyncworldedit.core.Fawe;
 import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
-import com.sk89q.worldedit.world.block.BaseBlock;
-import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockTypes;
+import kireiko.dev.millennium.core.MillenniumScheduler;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -315,7 +312,7 @@ public class Development {
         }
 
         Runnable runnable = () -> {
-            EditSession session = WorldEdit.getInstance().newEditSession(world);
+            EditSession session = Fawe.instance().getWorldEdit().newEditSessionBuilder().fastMode(true).world(world).build();
 
 
             try {
@@ -340,7 +337,7 @@ public class Development {
     }
 
     public static void setBlocks (World world, BlockVector3 pos1, BlockVector3 pos2) {
-        try (EditSession session = WorldEdit.getInstance().newEditSession(world)) {
+        try (EditSession session = Fawe.instance().getWorldEdit().newEditSessionBuilder().fastMode(true).world(world).build()) {
             Region region = new CuboidRegion(pos1, pos2);
             session.setBlocks(region, com.sk89q.worldedit.world.block.BlockTypes.AIR.getDefaultState());
         } catch (MaxChangedBlocksException e) {
@@ -353,12 +350,14 @@ public class Development {
     }
 
     public static void setBlocks(World world, BlockVector3 pos1, BlockVector3 pos2, Material material) {
-        try (EditSession session = WorldEdit.getInstance().newEditSession(world)) {
-            Region region = new CuboidRegion(pos1, pos2);
-            session.setBlocks(region, com.sk89q.worldedit.world.block.BlockTypes.get(material.name().toLowerCase()).getDefaultState());
-        } catch (MaxChangedBlocksException e) {
-            e.printStackTrace();
-        }
+        MillenniumScheduler.run(() -> {
+            try (EditSession session = Fawe.instance().getWorldEdit().newEditSessionBuilder().allowedRegionsEverywhere().checkMemory(true).fastMode(true).world(world).build()) {
+                Region region = new CuboidRegion(pos1, pos2);
+                session.setBlocks(region, com.sk89q.worldedit.world.block.BlockTypes.get(material.name().toLowerCase()).getDefaultState());
+            } catch (MaxChangedBlocksException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**

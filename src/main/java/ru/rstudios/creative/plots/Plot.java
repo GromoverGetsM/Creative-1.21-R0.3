@@ -10,15 +10,12 @@ import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 import ru.rstudios.creative.coding.CodeHandler;
 import ru.rstudios.creative.coding.actions.Action;
 import ru.rstudios.creative.coding.starters.StarterCategory;
@@ -75,7 +72,7 @@ public class Plot {
     }
 
     @SneakyThrows
-    public void create(String environment, String generation, boolean genStructures) {
+    public void create(String template) {
         Player player = Bukkit.getPlayerExact(owner);
 
         if (player != null) {
@@ -112,11 +109,8 @@ public class Plot {
         DatabaseUtil.updateValue("plots", "icon_lore", DatabaseUtil.stringsToJson(iconLore), "plot_name", plotName);
         DatabaseUtil.updateValue("plots", "cost", cost, "plot_name", plotName);
         DatabaseUtil.updateValue("plots", "openedState", isOpened, "plot_name", plotName);
-        DatabaseUtil.updateValue("plots", "environment", environment, "plot_name", plotName);
-        DatabaseUtil.updateValue("plots", "generation", generation, "plot_name", plotName);
-        DatabaseUtil.updateValue("plots", "gen_structures", genStructures, "plot_name", plotName);
 
-        generateWorld(environment, generation, genStructures, true);
+        generateWorld(template, true);
         dev.load();
 
         File file = new File(Bukkit.getWorldContainer() + File.separator + plotName + File.separator + "config.yml");
@@ -226,51 +220,29 @@ public class Plot {
         if (after > 500) plugin.getLogger().warning("Генерация мира слишком долгая (" + after + "/500ms)");
     }
 
-    @SneakyThrows
-    private void generateWorld (String environment, String generator, boolean generateStructures, boolean genOnCreate) {
-        WorldCreator creator = new WorldCreator(plotName());
-        creator.generator(generator.equalsIgnoreCase("void") ? new EmptyChunkGenerator() : new FlatChunkGenerator());
-        creator.environment(World.Environment.valueOf(environment.toUpperCase(Locale.ROOT)));
-        creator.generateStructures(generateStructures);
+    private void generateWorld (String template, boolean callForCreate) {
+        long start = System.currentTimeMillis();
+        if (callForCreate) this.world = WorldUtil.worldFromTemplate(plotName(), template);
+        else this.world = Bukkit.createWorld(new WorldCreator(plotName()));
 
-        this.world = creator.createWorld();
-        applyGameRules();
-        if (genOnCreate && generator.equalsIgnoreCase("void")) {
-            Development.setBlocks(world, world.getSpawnLocation().add(1, -1, 1), world.getSpawnLocation().add(-1, -1, -1), Material.STONE);
+        if (this.world == null) {
+            plugin.getLogger().severe("Ошибка при генерации мира " + plotName() + ", прерывание метода");
+            return;
         }
+
+        applyGameRules();
+        world.getWorldBorder().setSize(384);
+
         LimitManager.createIfNotExist(this);
         this.limits = LimitManager.loadLimits(this);
-
         world.setAutoSave(true);
         world.setKeepSpawnInMemory(false);
-        if (world.getEnvironment() == World.Environment.THE_END) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    for (Entity entity : world.getEntities()) {
-                        if (entity instanceof EnderDragon dragon) {
-                            dragon.setHealth(0);
-                            if (world.getEnderDragonBattle() != null) {
-                                world.getEnderDragonBattle().setPreviouslyKilled(true);
-                                world.getEnderDragonBattle().getBossBar().setVisible(false);
-                            }
-                            cancel();
-                        }
-                    }
-                }
-            }.runTaskTimer(plugin,0L, 10L);
-        }
 
-        world.getWorldBorder().setSize(1024);
-
+        plugin.getLogger().info("Мир " + (callForCreate ? "создан" : "загружен") +  " за " + (System.currentTimeMillis() - start) + "ms");
     }
 
     public void initWorld() {
-        String environment = (String) DatabaseUtil.getValue("plots", "environment", "plot_name", plotName());
-        String generator = (String) DatabaseUtil.getValue("plots", "generation", "plot_name", plotName());
-        boolean genStructures = Boolean.parseBoolean(String.valueOf(DatabaseUtil.getValue("plots", "gen_structures", "plot_name", plotName())));
-
-        generateWorld(environment, generator, genStructures, false);
+        generateWorld("", false);
         dev.load();
     }
 

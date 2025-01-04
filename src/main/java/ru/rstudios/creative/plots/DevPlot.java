@@ -11,6 +11,7 @@ import ru.rstudios.creative.user.User;
 import ru.rstudios.creative.utils.Development;
 import ru.rstudios.creative.utils.FileUtil;
 import ru.rstudios.creative.utils.ItemUtil;
+import ru.rstudios.creative.utils.WorldUtil;
 
 import java.io.File;
 import java.util.Arrays;
@@ -33,13 +34,14 @@ public class DevPlot {
 
     @SneakyThrows
     public void create() {
-        File template = new File(plugin.getDataFolder() + File.separator + "templates" + File.separator + "dev" + File.separator);
-        File dev = new File(Bukkit.getWorldContainer() + File.separator + linked.plotName().replace("_CraftPlot", "_dev"));
-        FileUtil.copyFilesTo(template, dev);
-        new File(Bukkit.getWorldContainer() + File.separator + linked.plotName().replace("_CraftPlot", "_dev") + File.separator + "DynamicVariables.yml").createNewFile();
+        String devWorldName = linked.plotName().replace("_CraftPlot", "_dev");
 
-        this.world = Bukkit.createWorld(new WorldCreator(linked.plotName().replace("_CraftPlot", "_dev")));
+        File template = new File(plugin.getDataFolder() + File.separator + "templates" + File.separator + "dev" + File.separator);
+        File dev = new File(Bukkit.getWorldContainer() + File.separator + devWorldName);
+
+        this.world = WorldUtil.worldFromTemplate(devWorldName, template, dev);
         this.world.setSpawnLocation(new Location(world, 62, -59, 62));
+        new File(Bukkit.getWorldContainer() + File.separator + devWorldName + File.separator + "DynamicVariables.yml").createNewFile();
         this.dynamicVars = new File(dev, "DynamicVariables.yml");
     }
 
