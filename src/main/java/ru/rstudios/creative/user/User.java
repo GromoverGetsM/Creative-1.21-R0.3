@@ -127,7 +127,7 @@ public class User {
 
 
             while (rs.next()) {
-                plotIds.add(rs.getInt("id") - 1);
+                plotIds.add(rs.getInt("id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

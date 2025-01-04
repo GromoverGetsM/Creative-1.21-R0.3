@@ -28,6 +28,11 @@ public class DatabaseUtil {
     }
 
     @SneakyThrows
+    public static void tryCreateConnection() {
+        getConnection();
+    }
+
+    @SneakyThrows
     public static void closeConnection() {
         if (connection != null && !connection.isClosed()) connection.close();
     }

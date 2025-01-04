@@ -29,7 +29,6 @@ public final class CreativePlugin extends JavaPlugin {
     public static LuckPerms luckPerms;
 
     @Override
-    @SneakyThrows
     public void onEnable() {
         try {
             Class.forName("org.h2.Driver");
@@ -39,9 +38,7 @@ public final class CreativePlugin extends JavaPlugin {
 
         plugin = this;
         luckPerms = getServer().getServicesManager().getRegistration(LuckPerms.class).getProvider();
-        DatabaseUtil.getConnection();
-        DatabaseUtil.createTables();
-        PlotManager.loadPlots();
+        MillenniumScheduler.run(DatabaseUtil::createTables);
 
         WorldEdit.getInstance().getEventBus().register(new Object() {
             @Subscribe
@@ -86,6 +83,8 @@ public final class CreativePlugin extends JavaPlugin {
         Objects.requireNonNull(getCommand("like")).setExecutor(new LikeCommand());
         Objects.requireNonNull(getCommand("chat")).setExecutor(new ChatCommand());
         Objects.requireNonNull(getCommand("query")).setExecutor(new QueryCommand());
+
+        PlotManager.loadPlots();
     }
 
     @Override
