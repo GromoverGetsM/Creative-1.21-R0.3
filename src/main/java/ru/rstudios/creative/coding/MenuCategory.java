@@ -33,7 +33,8 @@ public enum MenuCategory {
     ITEM_OPERATIONS(Material.GLOW_ITEM_FRAME),
     LIST_OPERATIONS(Material.BOOKSHELF),
     MAP_OPERATIONS(Material.CHEST_MINECART),
-    VARS_ASSIGNMENT(Material.GOLD_INGOT);
+    VARS_ASSIGNMENT(Material.GOLD_INGOT),
+    VECTOR_OPERATIONS(Material.PRISMARINE_SHARD);
 
 
     private final Material material;

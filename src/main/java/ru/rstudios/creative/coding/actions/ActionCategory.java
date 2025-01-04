@@ -167,6 +167,9 @@ public enum ActionCategory {
     VALUE_FROM_LOC(Development.BlockTypes.ACTION_VAR, MenuCategory.LOCATION_OPERATIONS, ValueFromLoc::new, Material.END_ROD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.LOCATION, CodingMenu.ArgumentType.NULL), new LinkedHashMap<>(Map.of(16,
             new SwitchItem(List.of("x", "y", "z", "yaw", "pitch"), "menus.switches.actions.value_from_loc", List.of(Material.PINK_DYE, Material.LIGHT_BLUE_DYE, Material.PURPLE_DYE, Material.ENDER_PEARL, Material.ENDER_EYE))))),
 
+    // Работа с переменными - операции с векторами
+    CREATE_VECTOR(Development.BlockTypes.ACTION_VAR, MenuCategory.VECTOR_OPERATIONS, CreateVector::new, Material.PRISMARINE_SHARD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+
     // Если переменная - условия чисел
     COMPARE_NUM_EZ(Development.BlockTypes.IF_VARIABLE, MenuCategory.NUMBER_OPERATIONS, IfVariableCompareNumberEasy::new, Material.SANDSTONE_STAIRS, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NULL, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>(Map.of(13,
             new SwitchItem(List.of("more", "moreorequals", "lower", "lowerorequals"), "menus.switches.actions.compare_ez", List.of(Material.COPPER_BLOCK, Material.COPPER_INGOT, Material.GOLD_BLOCK, Material.GOLD_INGOT))))),
