@@ -20,6 +20,7 @@ import java.util.Locale;
 import static ru.rstudios.creative.CreativePlugin.plugin;
 
 public class BlockEvent extends CodingCategoriesMenu {
+
     public BlockEvent(User user) {
         super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.block_event", false, ""), (byte) 6);
     }

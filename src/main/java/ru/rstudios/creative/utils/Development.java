@@ -52,7 +52,7 @@ public class Development {
         CYCLE(Material.EMERALD_BLOCK, Material.EMERALD_ORE, null, true, false),
         BLOCK_EVENT(Material.PRISMARINE_BRICKS, Material.PRISMARINE, BlockEvent::new, true, false),
         PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, PlayerAction::new,false, false),
-        ENTITY_ACTION(Material.MUD_BRICKS, Material.PACKED_MUD, EntityAction::new,false, false),
+        ENTITY_ACTION(Material.VAULT, Material.SPAWNER, EntityAction::new,false, false),
         ACTION_VAR(Material.IRON_BLOCK, Material.IRON_ORE, ActionVar::new,false, false),
         WORLD_ACTION(Material.RED_NETHER_BRICKS, Material.NETHERRACK, WorldAction::new,false, false),
         IF_PLAYER(Material.OAK_PLANKS, Material.PISTON, IfPlayer::new,false, true),

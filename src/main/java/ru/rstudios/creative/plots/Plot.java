@@ -28,6 +28,7 @@ import ru.rstudios.creative.utils.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static ru.rstudios.creative.CreativePlugin.plugin;
 import static ru.rstudios.creative.plots.PlotManager.awaitTeleport;
@@ -72,7 +73,7 @@ public class Plot {
     }
 
     @SneakyThrows
-    public void create(String template) {
+    public void create(String template) throws ExecutionException, InterruptedException {
         Player player = Bukkit.getPlayerExact(owner);
 
         if (player != null) {
@@ -129,7 +130,7 @@ public class Plot {
     }
 
     @SneakyThrows
-    public FileConfiguration createFile(File file) {
+    public FileConfiguration createFile(File file) throws IOException {
         plugin.getLogger().info("Trying to create config for plot=" + file);
         if (!(file.createNewFile() || (file.exists() && file.isFile()))) {
             plugin.getLogger().warning("Creation failed. File cannot be created and does not exist");
