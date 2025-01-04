@@ -16,7 +16,7 @@ import static ru.rstudios.creative.CreativePlugin.plugin;
 
 public class DatabaseUtil {
 
-    private final static String JDBC_URL = "jdbc:h2:" + new File(plugin.getDataFolder() + File.separator + "database.db").getAbsolutePath();
+    private final static String JDBC_URL = "jdbc:h2:" + new File(plugin.getDataFolder() + File.separator + "database.db").getAbsolutePath() + ";AUTO_RECONNECT=TRUE";
     private final static String DB_USER = "sa";
     private final static String PASSWORD = "";
 
