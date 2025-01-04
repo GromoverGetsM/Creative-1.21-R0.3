@@ -169,6 +169,10 @@ coding:
       name: "&eLocation Operations"
       lore:
         - "&7Actions and operations on locations"
+    vector_operations:
+      name: "&eVector Operations"
+      lore:
+        - "&7Actions and operations on vectors"
 
   tech:
     var-set: "&aValue Set"
@@ -211,6 +215,7 @@ coding:
       numericvalue: "&c🔢 Numeric Value"
       locationvalue: "&f🗺 Location Value"
       itemstackvalue: "&e🧰 Item Value"
+      vectorvalue: "&3🡽 Vector Value"
 
     specific:
       player_message:
@@ -1554,6 +1559,18 @@ menus:
           - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
           - "&7- &fLocation: &7Location to retrieve the value from &e(1)"
           - "&7- &6Toggle: &7Value to retrieve &e(1)"
+
+      create_vector:
+        name: "&eCreate Vector"
+        lore:
+          - "&7Creates a vector with the specified coordinates."
+          - "&7Saves the result to a variable."
+          - "&7"
+          - "&7Arguments (4):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &cNumber: &7X Coordinate &e(1)"
+          - "&7- &cNumber: &7Y Coordinate &e(1)"
+          - "&7- &cNumber: &7Z Coordinate &e(1)"
 
       compare_num_ez:
         name: "&eCompare Numbers (Easy)"
