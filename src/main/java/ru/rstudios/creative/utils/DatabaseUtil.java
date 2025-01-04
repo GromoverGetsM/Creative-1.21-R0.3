@@ -2,9 +2,9 @@ package ru.rstudios.creative.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.bukkit.Bukkit;
+import kireiko.dev.millennium.core.MillenniumScheduler;
+import lombok.SneakyThrows;
 import org.bukkit.Material;
-import ru.rstudios.creative.handlers.customevents.main.DatabaseUpdateEvent;
 
 import java.io.File;
 import java.sql.*;
@@ -20,8 +20,16 @@ public class DatabaseUtil {
     private final static String DB_USER = "sa";
     private final static String PASSWORD = "";
 
+    private static Connection connection;
+
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, DB_USER, PASSWORD);
+        if (connection == null || connection.isClosed()) connection = DriverManager.getConnection(JDBC_URL, DB_USER, PASSWORD);
+        return connection;
+    }
+
+    @SneakyThrows
+    public static void closeConnection() {
+        if (connection != null && !connection.isClosed()) connection.close();
     }
 
     public static void createTables() {
@@ -61,16 +69,18 @@ public class DatabaseUtil {
     }
 
     public static void insertValue (String tableName, String columnName, Object value) {
-        String insertSQL = String.format("INSERT INTO %s (%s) VALUES (?)", tableName, columnName);
+        MillenniumScheduler.run(() -> {
+            String insertSQL = String.format("INSERT INTO %s (%s) VALUES (?)", tableName, columnName);
 
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+            try (Connection conn = getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
 
-            pstmt.setObject(1, value);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+                pstmt.setObject(1, value);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public static void insertValue (String tableName, List<String> columnNames, List<Object> values) {
@@ -108,52 +118,19 @@ public class DatabaseUtil {
 
 
     public static void updateValue (String tableName, String columnName, Object value, String whereColumn, Object whereValue) {
-        String updateSQL = String.format("UPDATE %s SET %s = ? WHERE %s = ?", tableName, columnName, whereColumn);
+        MillenniumScheduler.run(() -> {
+            String updateSQL = String.format("UPDATE %s SET %s = ? WHERE %s = ?", tableName, columnName, whereColumn);
 
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+            try (Connection conn = getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
 
-            Object oldValue = getValue(tableName, columnName, whereColumn, whereValue);
-
-            pstmt.setObject(1, value);
-            pstmt.setObject(2, whereValue);
-            pstmt.executeUpdate();
-
-            Bukkit.getServer().getPluginManager().callEvent(new DatabaseUpdateEvent(tableName, columnName, value, oldValue, whereColumn, whereValue));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void updateValue (String tableName, List<String> columnNames, List<Object> values, String whereColumn, Object whereValue) {
-        if (columnNames.size() != values.size()) {
-            throw new IllegalArgumentException("Cannot execute H2 query: Amount of columns != amount of values");
-        }
-
-        StringBuilder setClauseBuilder = new StringBuilder();
-
-        for (int i = 0; i < columnNames.size(); i++) {
-            setClauseBuilder.append(columnNames.get(i)).append(" = ?");
-            if (i < columnNames.size() - 1) {
-                setClauseBuilder.append(", ");
+                pstmt.setObject(1, value);
+                pstmt.setObject(2, whereValue);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        }
-
-        String updateSQL = String.format("UPDATE %s SET %s WHERE %s = ?", tableName, setClauseBuilder, whereColumn);
-
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
-
-            for (int i = 0; i < values.size(); i++) {
-                pstmt.setObject(i + 1, values.get(i));
-            }
-
-            pstmt.setObject(values.size() + 1, whereValue);
-
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            plugin.getLogger().severe(e.getLocalizedMessage());
-        }
+        });
     }
 
 

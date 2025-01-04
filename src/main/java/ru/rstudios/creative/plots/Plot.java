@@ -136,30 +136,32 @@ public class Plot {
 
     @SneakyThrows
     public FileConfiguration createFile(File file) {
-        if (file.createNewFile()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            config.createSection("allowedDevs");
-            config.createSection("allowedBuilders");
-            config.createSection("paidPlayers");
-            config.createSection("gameRules");
-
-            config.set("gameRules.announceAdvancements", false);
-            config.set("gameRules.doWeatherCycle", false);
-            config.set("gameRules.disableRaids", true);
-            config.set("gameRules.spawnRadius", 0);
-            config.set("gameRules.doTraderSpawning", false);
-            config.set("gameRules.doWardenSpawning", false);
-            config.set("gameRules.doPatrolSpawning", false);
-            config.set("gameRules.doImmediateRespawn", true);
-            config.set("gameRules.showDeathMessages", false);
-            config.set("gameRules.doDaylightCycle", false);
-            config.set("gameRules.doMobSpawning", false);
-
-            config.save(file);
-            return config;
-        } else {
+        plugin.getLogger().info("Trying to create config for plot=" + file);
+        if (!(file.createNewFile() || (file.exists() && file.isFile()))) {
+            plugin.getLogger().warning("Creation failed. File cannot be created and does not exist");
             return null;
         }
+
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        config.createSection("allowedDevs");
+        config.createSection("allowedBuilders");
+        config.createSection("paidPlayers");
+        config.createSection("gameRules");
+
+        config.set("gameRules.announceAdvancements", false);
+        config.set("gameRules.doWeatherCycle", false);
+        config.set("gameRules.disableRaids", true);
+        config.set("gameRules.spawnRadius", 0);
+        config.set("gameRules.doTraderSpawning", false);
+        config.set("gameRules.doWardenSpawning", false);
+        config.set("gameRules.doPatrolSpawning", false);
+        config.set("gameRules.doImmediateRespawn", true);
+        config.set("gameRules.showDeathMessages", false);
+        config.set("gameRules.doDaylightCycle", false);
+        config.set("gameRules.doMobSpawning", false);
+
+        config.save(file);
+        return config;
     }
 
     public void init (long id, boolean needToInitWorld) {

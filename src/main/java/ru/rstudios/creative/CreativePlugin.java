@@ -87,5 +87,6 @@ public final class CreativePlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         PlotManager.unloadPlots();
+        DatabaseUtil.closeConnection();
     }
 }

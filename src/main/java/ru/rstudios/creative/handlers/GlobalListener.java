@@ -17,10 +17,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -98,6 +95,11 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerTeleport (PlayerTeleportEvent event) {
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL) event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onPlayerJoin (PlayerJoinEvent event) {
         User user = User.asUser(event.getPlayer());
         user.clear();
@@ -110,6 +112,11 @@ public class GlobalListener implements Listener {
 
             DatabaseUtil.updateValue("players", "player_locale", locale, "player_name", user.name());
         }
+    }
+
+    @EventHandler
+    public void onPlayerLogin (PlayerLoginEvent event) {
+        plugin.getLogger().warning("Join registered: " + event.getPlayer().getName() + "::" + event.getHostname());
     }
 
     @EventHandler
