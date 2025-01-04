@@ -23,13 +23,8 @@ public class DatabaseUtil {
     private static Connection connection;
 
     public static Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) connection = DriverManager.getConnection(JDBC_URL, DB_USER, PASSWORD);
+        if (connection == null || connection.isClosed() || !connection.isValid(2)) connection = DriverManager.getConnection(JDBC_URL, DB_USER, PASSWORD);
         return connection;
-    }
-
-    @SneakyThrows
-    public static void tryCreateConnection() {
-        getConnection();
     }
 
     @SneakyThrows
@@ -260,6 +255,16 @@ public class DatabaseUtil {
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(SQLQuery)) {
 
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void executeUpdateNoAutoClosed (String SQLQuery) {
+        try {
+            Connection conn = getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(SQLQuery);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

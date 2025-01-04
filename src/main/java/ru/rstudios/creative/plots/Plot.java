@@ -361,7 +361,7 @@ public class Plot {
 
     public void delete() {
         unload(false, false);
-        DatabaseUtil.executeUpdate("DELETE FROM plots WHERE id = " + id());
+        DatabaseUtil.executeUpdateNoAutoClosed("DELETE FROM plots WHERE id = " + id());
         MillenniumScheduler.run(() -> {
             plugin.getLogger().warning("Удаляем плот id=" + id() + " (" + plotName() + ")");
 
