@@ -10,12 +10,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import ru.rstudios.creative.coding.events.GameEvent;
 import ru.rstudios.creative.coding.eventvalues.ValueType;
 import ru.rstudios.creative.coding.starters.Starter;
 import ru.rstudios.creative.coding.supervariables.DynamicVariable;
 import ru.rstudios.creative.handlers.GlobalListener;
+import ru.rstudios.creative.plots.Plot;
 import ru.rstudios.creative.plots.PlotManager;
 
 import java.util.Arrays;
@@ -40,8 +42,9 @@ public class ActionChest {
     private ItemStack[] locations;
     private ItemStack[] dynamicVariables;
     private ItemStack[] itemStackGameValues;
+    private ItemStack[] vectors;
 
-    public static final Pattern NUMBER = Pattern.compile("-?[0-9]+\\.?[0-9]*");
+    public final static Pattern NUMBER = Pattern.compile("-?[0-9]+(\\.[0-9]*)?([eE][+-]?[0-9]+)?");
 
     public ActionChest (Action linkedAction, Block chestBlock) {
         this.linkedAction = linkedAction;
@@ -71,6 +74,7 @@ public class ActionChest {
         this.locations = new ItemStack[0];
         this.dynamicVariables = new ItemStack[0];
         this.itemStackGameValues = new ItemStack[0];
+        this.vectors = new ItemStack[0];
         sort();
     }
 
@@ -90,6 +94,7 @@ public class ActionChest {
                             case "numericvalue" -> this.numbers = ArrayUtils.add(this.numbers, item);
                             case "locationvalue" -> this.locations = ArrayUtils.add(this.locations, item);
                             case "itemstackvalue" -> this.itemStackGameValues = ArrayUtils.add(this.itemStackGameValues, item);
+                            case "vectorvalue" -> this.vectors = ArrayUtils.add(this.vectors, item);
                         }
                     }
                     case MAGMA_CREAM -> {
@@ -97,6 +102,7 @@ public class ActionChest {
                         this.texts = ArrayUtils.add(this.texts, item);
                         this.numbers = ArrayUtils.add(this.numbers, item);
                         this.locations = ArrayUtils.add(this.locations, item);
+                        this.vectors = ArrayUtils.add(this.vectors, item);
                     }
                 }
             }
@@ -523,5 +529,22 @@ public class ActionChest {
         }
 
         return new DynamicVariable("");
+    }
+
+    public static boolean isVector (Object value) {
+        return value instanceof Vector;
+    }
+
+    public static boolean isVector (DynamicVariable variable, Plot plot) {
+        return isVector(variable.getValue(plot));
+    }
+
+    public static Vector asVector (Object o) {
+        if (o instanceof Vector vector) return vector;
+        return null;
+    }
+
+    public static Vector asVector (DynamicVariable variable, Plot plot) {
+        return asVector(variable.getValue(plot));
     }
 }
