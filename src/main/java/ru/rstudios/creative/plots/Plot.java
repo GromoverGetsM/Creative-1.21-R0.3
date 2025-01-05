@@ -73,7 +73,7 @@ public class Plot {
     }
 
     @SneakyThrows
-    public void create(String template) throws ExecutionException, InterruptedException {
+    public void create(String template) {
         Player player = Bukkit.getPlayerExact(owner);
 
         if (player != null) {
@@ -102,7 +102,7 @@ public class Plot {
         this.plotMode = PlotMode.BUILD;
         this.handler = new CodeHandler(this);
 
-        DatabaseUtil.insertValue("plots", Arrays.asList("id", "plot_name", "owner_name"),
+        DatabaseUtil.insertValues("plots", Arrays.asList("id", "plot_name", "owner_name"),
                 Arrays.asList(id, plotName, owner));
         DatabaseUtil.updateValue("plots", "custom_id", "", "plot_name", plotName);
         DatabaseUtil.updateValue("plots", "icon", icon.toString(), "plot_name", plotName);
@@ -362,7 +362,7 @@ public class Plot {
 
     public void delete() {
         unload(false, false);
-        DatabaseUtil.executeUpdateNoAutoClosed("DELETE FROM plots WHERE id = " + id());
+        DatabaseUtil.executeUpdate("DELETE FROM plots WHERE id = " + id());
         MillenniumScheduler.run(() -> {
             plugin.getLogger().warning("Удаляем плот id=" + id() + " (" + plotName() + ")");
 
