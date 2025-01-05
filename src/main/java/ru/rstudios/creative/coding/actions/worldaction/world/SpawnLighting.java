@@ -17,7 +17,7 @@ public class SpawnLighting extends Action {
     public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
-
+        //
         for (Entity entity : selection) {
             if (!Development.checkPlot(entity, event.getPlot())) {
                 continue;

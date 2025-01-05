@@ -17,7 +17,7 @@ public class SetHealth extends Action {
     public void execute(GameEvent event, List<Entity> selection) {
         ActionChest chest = getChest();
         chest.initInventorySort();
-
+        //
         for (Entity entity : selection) {
             double toset = chest.parseNumberPlus(chest.getOriginalContents()[13], 0, event, entity);
             if (!Development.checkPlot(entity, event.getPlot())) {
