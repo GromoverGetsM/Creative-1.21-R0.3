@@ -1,15 +1,15 @@
-package ru.rstudios.creative.coding.eventvalues;
+package ru.rstudios.creative1.coding.eventvalues;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
-import ru.rstudios.creative.coding.eventvalues.specific.entity.*;
-import ru.rstudios.creative.coding.eventvalues.specific.event.*;
-import ru.rstudios.creative.coding.eventvalues.specific.world.*;
-import ru.rstudios.creative.user.LocaleManages;
-import ru.rstudios.creative.user.User;
-import ru.rstudios.creative.utils.ItemUtil;
+import ru.rstudios.creative1.coding.eventvalues.specific.entity.*;
+import ru.rstudios.creative1.coding.eventvalues.specific.event.*;
+import ru.rstudios.creative1.coding.eventvalues.specific.world.*;
+import ru.rstudios.creative1.user.LocaleManages;
+import ru.rstudios.creative1.user.User;
+import ru.rstudios.creative1.utils.ItemUtil;
 
 import java.util.*;
 import java.util.function.Function;
@@ -31,17 +31,12 @@ public enum ValueType {
     ENTITY_OPENED_INV_TITLE(Value.Category.ENTITY, Material.PAINTING, EntityOpenedInvTitleValue::new),
     ENTITY_GAMEMODE(Value.Category.ENTITY, Material.DIAMOND, EntityGamemodeValue::new),
     ENTITY_EXPLVL(Value.Category.ENTITY, Material.SLIME_BALL, EntityExpLvlValue::new),
-    ENTITY_FACE(Value.Category.ENTITY, Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE, EntityFaceValue::new),
-    ENTITY_EYE_HEIGHT(Value.Category.ENTITY, Material.FEATHER, EntityEyeHeightValue::new),
-    ENTITY_UUID(Value.Category.ENTITY, Material.BOOK, EntityUUIDValue::new),
-    ENTITY_FLY(Value.Category.ENTITY, Material.CHAINMAIL_BOOTS, EntityFlyValue::new),
 
     PLAYER_MESSAGE(Value.Category.EVENT, Material.WRITABLE_BOOK, EventMessage::new),
     EVENT_BLOCK(Value.Category.EVENT, Material.GRASS_BLOCK, EventBlockValue::new),
     EVENT_BLOCK_LOC(Value.Category.EVENT, Material.PAPER, EventBlockLocationValue::new),
     EVENT_BLOCK_FACE(Value.Category.EVENT, Material.MAGENTA_GLAZED_TERRACOTTA, EventBlockFaceValue::new),
     EVENT_ITEM(Value.Category.EVENT, Material.CRAFTING_TABLE, EventClickedItemValue::new),
-    EVENT_ENTITYNAME(Value.Category.EVENT, Material.NAME_TAG, EventNameValue::new),
 
     CURRENT_ACTIONS_COUNTER(Value.Category.WORLD, Material.SLIME_BALL, CurrentActionsCounter::new),
     PLOT_ID(Value.Category.WORLD, Material.COMPARATOR, PlotId::new),
