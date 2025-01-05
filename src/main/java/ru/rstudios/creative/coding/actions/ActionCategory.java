@@ -17,9 +17,7 @@ import ru.rstudios.creative.coding.actions.playeraction.communication.*;
 import ru.rstudios.creative.coding.actions.playeraction.inventory.*;
 import ru.rstudios.creative.coding.actions.playeraction.movement.Teleport;
 import ru.rstudios.creative.coding.actions.playeraction.movement.ToOtherPlot;
-import ru.rstudios.creative.coding.actions.playeraction.params.SetFlying;
-import ru.rstudios.creative.coding.actions.playeraction.params.SetGamemode;
-import ru.rstudios.creative.coding.actions.playeraction.params.SetImmortality;
+import ru.rstudios.creative.coding.actions.playeraction.params.*;
 import ru.rstudios.creative.coding.actions.select.*;
 import ru.rstudios.creative.coding.actions.worldaction.appearence.*;
 import ru.rstudios.creative.coding.actions.worldaction.lines.*;
@@ -82,12 +80,17 @@ public enum ActionCategory {
             new SwitchItem(List.of("all", "coords", "eyedir"), "menus.switches.actions.teleport", List.of(Material.PAPER, Material.COMPASS, Material.ENDER_EYE))))),
     TO_OTHER_PLOT(Development.BlockTypes.PLAYER_ACTION, MenuCategory.MOVEMENT, ToOtherPlot::new, Material.DARK_OAK_DOOR, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
+    // Действие игрока - Параметры (Сделанные чаем)
     SET_FLYING(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetFlying::new, Material.FEATHER, true, CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(11,
             new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_fly", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER)), 15, new SwitchItem(List.of("true", "false"), "menus.switches.actions.allow_fly", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
     SET_GAMEMODE(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetGamemode::new, Material.ANVIL, true, CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
             new SwitchItem(List.of("creative", "survival", "adventure", "spectator"), "menus.switches.actions.set_gm", List.of(Material.BRICKS, Material.BEEF, Material.IRON_SWORD, Material.ENDER_EYE))))),
     SET_IMMORTALITY(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetImmortality::new, Material.TOTEM_OF_UNDYING, true, CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
             new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_immortality", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
+    SET_HEALTH(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetHealth::new, Material.APPLE, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+
+    SET_GLOWING(Development.BlockTypes.PLAYER_ACTION, MenuCategory.PARAMS, SetGlowing::new, Material.BEACON, true, CodingMenu.MenuType.DEFAULT, new LinkedList<>(), new LinkedHashMap<>(Map.of(13,
+            new SwitchItem(List.of("true", "false"), "menus.switches.actions.set_glowing", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER))))),
 
     SHOW_SCOREBOARD(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, ShowScoreboard::new, Material.LANTERN, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     HIDE_SCOREBOARD(Development.BlockTypes.PLAYER_ACTION, MenuCategory.APPEARANCE, HideScoreboard::new, Material.GLASS, false, null, null, null),
@@ -126,6 +129,7 @@ public enum ActionCategory {
     SET_BORDER_DAMAGE(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderDamage::new, Material.IRON_SWORD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
     SET_BORDER_BUFFER(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderBuffer::new, Material.SHIELD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
     SET_BORDER_WARNING(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SetBorderWarning::new, Material.GOAT_HORN, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
+    SPAWN_LIGHTING(Development.BlockTypes.WORLD_ACTION, MenuCategory.WORLD, SpawnLighting::new, Material.WIND_CHARGE, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
 
     // Если игрок - общее
     NAME_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, NameEquals::new, Material.NAME_TAG, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
