@@ -35,7 +35,6 @@ import java.util.function.Supplier;
 
 public enum ActionCategory {
 
-    //
     // Действие игрока - Работа с инвентарём
     GIVE_ITEMS(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, GiveItems::new, Material.CHEST, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>()),
     SET_ITEMS(Development.BlockTypes.PLAYER_ACTION, MenuCategory.INVENTORY, SetItems::new, Material.ENDER_CHEST, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.ITEMSTACK), new LinkedHashMap<>(Map.of(49,

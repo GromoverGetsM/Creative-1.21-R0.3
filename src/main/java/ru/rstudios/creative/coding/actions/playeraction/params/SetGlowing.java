@@ -18,7 +18,7 @@ import java.util.List;
 public class SetGlowing extends Action {
     @Override
     public void execute(GameEvent event, List<Entity> selection) {
-        //
+
         ActionChest chest = getChest();
         chest.initInventorySort();
         SwitchItem glowing = getCategory().getCodingMenu().getSwitches().get(13);
