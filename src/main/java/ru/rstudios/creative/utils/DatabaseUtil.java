@@ -54,20 +54,6 @@ public class DatabaseUtil {
                 icon_name VARCHAR(100),
                 icon_lore VARCHAR(500),
                 cost BIGINT,
-                environment VARCHAR(100),
-                generation VARCHAR(100),
-                gen_structures BOOLEAN
-                team VARCHAR(100),
-                lvl INT,
-                exp INT,
-                expMax INT,
-                kills INT,
-                blocks INT,
-                wins INT,
-                loses INT,
-                balance INT,
-                rating INT,
-                games_count INT
             );
         """;
 
