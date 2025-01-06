@@ -40,17 +40,20 @@ public class DatabaseUtil {
             CREATE TABLE IF NOT EXISTS players (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 player_name VARCHAR(100) NOT NULL,
-                team VARCHAR(100),
-                lvl INT,
-                exp INT,
-                expMax INT,
-                kills INT,
-                blocks INT,
-                wins INT,
-                loses INT,
-                balance INT,
-                rating INT,
-                games_count INT
+                player_locale VARCHAR(100)
+            );
+        """;
+        String createPlotTable = """
+            CREATE TABLE IF NOT EXISTS plots (
+                id INT PRIMARY KEY,
+                plot_name VARCHAR(100) NOT NULL,
+                custom_id VARCHAR(100),
+                owner_name VARCHAR(100) NOT NULL,
+                openedState BOOLEAN,
+                icon VARCHAR(100),
+                icon_name VARCHAR(100),
+                icon_lore VARCHAR(500),
+                cost BIGINT,
             );
         """;
 
@@ -58,6 +61,7 @@ public class DatabaseUtil {
         Statement pstmt = conn.createStatement();
 
         pstmt.execute(createPlayerTable);
+        pstmt.execute(createPlotTable);
     }
 
     public static void insertValue (String tableName, String columnName, Object value) {
