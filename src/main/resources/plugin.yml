@@ -72,3 +72,6 @@ commands:
   placeholders:
     aliases:
       - здфсурщдвукы
+  diamondfire:
+    aliases:
+      - df

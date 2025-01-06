@@ -180,6 +180,10 @@ public enum ActionCategory {
     // Работа с переменными - операции с векторами
     CREATE_VECTOR(Development.BlockTypes.ACTION_VAR, MenuCategory.VECTOR_OPERATIONS, CreateVector::new, Material.PRISMARINE_SHARD, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
+    // Работа с переменными - операции с предметом
+    SET_ITEM_NAME(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, SetItemName::new, Material.NAME_TAG, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap()),
+
+
     // Если переменная - условия чисел
     COMPARE_NUM_EZ(Development.BlockTypes.IF_VARIABLE, MenuCategory.NUMBER_OPERATIONS, IfVariableCompareNumberEasy::new, Material.SANDSTONE_STAIRS, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.NUMERIC, CodingMenu.ArgumentType.NULL, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>(Map.of(13,
             new SwitchItem(List.of("more", "moreorequals", "lower", "lowerorequals"), "menus.switches.actions.compare_ez", List.of(Material.COPPER_BLOCK, Material.COPPER_INGOT, Material.GOLD_BLOCK, Material.GOLD_INGOT))))),
