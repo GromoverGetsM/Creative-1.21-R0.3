@@ -80,6 +80,15 @@ public class User {
         player.sendMessage(message);
     }
 
+    public void sendMessage (String code, HashMap<Integer, String> changes) {
+        List<String> messages = LocaleManages.getLocaleMessagesS(getLocale(), code, changes);
+        StringBuilder builder = new StringBuilder();
+        messages.forEach(message -> builder.append(message).append("\n"));
+        if (!builder.isEmpty() && builder.charAt(builder.length() - 1) == '\n') builder.setLength(builder.length() - 1);
+
+        player.sendMessage(builder.toString());
+    }
+
     public void sendComponent (Component component) {
         player().sendMessage(component);
     }
