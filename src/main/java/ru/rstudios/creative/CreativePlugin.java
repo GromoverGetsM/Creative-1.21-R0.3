@@ -28,13 +28,10 @@ public final class CreativePlugin extends JavaPlugin {
     public static JavaPlugin plugin;
     public static LuckPerms luckPerms;
 
+    @SneakyThrows
     @Override
     public void onEnable() {
-        try {
-            Class.forName("org.h2.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        Class.forName("org.h2.Driver");
 
         plugin = this;
         luckPerms = getServer().getServicesManager().getRegistration(LuckPerms.class).getProvider();
@@ -52,12 +49,8 @@ public final class CreativePlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ProtectedManager(), this);
         getServer().getPluginManager().registerEvents(new PlotManager(), this);
 
-        try {
-            FileUtil.saveResourceFolder("templates", new File(getDataFolder() + File.separator + "templates"));
-            FileUtil.saveResourceFolder("locale", new File(getDataFolder(), "locale"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        FileUtil.saveResourceFolder("templates", new File(getDataFolder() + File.separator + "templates"));
+        FileUtil.saveResourceFolder("locale", new File(getDataFolder(), "locale"));
 
         boolean isWEEnabled = getServer().getPluginManager().isPluginEnabled("WorldEdit");
         if (!isWEEnabled) {

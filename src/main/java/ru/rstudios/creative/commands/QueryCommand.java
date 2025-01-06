@@ -37,7 +37,7 @@ public class QueryCommand implements CommandExecutor {
     private void handleSelectQuery(CommandSender sender, String sqlQuery) {
         ResultSet resultSet = null;
         try {
-            resultSet = DatabaseUtil.executeQueryNoAutoClosed(sqlQuery);
+            resultSet = DatabaseUtil.executeQuery(sqlQuery);
 
             if (resultSet == null || !resultSet.next()) {
                 sender.sendMessage("§cЗапрос не вернул данных.");

@@ -1,15 +1,15 @@
-package ru.rstudios.creative1.coding.eventvalues;
+package ru.rstudios.creative.coding.eventvalues;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
-import ru.rstudios.creative1.coding.eventvalues.specific.entity.*;
-import ru.rstudios.creative1.coding.eventvalues.specific.event.*;
-import ru.rstudios.creative1.coding.eventvalues.specific.world.*;
-import ru.rstudios.creative1.user.LocaleManages;
-import ru.rstudios.creative1.user.User;
-import ru.rstudios.creative1.utils.ItemUtil;
+import ru.rstudios.creative.coding.eventvalues.specific.entity.*;
+import ru.rstudios.creative.coding.eventvalues.specific.event.*;
+import ru.rstudios.creative.coding.eventvalues.specific.world.*;
+import ru.rstudios.creative.user.LocaleManages;
+import ru.rstudios.creative.user.User;
+import ru.rstudios.creative.utils.ItemUtil;
 
 import java.util.*;
 import java.util.function.Function;

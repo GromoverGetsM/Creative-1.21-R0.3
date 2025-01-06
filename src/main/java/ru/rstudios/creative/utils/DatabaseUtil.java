@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,8 @@ public class DatabaseUtil {
 
     private static Connection connection;
 
-    public static Connection getConnection() throws SQLException {
+    @SneakyThrows
+    public static Connection getConnection() {
         if (connection == null || connection.isClosed() || !connection.isValid(2)) connection = DriverManager.getConnection(JDBC_URL, DB_USER, PASSWORD);
         return connection;
     }
@@ -32,243 +34,173 @@ public class DatabaseUtil {
         if (connection != null && !connection.isClosed()) connection.close();
     }
 
+    @SneakyThrows
     public static void createTables() {
         String createPlayerTable = """
             CREATE TABLE IF NOT EXISTS players (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 player_name VARCHAR(100) NOT NULL,
-                player_locale VARCHAR(100)
+                team VARCHAR(100),
+                lvl INT,
+                exp INT,
+                expMax INT,
+                kills INT,
+                blocks INT,
+                wins INT,
+                loses INT,
+                balance INT,
+                rating INT,
+                games_count INT
             );
         """;
 
-        String createPlotTable = """
-            CREATE TABLE IF NOT EXISTS plots (
-                id INT PRIMARY KEY,
-                plot_name VARCHAR(100) NOT NULL,
-                custom_id VARCHAR(100),
-                owner_name VARCHAR(100) NOT NULL,
-                openedState BOOLEAN,
-                icon VARCHAR(100),
-                icon_name VARCHAR(100),
-                icon_lore VARCHAR(500),
-                cost BIGINT,
-                environment VARCHAR(100),
-                generation VARCHAR(100),
-                gen_structures BOOLEAN
-            );
-        """;
+        Connection conn = getConnection();
+        Statement pstmt = conn.createStatement();
 
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
-
-            stmt.execute(createPlayerTable);
-            stmt.execute(createPlotTable);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        pstmt.execute(createPlayerTable);
     }
 
     public static void insertValue (String tableName, String columnName, Object value) {
-        MillenniumScheduler.run(() -> {
-            String insertSQL = String.format("INSERT INTO %s (%s) VALUES (?)", tableName, columnName);
+        MillenniumScheduler.run(new Runnable() {
+            @Override
+            @SneakyThrows
+            public void run() {
+                String insertSQL = "INSERT INTO " + tableName + "(" + columnName + ") VALUES (?)";
 
-            try (Connection conn = getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+                Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(insertSQL);
 
-                pstmt.setObject(1, value);
+                pstmt.setObject(1, tableName);
+                pstmt.setObject(2, columnName);
+                pstmt.setObject(3, value);
+
                 pstmt.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
         });
     }
 
-    public static void insertValue (String tableName, List<String> columnNames, List<Object> values) {
-        if (columnNames.size() != values.size()) {
-            throw new IllegalArgumentException("Cannot execute H2 query: Amount of columns != amount of values");
-        }
+    public static void insertValues (String tableName, List<String> columns, List<Object> values) {
+        MillenniumScheduler.run(new Runnable() {
+            @Override
+            @SneakyThrows
+            public void run() {
+                if (columns.size() != values.size()) throw new IllegalArgumentException("Cannot execute H2 query: Amount of columns != amount of values!");
 
-        StringBuilder columnBuilder = new StringBuilder();
-        StringBuilder valuesBuilder = new StringBuilder();
+                StringBuilder columnsBuilder = new StringBuilder();
+                StringBuilder valuesBuilder = new StringBuilder();
 
-        for (int i = 0; i < columnNames.size(); i++) {
-            columnBuilder.append(columnNames.get(i));
-            valuesBuilder.append("?");
+                for (int i = 0; i < columns.size(); i++) {
+                    columnsBuilder.append(columns.get(i));
+                    valuesBuilder.append("?");
 
-            if (i < columnNames.size() - 1) {
-                columnBuilder.append(", ");
-                valuesBuilder.append(", ");
+                    if (i < columns.size() - 1) {
+                        columnsBuilder.append(", ");
+                        valuesBuilder.append(", ");
+                    }
+                }
+
+                String query = "INSERT INTO " + tableName + "(" + columnsBuilder + ") VALUES (" + valuesBuilder + ")";
+                Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query);
+
+                for (int i = 0; i < values.size(); i++) {
+                    pstmt.setObject(i+1, values.get(i));
+                }
+
+                pstmt.executeUpdate();
             }
-        }
-
-        String insertSQL = String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, columnBuilder, valuesBuilder);
-
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
-
-            for (int i = 0; i < values.size(); i++) {
-                pstmt.setObject(i + 1, values.get(i));
-            }
-
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            plugin.getLogger().severe(e.getLocalizedMessage());
-        }
+        });
     }
 
-
-    public static void updateValue (String tableName, String columnName, Object value, String whereColumn, Object whereValue) {
-        MillenniumScheduler.run(() -> {
-            String updateSQL = String.format("UPDATE %s SET %s = ? WHERE %s = ?", tableName, columnName, whereColumn);
-
-            try (Connection conn = getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+    public static void updateValue (String tableName, String column, Object value, String whereColumn, Object whereValue) {
+        MillenniumScheduler.run(new Runnable() {
+            @Override
+            @SneakyThrows
+            public void run() {
+                String query = "UPDATE " + tableName + " SET " + column + " = ? WHERE " + whereColumn + " = ?";
+                Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query);
 
                 pstmt.setObject(1, value);
                 pstmt.setObject(2, whereValue);
                 pstmt.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
         });
     }
 
-
+    @SneakyThrows
     public static Object getValue (String tableName, String columnName, String whereColumn, Object whereValue) {
-        String selectSQL = String.format("SELECT %s FROM %s WHERE %s = ?", columnName, tableName, whereColumn);
+        String query = "SELECT " + columnName + " FROM " + tableName + " WHERE " + whereColumn + " = ?";
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(query);
 
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+        pstmt.setObject(1, whereValue);
+        ResultSet rs = pstmt.executeQuery();
 
-            pstmt.setObject(1, whereValue);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getObject(columnName);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return rs.next() ? rs.getObject(columnName) : null;
     }
 
+    @SneakyThrows
     public static Object selectValue (String tableName, String columnName) {
-        String selectSQL = String.format("SELECT %s FROM %s", columnName, tableName);
+        String query = "SELECT " + columnName + " FROM " + tableName;
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(query);
 
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+        ResultSet rs = pstmt.executeQuery();
 
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
-        } catch (SQLException e) {
-            plugin.getLogger().severe(e.getLocalizedMessage());
-        }
-
-        return null;
+        return rs.next() ? rs.getObject(1) : null;
     }
 
-    public static List<Long> selectAllValues(String tableName, String columnName) {
-        List<Long> values = new ArrayList<>();
-        String selectSQL = String.format("SELECT %s FROM %s", columnName, tableName);
+    @SneakyThrows
+    public static List<Long> selectAllValues (String tableName, String columnName) {
+        List<Long> values = new LinkedList<>();
+        String query = "SELECT " + columnName + " FROM " + tableName;
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        ResultSet rs = pstmt.executeQuery();
 
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(selectSQL);
-             ResultSet rs = pstmt.executeQuery()) {
-
-            while (rs.next()) {
-                values.add(rs.getLong(1));
-            }
-
-        } catch (SQLException e) {
-            plugin.getLogger().severe(e.getLocalizedMessage());
-        }
-
+        while (rs.next()) values.add(rs.getLong(1));
         return values;
     }
 
-
+    @SneakyThrows
     public static boolean isValueExist (String tableName, String columnName, String providedValue) {
-        String query = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", tableName, columnName);
+        String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + columnName + " = ?";
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(query);
 
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+        pstmt.setString(1, providedValue);
+        ResultSet rs = pstmt.executeQuery();
 
-            pstmt.setString(1, providedValue);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return rs.next() && rs.getInt(1) > 0;
     }
 
+    @SneakyThrows
     public static boolean isValueEmpty (String tableName, String columnName, String providedValue) {
-        String query = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", tableName, columnName);
+        String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + columnName + " = ?";
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(query);
 
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+        pstmt.setString(1, providedValue);
+        ResultSet rs = pstmt.executeQuery();
 
-            pstmt.setString(1, providedValue);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return ((String) rs.getObject(1)).isEmpty();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return rs.next() && ((String) rs.getObject(1)).isEmpty();
     }
+
+    @SneakyThrows
     public static ResultSet executeQuery (String SQLQuery) {
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(SQLQuery)) {
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(SQLQuery);
 
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) return rs;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        ResultSet rs = pstmt.executeQuery();
+        return rs.next() ? rs : null;
     }
 
-    public static ResultSet executeQueryNoAutoClosed (String SQLQuery) {
-        try {
-            Connection conn = getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(SQLQuery);
-            return pstmt.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
+    @SneakyThrows
     public static void executeUpdate (String SQLQuery) {
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(SQLQuery)) {
-
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void executeUpdateNoAutoClosed (String SQLQuery) {
-        try {
-            Connection conn = getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(SQLQuery);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(SQLQuery);
+        pstmt.executeUpdate();
     }
 
     public static String stringsToJson (List<String> list) {
