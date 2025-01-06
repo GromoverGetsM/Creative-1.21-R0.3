@@ -594,7 +594,7 @@ menus:
       sm:
         name: "&3Separator"
         lore:
-          - "&fSeparates parameters in a message"
+          - "&fSeparates parameters in a text"
           - "&faccording to the specified settings"
 
         states:

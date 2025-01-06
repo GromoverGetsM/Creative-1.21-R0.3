@@ -130,7 +130,7 @@ public class Plot {
     }
 
     @SneakyThrows
-    public FileConfiguration createFile(File file) throws IOException {
+    public FileConfiguration createFile(File file) {
         plugin.getLogger().info("Trying to create config for plot=" + file);
         if (!(file.createNewFile() || (file.exists() && file.isFile()))) {
             plugin.getLogger().warning("Creation failed. File cannot be created and does not exist");

@@ -164,6 +164,8 @@ public enum ActionCategory {
     VAR_DECREMENT(Development.BlockTypes.ACTION_VAR, MenuCategory.NUMBER_OPERATIONS, VarDecrement::new, Material.COPPER_INGOT, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.NUMERIC), new LinkedHashMap<>()),
 
     // Работа с переменными - операции с текстом
+    COMBINE_TEXT(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, CombineText::new, Material.BOOK, true, CodingMenu.MenuType.SET, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>(Map.of(22,
+            new SwitchItem(List.of("together", "space", "newline"), "menus.switches.actions.sm", List.of(Material.SLIME_BALL, Material.RABBIT_FOOT, Material.SHEARS))))),
     PARSE_NUMBER(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, ParseNumber::new, Material.ANVIL, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
     GET_TEXT_LEN(Development.BlockTypes.ACTION_VAR, MenuCategory.TEXT_OPERATIONS, GetTextLength::new, Material.BOOK, true, CodingMenu.MenuType.DEFAULT, List.of(CodingMenu.ArgumentType.DYNAMIC_VAR, CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 

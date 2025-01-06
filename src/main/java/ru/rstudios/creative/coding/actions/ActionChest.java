@@ -1,6 +1,9 @@
 package ru.rstudios.creative.coding.actions;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -28,6 +31,7 @@ import java.util.regex.Pattern;
 
 import static ru.rstudios.creative.CreativePlugin.plugin;
 
+@Data
 public class ActionChest {
 
     private static Starter starter;
@@ -303,14 +307,6 @@ public class ActionChest {
         if (o instanceof Location location) return location;
 
         return defaultValue;
-    }
-
-    public Action getLinkedAction() {
-        return linkedAction;
-    }
-
-    public void setLinkedAction(Action linkedAction) {
-        this.linkedAction = linkedAction;
     }
 
     public Block getChestBlock() {
