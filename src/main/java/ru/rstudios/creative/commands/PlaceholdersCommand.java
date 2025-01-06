@@ -14,7 +14,7 @@ public class PlaceholdersCommand implements CommandExecutor {
             User user = User.asUser(player);
 
             if (user.isInDev()) {
-                player.sendMessage("тут должно быть сообщение, но главный разраб плагина мазохист из-за чего мне пришлось ждать пока он перепишет свой метод отправки сообщения для мазохистов");
+                user.sendMessage("info.placeholders", null);
             }
 
         }

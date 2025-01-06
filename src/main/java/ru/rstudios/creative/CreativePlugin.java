@@ -76,6 +76,7 @@ public final class CreativePlugin extends JavaPlugin {
         Objects.requireNonNull(getCommand("like")).setExecutor(new LikeCommand());
         Objects.requireNonNull(getCommand("chat")).setExecutor(new ChatCommand());
         Objects.requireNonNull(getCommand("query")).setExecutor(new QueryCommand());
+        Objects.requireNonNull(getCommand("placeholders")).setExecutor(new PlaceholdersCommand());
 
         PlotManager.loadPlots();
     }
