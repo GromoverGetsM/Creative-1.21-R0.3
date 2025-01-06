@@ -279,6 +279,7 @@ public class GlobalListener implements Listener {
                     }
                     case SLIME_BALL -> {
                         event.setCancelled(true);
+                        meta = activeItem.getItemMeta();
 
                         try {
                             double d = Double.parseDouble(message);
@@ -293,14 +294,22 @@ public class GlobalListener implements Listener {
                             user.player().playSound(user.player().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
                             user.sendTitle("coding.tech.var-set", displayValue, 10, 70, 20, true, false);
 
-                            meta = activeItem.getItemMeta();
                             if (meta != null) {
                                 meta.setDisplayName(displayValue);
-                                activeItem.setItemMeta(meta);
                             }
                         } catch (NumberFormatException e) {
-                            user.player().playSound(user.player().getLocation(), Sound.BLOCK_ANVIL_PLACE, 1.0F, 1.0F);
-                            user.sendTitle("coding.tech.incorrect-value", "§6" + message, 10, 70, 20, true, false);
+                            if (message.equalsIgnoreCase("pi")) {
+                                meta.setDisplayName(String.valueOf(Math.PI));
+                                user.player().playSound(user.player().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
+                                user.sendTitle("coding.tech.var-set", String.valueOf(Math.PI), 10, 70, 20, true, false);
+                            } else if (message.equalsIgnoreCase("e")) {
+                                meta.setDisplayName(String.valueOf(Math.E));
+                                user.player().playSound(user.player().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
+                                user.sendTitle("coding.tech.var-set", String.valueOf(Math.E), 10, 70, 20, true, false);
+                            } else {
+                                user.player().playSound(user.player().getLocation(), Sound.BLOCK_ANVIL_PLACE, 1.0F, 1.0F);
+                                user.sendTitle("coding.tech.incorrect-value", "§6" + message, 10, 70, 20, true, false);
+                            }
                         }
                     }
 

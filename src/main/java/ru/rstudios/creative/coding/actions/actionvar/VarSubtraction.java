@@ -34,7 +34,6 @@ public class VarSubtraction extends Action {
                 mainNumeric -= d;
             }
 
-
             variable.setValue(event.getPlot(), mainNumeric, DynamicVariable.isVarSaved(varItem));
         }
     }
