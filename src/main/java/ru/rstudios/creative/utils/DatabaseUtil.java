@@ -34,6 +34,7 @@ public class DatabaseUtil {
         if (connection != null && !connection.isClosed()) connection.close();
     }
 
+    // Привет разрабам из будущего, сегодня 6 января 2025 года, 18:30 вечера по МСК. Главный разработчик ГромоверГетсл лоханулся и при копипасте новой версии бд с другого нашего проекта забыл изменить таблицы, пишу этот комментарий чтобы запушить фикс.
     @SneakyThrows
     public static void createTables() {
         String createPlayerTable = """
