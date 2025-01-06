@@ -44,8 +44,6 @@ public class BuildCommand implements CommandExecutor {
                     }
                 }
 
-                p.teleportToPlot(user);
-
                 user.sendMessage("info.user-issued-build", true, "");
             }
 

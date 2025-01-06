@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.rstudios.creative.user.User;
 
+import java.util.LinkedHashMap;
+
 public class PlaceholdersCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
@@ -14,7 +16,7 @@ public class PlaceholdersCommand implements CommandExecutor {
             User user = User.asUser(player);
 
             if (user.isInDev()) {
-                user.sendMessage("info.placeholders", null);
+                user.sendMessage("info.placeholders", new LinkedHashMap<>());
             }
 
         }

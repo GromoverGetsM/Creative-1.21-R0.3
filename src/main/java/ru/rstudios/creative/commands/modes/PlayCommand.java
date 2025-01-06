@@ -38,8 +38,6 @@ public class PlayCommand implements CommandExecutor {
                     }
                 }
 
-                p.teleportToPlot(user);
-
                 user.sendMessage("info.user-issued-play", true, "");
             }
         }

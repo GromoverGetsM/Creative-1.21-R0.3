@@ -75,9 +75,7 @@ public class DatabaseUtil {
                 Connection conn = getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(insertSQL);
 
-                pstmt.setObject(1, tableName);
-                pstmt.setObject(2, columnName);
-                pstmt.setObject(3, value);
+                pstmt.setObject(1, value);
 
                 pstmt.executeUpdate();
             }
