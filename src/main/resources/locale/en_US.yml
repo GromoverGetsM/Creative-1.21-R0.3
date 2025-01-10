@@ -324,6 +324,27 @@ coding:
           - "&7Returns the current experience level of the player"
           - "&7"
           - "&eOnly for players"
+      entity_face:
+        name: "&eGet entity's view direction"
+        lore:
+          - "&7Returns the current view direction of the entity"
+      entity_name:
+        name: "&eGet entity's name"
+        lore:
+          - "&7Returns the current name of the entity"
+      entity_eye_height:
+        name: "&eGet entity's eye height"
+        lore:
+          - "&7Returns the eye height (Y) of the entity"
+      entity_uuid:
+        name: "&eGet entity's UUID"
+        lore:
+          - "&7Returns the UUID of the entity"
+      entity_fly:
+        name: "&eGet entity's flight status"
+        lore:
+          - "&7Returns the flight status of the entity"
+
 
       current_actions_counter:
         name: "&eRunning actions count"

@@ -31,6 +31,11 @@ public enum ValueType {
     ENTITY_OPENED_INV_TITLE(Value.Category.ENTITY, Material.PAINTING, EntityOpenedInvTitleValue::new),
     ENTITY_GAMEMODE(Value.Category.ENTITY, Material.DIAMOND, EntityGamemodeValue::new),
     ENTITY_EXPLVL(Value.Category.ENTITY, Material.SLIME_BALL, EntityExpLvlValue::new),
+    ENTITY_FACE(Value.Category.ENTITY, Material.MAGENTA_GLAZED_TERRACOTTA, EntityFaceValue::new),
+    ENTITY_EYE_HEIGHT(Value.Category.ENTITY, Material.ENDER_EYE, EntityEyeHeightValue::new),
+    ENTITY_NAME(Value.Category.ENTITY, Material.NAME_TAG, EntityNameValue::new),
+    ENTITY_UUID(Value.Category.ENTITY, Material.WRITTEN_BOOK, EntityUUIDValue::new),
+    ENTITY_FLIGHT(Value.Category.ENTITY, Material.FEATHER, EntityFlyValue::new),
 
     PLAYER_MESSAGE(Value.Category.EVENT, Material.WRITABLE_BOOK, EventMessage::new),
     EVENT_BLOCK(Value.Category.EVENT, Material.GRASS_BLOCK, EventBlockValue::new),
