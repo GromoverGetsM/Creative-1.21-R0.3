@@ -514,7 +514,7 @@ coding:
   if_player: "&6&lIf Player"
   if_variable: "&5&lIf Variable"
   select: "&d&lSelect object"
-  player_conds: "Player conditions"
+  select_conds: "Conditions select"
 
   var-types:
     text:

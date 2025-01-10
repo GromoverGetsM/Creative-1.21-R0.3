@@ -1,5 +1,7 @@
 package ru.rstudios.creative;
 
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.ProtocolLibrary;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.event.extent.EditSessionEvent;
 import com.sk89q.worldedit.util.eventbus.Subscribe;
@@ -20,13 +22,13 @@ import ru.rstudios.creative.utils.DatabaseUtil;
 import ru.rstudios.creative.utils.FileUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 
 public final class CreativePlugin extends JavaPlugin {
 
     public static JavaPlugin plugin;
     public static LuckPerms luckPerms;
+    public static ProtocolManager protocolManager;
 
     @SneakyThrows
     @Override
@@ -35,6 +37,7 @@ public final class CreativePlugin extends JavaPlugin {
 
         plugin = this;
         luckPerms = getServer().getServicesManager().getRegistration(LuckPerms.class).getProvider();
+        protocolManager = ProtocolLibrary.getProtocolManager();
         MillenniumScheduler.run(DatabaseUtil::createTables);
 
         WorldEdit.getInstance().getEventBus().register(new Object() {
@@ -78,6 +81,7 @@ public final class CreativePlugin extends JavaPlugin {
         Objects.requireNonNull(getCommand("query")).setExecutor(new QueryCommand());
         Objects.requireNonNull(getCommand("placeholders")).setExecutor(new PlaceholdersCommand());
         Objects.requireNonNull(getCommand("diamondfire")).setExecutor(new DiamondFireCommand());
+        Objects.requireNonNull(getCommand("debuginfo")).setExecutor(new DebugInfoCount());
 
         PlotManager.loadPlots();
     }

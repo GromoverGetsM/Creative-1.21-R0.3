@@ -138,6 +138,7 @@ public enum ActionCategory {
     MESSAGE_EQUALS(Development.BlockTypes.IF_PLAYER, MenuCategory.PLAYER, MessageEquals::new, Material.WRITABLE_BOOK, true, CodingMenu.MenuType.ALL_IN, List.of(CodingMenu.ArgumentType.TEXT), new LinkedHashMap<>()),
 
     // Если игрок - проверка состояний
+    IF_PLAYER_FIRST_JOINED(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfFirstJoin::new, Material.GOLD_INGOT, false, null, null, null),
     IF_PLAYER_BLOCKING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerBlocking::new, Material.SHIELD, false, null, null, null),
     IF_PLAYER_FLYING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerFlying::new, Material.CHAINMAIL_BOOTS, false, null, null, null),
     IF_PLAYER_GLIDING(Development.BlockTypes.IF_PLAYER, MenuCategory.STATE, IfPlayerGliding::new, Material.ELYTRA, false, null, null, null),

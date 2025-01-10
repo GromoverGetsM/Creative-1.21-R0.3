@@ -553,7 +553,7 @@ coding:
   if_player: "&6&lЕсли игрок"
   if_variable: "&5&lЕсли переменная"
   select: "&d&lВыбрать объект"
-  player_conds: "Условия игрока"
+  select_conds: "Выбор условия"
   function: "&9&lФункция"
   cycle: "&a&lЦикл"
 

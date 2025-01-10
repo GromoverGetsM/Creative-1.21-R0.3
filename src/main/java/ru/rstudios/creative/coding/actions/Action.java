@@ -48,7 +48,12 @@ public abstract class Action {
                 String placeholder = matcher.group();
                 String variableName = placeholder.substring(1, placeholder.length() - 1);
                 String value = (String) new DynamicVariable(variableName).getValue(event.getPlot());
-                matcher.appendReplacement(result, value);
+                
+                if (value != null && value.contains("%")) {
+                    value = replacePlaceholders(value, event, entity);
+                }
+
+                matcher.appendReplacement(result, value != null ? Matcher.quoteReplacement(value) : "");
             }
             matcher.appendTail(result);
 

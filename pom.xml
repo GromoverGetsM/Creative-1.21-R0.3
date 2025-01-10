@@ -12,7 +12,7 @@
   <name>Creative-1.21-R0.3</name>
 
   <properties>
-    <java.version>16</java.version>
+    <java.version>21</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -62,6 +62,10 @@
 
   <repositories>
       <repository>
+          <id>dmulloy2-repo</id>
+          <url>https://repo.dmulloy2.net/repository/public/</url>
+      </repository>
+      <repository>
           <id>papermc-repo</id>
           <url>https://repo.papermc.io/repository/maven-public/</url>
       </repository>
@@ -80,6 +84,10 @@
       <repository>
           <id>jitpack.io</id>
           <url>https://jitpack.io</url>
+      </repository>
+      <repository>
+          <id>placeholderapi</id>
+          <url>https://repo.extendedclip.com/releases/</url>
       </repository>
   </repositories>
   <dependencyManagement>
@@ -158,6 +166,18 @@
           <groupId>org.projectlombok</groupId>
           <artifactId>lombok</artifactId>
           <version>1.18.36</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>com.comphenix.protocol</groupId>
+          <artifactId>ProtocolLib</artifactId>
+          <version>5.3.0</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>me.clip</groupId>
+          <artifactId>placeholderapi</artifactId>
+          <version>2.11.6</version>
           <scope>provided</scope>
       </dependency>
   </dependencies>

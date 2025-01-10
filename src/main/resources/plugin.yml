@@ -6,7 +6,12 @@ authors: [ GromoverGets, tea_with_sugar ] # pawsashatoy легенда
 depend:
   - LuckPerms
   - WorldEdit
+  - ProtocolLib
+softdepend:
+  - PlaceholderAPI
 commands:
+  debuginfo:
+    permission: creative.debug
   games:
     aliases:
       - g

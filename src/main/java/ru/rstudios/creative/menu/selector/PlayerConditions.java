@@ -13,7 +13,7 @@ public class PlayerConditions extends ProtectedMenu {
     private Block sign;
 
     public PlayerConditions(User user) {
-        super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.player_conds", false, ""), (byte) 1);
+        super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.select_conds", false, ""), (byte) 1);
     }
 
     @Override

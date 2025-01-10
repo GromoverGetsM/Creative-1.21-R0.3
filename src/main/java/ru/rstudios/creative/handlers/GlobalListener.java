@@ -52,10 +52,7 @@ import ru.rstudios.creative.utils.ChestMenuHook;
 import ru.rstudios.creative.utils.DatabaseUtil;
 import ru.rstudios.creative.utils.Development;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -151,7 +148,7 @@ public class GlobalListener implements Listener {
                 int targetY = -59;
 
                 World world = player.getWorld();
-                List<Block> visibleSigns = new ArrayList<>();
+                List<Block> visibleSigns = Collections.synchronizedList(new ArrayList<>());
 
                 MillenniumScheduler.run(() -> {
                     int minX = eyeLocation.getBlockX() - viewDistance;
@@ -324,11 +321,7 @@ public class GlobalListener implements Listener {
         String formatted = parseColors(rawMessage);
 
         if (user.isOnPlot()) {
-            if (formatted.startsWith("!")) {
-                Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(formatted.replaceFirst("!", "")));
-            } else {
-                user.getCurrentPlot().online().forEach(player -> player.sendMessage(formatted));
-            }
+            user.getCurrentPlot().online().forEach(player -> player.sendMessage(formatted));
         } else {
             user.player().getWorld().getPlayers().forEach(player -> player.sendMessage(formatted));
         }

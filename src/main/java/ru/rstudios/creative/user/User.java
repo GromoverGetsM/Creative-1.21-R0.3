@@ -1,5 +1,11 @@
 package ru.rstudios.creative.user;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.reflect.accessors.FieldAccessor;
+import com.comphenix.protocol.wrappers.WrappedDataValue;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
@@ -9,23 +15,25 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import ru.rstudios.creative.plots.Plot;
 import ru.rstudios.creative.plots.PlotManager;
 import ru.rstudios.creative.utils.DatabaseUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static ru.rstudios.creative.CreativePlugin.luckPerms;
-import static ru.rstudios.creative.CreativePlugin.plugin;
+import static ru.rstudios.creative.CreativePlugin.*;
 
 public class User {
 
@@ -306,6 +314,41 @@ public class User {
 
         return user.getCachedData().getMetaData().getPrefix();
     }
+
+    @SneakyThrows
+    public void glowBlock(Location loc) {
+        PacketContainer spawnPacket = protocolManager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
+        UUID entityUUID = UUID.randomUUID();
+        int entityId = entityUUID.hashCode();
+
+        spawnPacket.getIntegers().write(0, entityId);
+        spawnPacket.getUUIDs().write(0, entityUUID);
+        spawnPacket.getEntityTypeModifier().write(0, EntityType.SHULKER);
+
+        spawnPacket.getDoubles().write(0, loc.getX());
+        spawnPacket.getDoubles().write(1, loc.getY());
+        spawnPacket.getDoubles().write(2, loc.getZ());
+
+        protocolManager.sendServerPacket(player, spawnPacket);
+        sendEntityMetadata(entityId, (byte) 0x20);
+        sendEntityMetadata(entityId, (byte) 0x40);
+    }
+
+    private void sendEntityMetadata (int entityId, byte value) {
+        PacketContainer metadataPacket = protocolManager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+
+        List<WrappedDataValue> values = List.of(
+                new WrappedDataValue(0, WrappedDataWatcher.Registry.get(Byte.class), value)
+        );
+
+        metadataPacket.getIntegers().write(0, entityId);
+        metadataPacket.getDataValueCollectionModifier().write(0, values);
+
+        protocolManager.sendServerPacket(player, metadataPacket);
+    }
+
+
+
 
     @Override
     public String toString() {

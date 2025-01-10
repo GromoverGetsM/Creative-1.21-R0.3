@@ -313,7 +313,10 @@ public class Plot {
                 awaitTeleport.remove(user);
                 user.clear();
                 user.player().teleport(this.world.getSpawnLocation());
-                uniquePlayers.putIfAbsent(user.name(), false);
+                if (!uniquePlayers.containsKey(user.name())) {
+                    uniquePlayers.putIfAbsent(user.name(), false);
+                    user.datastore().put(plotName() + "_firstjoined", System.currentTimeMillis());
+                }
 
                 if (this.plotMode == PlotMode.BUILD) {
                     if (user.name().equalsIgnoreCase(owner) || allowedBuilders.contains(user.name())) {

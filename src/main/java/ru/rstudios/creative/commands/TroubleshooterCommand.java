@@ -19,7 +19,7 @@ public class TroubleshooterCommand implements CommandExecutor {
                     Location loc = new Location(user.getCurrentPlot().getDev().world(), Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 
                     user.getCurrentPlot().teleportToDev(user);
-                    user.player().teleport(loc);
+                    user.player().teleport(loc.clone().add(0, 0, -1));
                 }
             }
         }
