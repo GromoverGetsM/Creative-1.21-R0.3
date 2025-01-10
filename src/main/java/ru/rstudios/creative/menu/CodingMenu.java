@@ -129,6 +129,105 @@ public class CodingMenu implements InventoryHolder {
                                 List.of(0, 18), List.of(2, 20), List.of(4, 22), List.of(6, 24), List.of(8, 26)
                         ));
                     }
+                    case 6 -> {
+                        argumentSlots.add(10);
+                        argumentSlots.add(13);
+                        argumentSlots.add(16);
+                        argumentSlots.add(37);
+                        argumentSlots.add(40);
+                        argumentSlots.add(43);
+                        setupDefaultMarkers(args, List.of(
+                                List.of(1, 9, 11, 19),
+                                List.of(4, 12, 14, 22),
+                                List.of(7, 15, 17, 25),
+                                List.of(28, 36, 38, 46),
+                                List.of(31, 39, 41, 49),
+                                List.of(34, 42, 44, 52)));
+                    }
+                    case 7 -> {
+                        argumentSlots.add(10);
+                        argumentSlots.add(12);
+                        argumentSlots.add(14);
+                        argumentSlots.add(16);
+                        argumentSlots.add(38);
+                        argumentSlots.add(40);
+                        argumentSlots.add(42);
+                        setupDefaultMarkers(args, List.of(
+                                List.of(1, 19),
+                                List.of(3, 21),
+                                List.of(5, 23),
+                                List.of(7, 25),
+                                List.of(29, 47),
+                                List.of(31, 49),
+                                List.of(33, 51)
+                        ));
+                    }
+                    case 8 -> {
+                        argumentSlots.add(10);
+                        argumentSlots.add(12);
+                        argumentSlots.add(14);
+                        argumentSlots.add(16);
+                        argumentSlots.add(37);
+                        argumentSlots.add(39);
+                        argumentSlots.add(41);
+                        argumentSlots.add(43);
+                        setupDefaultMarkers(args, List.of(
+                                List.of(1, 19),
+                                List.of(3, 21),
+                                List.of(5, 23),
+                                List.of(7, 25),
+                                List.of(28, 46),
+                                List.of(30, 48),
+                                List.of(32, 50),
+                                List.of(34, 52)
+                        ));
+                    }
+                    case 9 -> {
+                        argumentSlots.add(9);
+                        argumentSlots.add(11);
+                        argumentSlots.add(13);
+                        argumentSlots.add(15);
+                        argumentSlots.add(17);
+                        argumentSlots.add(37);
+                        argumentSlots.add(39);
+                        argumentSlots.add(41);
+                        argumentSlots.add(43);
+                        setupDefaultMarkers(args, List.of(
+                                List.of(0, 18),
+                                List.of(2, 20),
+                                List.of(4, 22),
+                                List.of(6, 24),
+                                List.of(8, 26),
+                                List.of(28, 46),
+                                List.of(30, 48),
+                                List.of(32, 50),
+                                List.of(34, 52)
+                        ));
+                    }
+                    case 10 -> {
+                        argumentSlots.add(9);
+                        argumentSlots.add(11);
+                        argumentSlots.add(13);
+                        argumentSlots.add(15);
+                        argumentSlots.add(17);
+                        argumentSlots.add(36);
+                        argumentSlots.add(38);
+                        argumentSlots.add(40);
+                        argumentSlots.add(42);
+                        argumentSlots.add(44);
+                        setupDefaultMarkers(args, List.of(
+                                List.of(0, 18),
+                                List.of(2, 20),
+                                List.of(4, 22),
+                                List.of(6, 24),
+                                List.of(8, 26),
+                                List.of(27, 45),
+                                List.of(29, 47),
+                                List.of(31, 49),
+                                List.of(33, 51),
+                                List.of(35, 53)
+                        ));
+                    }
                 }
             }
             case SET -> {
@@ -222,7 +321,7 @@ public class CodingMenu implements InventoryHolder {
     }
 
     private int getSize() {
-        return (menuType == MenuType.DEFAULT) ? 27 : 54;
+        return (menuType == MenuType.DEFAULT && args.size() <= 5) ? 27 : 54;
     }
 
     public Inventory getInventory (User user) {
