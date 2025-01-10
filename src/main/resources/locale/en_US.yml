@@ -4,7 +4,6 @@ info:
   locale-set: "Locale set: &6en_US"
   plot-is-creating: "Plot is creating. Please wait..."
   plot-offline: "The plot you were on has been shut down."
-  plot-undefined: "The identifier &6%s &fdoes not exist or was entered incorrectly!"
   plot-displayname-set: "Name set: &r%s"
   plot-displayname-await: "Enter a name according to the criteria (up to &640 characters&f including color codes)"
   plot-lore-set: "World description set."
@@ -16,6 +15,18 @@ info:
   user-issued-play: "You have entered &6play mode"
   user-issued-build: "You have entered &6build mode"
   successfully-liked: "&r\n&f Player &6%s &fliked this game!\n&f Do you like it too? &d/like\n&r"
+  placeholders:
+    - "&r"
+    - "&a Available placeholders:"
+    - "&e  %player% &8- &7Event player"
+    - "&e  %default% &8- &7Default set player"
+    - "&e  %selected% &8- &7Entity from selection"
+    - "&e  %damager% &8- &7The one who dealt damage"
+    - "&e  %victim% &8- &7Victim"
+    - "&e  %shooter% &8- &7Shooter"
+    - "&e  %killer% &8- &7Killer"
+    - "&e  %entity% &8- &7Entity name"
+    - "&r"
 
 errors:
   menu-not-defined: "&4⛔ &cMenu is not defined"
@@ -676,6 +687,15 @@ menus:
         states:
           true: "Enabled"
           false: "Disabled"
+      sa:
+        name: "&3Account for empty slots"
+        lore:
+          - "&fIf enabled, empty slots in"
+          - "&fthe chest will be transferred to the player"
+          - "&freplacing the item in the current armor slot"
+        states:
+          true: "Enabled"
+          false: "Disabled"
       oi:
         name: "&3Interface Type"
         lore:
@@ -706,6 +726,13 @@ menus:
           ticks: "Ticks"
           seconds: "Seconds"
           minutes: "Minutes"
+      set_world_privacy:
+        name: "&3Set World Privacy"
+        lore:
+          - "&fChoose whether the world will be accessible for visits"
+        states:
+          true: "World is open for visits"
+          false: "World is closed for visits"
       set_fly:
         name: "&3Set flight mode"
         lore:
@@ -713,6 +740,13 @@ menus:
         states:
           true: "Flight allowed"
           false: "Flight denied"
+      set_glowing:
+        name: "&eGlowing"
+        lore:
+          - "&fChoose whether the player will have glowing effect"
+        states:
+          true: "Player is glowing"
+          false: "Player is NOT glowing"
       set_immortality:
         name: "&3Set immortality"
         lore:
