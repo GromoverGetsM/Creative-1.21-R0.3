@@ -8,11 +8,13 @@ import ru.rstudios.creative.coding.actions.Action;
 import ru.rstudios.creative.coding.actions.ActionIf;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class DebugInfoCount implements CommandExecutor {
+
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         String jarFilePath = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -21,18 +23,21 @@ public class DebugInfoCount implements CommandExecutor {
         List<Class<?>> starterClasses = getClassesFromJar(jarFilePath, startersPackagePath);
         Map<String, Long> starterCounts = new HashMap<>();
 
+        Set<String> processedClasses = new HashSet<>();
         for (Class<?> clazz : starterClasses) {
             String className = clazz.getName();
-            if (className.contains("playerevent")) {
-                starterCounts.put("playerevent", starterCounts.getOrDefault("playerevent", 0L) + 1);
-            } else if (className.contains("blockevent")) {
-                starterCounts.put("blockevent", starterCounts.getOrDefault("blockevent", 0L) + 1);
-            } else {
-                starterCounts.put("uncommon", starterCounts.getOrDefault("uncommon", 0L) + 1);
+            if (!processedClasses.contains(className) && !className.contains("$") && !Modifier.isAbstract(clazz.getModifiers())) {
+                processedClasses.add(className);
+
+                if (className.contains("playerevent")) {
+                    starterCounts.put("playerevent", starterCounts.getOrDefault("playerevent", 0L) + 1);
+                } else if (className.contains("blockevent")) {
+                    starterCounts.put("blockevent", starterCounts.getOrDefault("blockevent", 0L) + 1);
+                } else if (className.contains("uncommon")) {
+                    starterCounts.put("uncommon", starterCounts.getOrDefault("uncommon", 0L) + 1);
+                }
             }
         }
-
-        starterCounts.put("uncommon", starterCounts.getOrDefault("uncommon", 0L) - 1);
 
         long totalStartersCount = starterCounts.values().stream().mapToLong(Long::longValue).sum();
 
@@ -46,12 +51,17 @@ public class DebugInfoCount implements CommandExecutor {
 
         for (Class<?> clazz : actionClasses) {
             String className = clazz.getName();
+
+            if (Modifier.isAbstract(clazz.getModifiers()) || className.contains("$")) continue;
+
             if (Action.class.isAssignableFrom(clazz) && !ActionIf.class.isAssignableFrom(clazz)) {
                 actionCountNotActionIf++;
             }
+
             if (ActionIf.class.isAssignableFrom(clazz)) {
                 actionIfCount++;
             }
+
             if (className.contains("actionvar")) {
                 actionCounts.put("actionvar", actionCounts.getOrDefault("actionvar", 0L) + 1);
             } else if (className.contains("entityaction")) {
@@ -70,9 +80,9 @@ public class DebugInfoCount implements CommandExecutor {
         }
 
         StringBuilder builder = new StringBuilder("[DEBUG] Сбор информации о кодинге Creative-1.21-R0.3...");
-        builder.append("\n[DEBUG] Найдено ").append(totalStartersCount/2).append(" событий:");
+        builder.append("\n[DEBUG] Найдено ").append(totalStartersCount).append(" событий:");
 
-        starterCounts.forEach((key, value) -> builder.append("\n  ").append(key).append("=").append(value/2));
+        starterCounts.forEach((key, value) -> builder.append("\n  ").append(key).append("=").append(value));
 
         builder.append("\n[DEBUG] Найдено ").append(actionCountNotActionIf).append(" действий:");
         actionCounts.forEach((key, value) -> builder.append("\n  ").append(key).append("=").append(value));
