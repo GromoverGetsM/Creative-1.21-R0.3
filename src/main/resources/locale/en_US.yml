@@ -419,6 +419,8 @@ coding:
     set_flying: "Flying"
     set_gamemode: "Set Game mode"
     set_immortality: "Set Immortality"
+    set_health: "Set Health"
+    set_glowing: "Set Glowing"
 
     show_scoreboard: "Show board"
     hide_scoreboard: "Hide board"
@@ -448,15 +450,19 @@ coding:
     set_world_custom_id: "Set Identifier"
     create_worldborder: "Create Border"
     delete_worldborder: "Delete Border"
+    get_container_title: "Get container name"
+    get_item_from_container: "Item from container"
     set_border_center: "Set Border Center"
     set_border_size: "Set Border Size"
     set_border_damage: "Set Border Damage"
     set_border_buffer: "Set Border Buffer"
     set_border_warning: "Set Border Warning"
+    spawn_lighting: "Spawn lightning"
 
     name_equals: "Name equals"
     message_equals: "Message equals"
 
+    if_player_first_joined: "First joined"
     if_player_blocking: "Using Shield"
     if_player_flying: "Flying"
     if_player_gliding: "Gliding (Elytra)"
@@ -473,13 +479,17 @@ coding:
     set_var: "Set (=)"
     set_item_var: "Set item"
 
+    var_addition: "+"
+    var_subtraction: "-"
     var_multiply: "*"
     var_divide: "/"
     var_increment: "+="
     var_decrement: "-="
 
+    combine_text: "Combine texts"
     parse_number: "Parse number"
-    get_text_len: "Text Length"
+    get_text_len: "Text length"
+    set_item_name: "Set item name"
 
     get_locs_distance: "Get Distance"
     block_from_loc: "Block from loc."
@@ -515,6 +525,8 @@ coding:
   if_variable: "&5&lIf Variable"
   select: "&d&lSelect object"
   select_conds: "Conditions select"
+  function: "&9&lFunction"
+  cycle: "&a&lCycle"
 
   var-types:
     text:
@@ -1115,6 +1127,14 @@ menus:
           - "&7"
           - "&7Arguments (1):"
           - "&7- &6Toggle: &7Game mode &e(1)"
+      set_flying:
+        name: "&eSet flight mode"
+        lore:
+          - "&7Sets flight for the player"
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Switch: &7Flight &e(1)"
+          - "&7- &6Switch: &7Re-launch &e(2)"
       set_immortality:
         name: "&eSet invincibility"
         lore:
@@ -1122,6 +1142,20 @@ menus:
           - "&7"
           - "&7Arguments (1):"
           - "&7- &6Toggle: &7Invincibility &e(1)"
+      set_glowing:
+        name: "&eSet Glowing Effect"
+        lore:
+          - "&7Applies or removes the glowing effect for a player."
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &6Toggle: &7Glowing state &e(1)"
+      set_health:
+        name: "&eSet Health"
+        lore:
+          - "&7Sets the player's health to a specific value."
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &cNumber: &7Health value &e(1)"
 
       hide_scoreboard:
         name: "&eHide Scoreboard"
@@ -1210,6 +1244,23 @@ menus:
           - "&7"
           - "&7Arguments (1):"
           - "&7- &bText: &7Border Name &e(1)"
+      get_container_title:
+        name: "&eContainer Title"
+        lore:
+          - "&7Retrieves the title of the container."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic Variable: &7Variable to store the title &e(1)"
+          - "&7- &fLocation: &7Location of the container &e(1)"
+      get_item_from_container:
+        name: "&eItem from Container"
+        lore:
+          - "&7Retrieves an item from a container."
+          - "&7"
+          - "&7Arguments (3):"
+          - "&7- &6Dynamic Variable: &7Variable to store the item &e(1)"
+          - "&7- &fLocation: &7Location of the container &e(1)"
+          - "&7- &cNumber: &7Slot number &e(1)"
       set_border_center:
         name: "&eSet Barrier Center"
         lore:
@@ -1238,7 +1289,6 @@ menus:
           - "&7Arguments (2):"
           - "&7- &bText: &7Name of the border &e(1)"
           - "&7- &cNumber: &7New damage dealt &e(1)"
-
       set_border_buffer:
         name: "&eSet Border Buffer"
         lore:
@@ -1249,7 +1299,6 @@ menus:
           - "&7Arguments (2):"
           - "&7- &bText: &7Name of the border &e(1)"
           - "&7- &cNumber: &7New buffer zone size &e(1)"
-
       set_border_warning:
         name: "&eSet Border Warning"
         lore:
@@ -1260,6 +1309,13 @@ menus:
           - "&7Arguments (2):"
           - "&7- &bText: &7Name of the border &e(1)"
           - "&7- &cNumber: &7New distance &e(1)"
+      spawn_lighting:
+        name: "&eSpawn Lightning"
+        lore:
+          - "&7Creates a lightning strike in the world."
+          - "&7"
+          - "&7Arguments (1):"
+          - "&7- &fLocation: &7Where to spawn"
 
       cancel_event:
         name: "&eCancel Event"
@@ -1383,6 +1439,13 @@ menus:
           - "&7Arguments (36):"
           - "&7- &bText: &7Messages to check &e(36)"
 
+      if_player_first_joined:
+        name: "&eFirst Time Joined"
+        lore:
+          - "&7Checks if the player has a marker"
+          - "&7indicating he joined this world for the first time."
+          - "&7"
+          - "&aNo arguments required"
       if_player_blocking:
         name: "&eUsing Shield"
         lore:
@@ -1453,6 +1516,15 @@ menus:
           - "&7"
           - "&7Arguments (36):"
           - "&7- &eItem: &7Item to check &e(36)"
+      inv_title_equals:
+        name: "&eOpen Inventory Title Equals"
+        lore:
+          - "&7Checks if the title of the open inventory matches"
+          - "&7any of the provided text values. Returns &6true&7 if"
+          - "&7at least one text matches."
+          - "&7"
+          - "&7Arguments (36):"
+          - "&7- &bText: &7Text to check &e(36)"
 
       set_var:
         name: "&eSet (=)"
@@ -1473,6 +1545,26 @@ menus:
           - "&7- &6Dynamic Variable: &7The variable to set &e(1)"
           - "&7- &eItem: &7The item to assign &e(1)"
 
+      var_addition:
+        name: "&eAdd (+)"
+        lore:
+          - "&7Adds the initial number with all numbers listed below,"
+          - "&7and saves the result in a variable."
+          - "&7"
+          - "&7Arguments (29):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &cNumber: &7The number to start with &e(1)"
+          - "&7- &cNumber: &7Numbers to add &e(27)"
+      var_subtraction:
+        name: "&eSubtract (-)"
+        lore:
+          - "&7Subtracts all numbers listed below from the initial number,"
+          - "&7and saves the result in a variable."
+          - "&7"
+          - "&7Arguments (29):"
+          - "&7- &6Dynamic Variable: &7Variable for the result &e(1)"
+          - "&7- &cNumber: &7The number to subtract from &e(1)"
+          - "&7- &cNumber: &7Numbers to subtract &e(27)"
       var_multiply:
         name: "&eMultiply (*)"
         lore:
@@ -1513,6 +1605,16 @@ menus:
           - "&7- &6Dynamic Variable: &7The variable to modify &e(1)"
           - "&7- &cNumber: &7The amount to subtract &e(1)"
 
+      combine_text:
+        name: "&eCombine Texts"
+        lore:
+          - "&7Combines multiple texts into one and saves"
+          - "&7the result in a variable."
+          - "&7"
+          - "&7Arguments (3):"
+          - "&7- &6Dynamic Variable: &7The final combined text &e(1)"
+          - "&7- &6Switch: &7Separator between texts &e(1)"
+          - "&7- &bText: &7Texts to combine &e(27)"
       parse_number:
         name: "&eParse Number"
         lore:
@@ -1529,6 +1631,14 @@ menus:
           - "&7Arguments (2):"
           - "&7- &6Dynamic variable: &7Variable for the result &e(1)"
           - "&7- &bText: &7Text to check &e(1)"
+      set_item_name:
+        name: "&eSet Item Name"
+        lore:
+          - "&7Sets the name of an item."
+          - "&7"
+          - "&7Arguments (2):"
+          - "&7- &6Dynamic Variable: &7The item variable &e(1)"
+          - "&7- &bText: &7The text to set as the name &e(1)"
 
       get_locs_distance:
         name: "&eGet Distance Between Locations"

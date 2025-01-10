@@ -28,14 +28,20 @@ commands:
     usage: /plot
     aliases:
       - здще
+      - world
+      - цщкдв
   join:
     usage: /join <id>
     aliases:
       - ощшт
+      - ad
+      - фв
   locale:
     usage: /locale
     aliases:
       - дщсфду
+      - lang
+      - дфтп
   build:
     usage: /build
     aliases:

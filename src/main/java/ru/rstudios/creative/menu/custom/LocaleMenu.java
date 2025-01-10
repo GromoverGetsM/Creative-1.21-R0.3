@@ -28,14 +28,15 @@ public class LocaleMenu extends ProtectedMenu {
     public void onClick(InventoryClickEvent event) {
         event.setCancelled(true);
         User user = User.asUser(event.getWhoClicked());
-        user.player().closeInventory();
 
-        switch (event.getSlot()) {
-            case 10 -> LocaleManages.setLocale(user, "ru_RU");
-            case 11 -> LocaleManages.setLocale(user, "en_US");
+        if (event.getCurrentItem() != null) {
+            user.player().closeInventory();
+            switch (event.getSlot()) {
+                case 10 -> LocaleManages.setLocale(user, "ru_RU");
+                case 11 -> LocaleManages.setLocale(user, "en_US");
+            }
+            user.sendMessage("info.locale-set", true, "");
         }
-
-        user.sendMessage("info.locale-set", true, "");
     }
 
     @Override
