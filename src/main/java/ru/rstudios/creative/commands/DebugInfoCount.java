@@ -32,6 +32,8 @@ public class DebugInfoCount implements CommandExecutor {
             }
         }
 
+        starterCounts.put("uncommon", starterCounts.getOrDefault("uncommon", 0L) - 1);
+
         long totalStartersCount = starterCounts.values().stream().mapToLong(Long::longValue).sum();
 
         String actionsPackagePath = "ru/rstudios/creative/coding/actions";
