@@ -23,6 +23,6 @@ public class IfFirstJoin extends ActionIf {
 
     @Override
     public ActionCategory getCategory() {
-        return null;
+        return ActionCategory.IF_PLAYER_FIRST_JOINED;
     }
 }
