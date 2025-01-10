@@ -68,9 +68,9 @@ public class DebugInfoCount implements CommandExecutor {
         }
 
         StringBuilder builder = new StringBuilder("[DEBUG] Сбор информации о кодинге Creative-1.21-R0.3...");
-        builder.append("\n[DEBUG] Найдено ").append(totalStartersCount).append(" событий:");
+        builder.append("\n[DEBUG] Найдено ").append(totalStartersCount/2).append(" событий:");
 
-        starterCounts.forEach((key, value) -> builder.append("\n  ").append(key).append("=").append(value));
+        starterCounts.forEach((key, value) -> builder.append("\n  ").append(key).append("=").append(value/2));
 
         builder.append("\n[DEBUG] Найдено ").append(actionCountNotActionIf).append(" действий:");
         actionCounts.forEach((key, value) -> builder.append("\n  ").append(key).append("=").append(value));
