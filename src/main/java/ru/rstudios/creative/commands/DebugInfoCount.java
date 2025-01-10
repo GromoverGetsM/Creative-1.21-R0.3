@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import ru.rstudios.creative.coding.actions.Action;
 import ru.rstudios.creative.coding.actions.ActionIf;
-import ru.rstudios.creative.coding.starters.Starter;
 
 import java.io.IOException;
 import java.util.*;
@@ -20,25 +19,37 @@ public class DebugInfoCount implements CommandExecutor {
 
         String startersPackagePath = "ru/rstudios/creative/coding/starters";
         List<Class<?>> starterClasses = getClassesFromJar(jarFilePath, startersPackagePath);
-        long starterCount = starterClasses.stream()
-                .filter(Starter.class::isAssignableFrom)
-                .count();
+        Map<String, Long> starterCounts = new HashMap<>();
+
+        for (Class<?> clazz : starterClasses) {
+            String className = clazz.getName();
+            if (className.contains("playerevent")) {
+                starterCounts.put("playerevent", starterCounts.getOrDefault("playerevent", 0L) + 1);
+            } else if (className.contains("blockevent")) {
+                starterCounts.put("blockevent", starterCounts.getOrDefault("blockevent", 0L) + 1);
+            } else {
+                starterCounts.put("uncommon", starterCounts.getOrDefault("uncommon", 0L) + 1);
+            }
+        }
+
+        long totalStartersCount = starterCounts.values().stream().mapToLong(Long::longValue).sum();
 
         String actionsPackagePath = "ru/rstudios/creative/coding/actions";
         List<Class<?>> actionClasses = getClassesFromJar(jarFilePath, actionsPackagePath);
-        long actionCountNotActionIf = actionClasses.stream()
-                .filter(clazz -> Action.class.isAssignableFrom(clazz) && !ActionIf.class.isAssignableFrom(clazz))
-                .count();
-
-        long actionIfCount = actionClasses.stream()
-                .filter(ActionIf.class::isAssignableFrom)
-                .count();
-
         Map<String, Long> actionCounts = new HashMap<>();
         Map<String, Long> conditionCounts = new HashMap<>();
 
+        long actionCountNotActionIf = 0;
+        long actionIfCount = 0;
+
         for (Class<?> clazz : actionClasses) {
             String className = clazz.getName();
+            if (Action.class.isAssignableFrom(clazz) && !ActionIf.class.isAssignableFrom(clazz)) {
+                actionCountNotActionIf++;
+            }
+            if (ActionIf.class.isAssignableFrom(clazz)) {
+                actionIfCount++;
+            }
             if (className.contains("actionvar")) {
                 actionCounts.put("actionvar", actionCounts.getOrDefault("actionvar", 0L) + 1);
             } else if (className.contains("entityaction")) {
@@ -57,7 +68,9 @@ public class DebugInfoCount implements CommandExecutor {
         }
 
         StringBuilder builder = new StringBuilder("[DEBUG] Сбор информации о кодинге Creative-1.21-R0.3...");
-        builder.append("\n[DEBUG] Найдено ").append(starterCount).append(" событий");
+        builder.append("\n[DEBUG] Найдено ").append(totalStartersCount).append(" событий:");
+
+        starterCounts.forEach((key, value) -> builder.append("\n  ").append(key).append("=").append(value));
 
         builder.append("\n[DEBUG] Найдено ").append(actionCountNotActionIf).append(" действий:");
         actionCounts.forEach((key, value) -> builder.append("\n  ").append(key).append("=").append(value));
@@ -93,4 +106,3 @@ public class DebugInfoCount implements CommandExecutor {
         return classes;
     }
 }
-
