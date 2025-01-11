@@ -110,12 +110,12 @@ public abstract class ProtectedMultipages extends ProtectedMenu {
             onMenuElementClick(event);
         }
 
-        if (isPossibleItemClicked((byte) event.getSlot()) && Objects.equals(event.getCurrentItem(), getNextPageItem())) {
+        if (event.getSlot() == nextPageSlot && Objects.equals(event.getCurrentItem(), getNextPageItem())) {
             player1.playSound(player1.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1F, 1F);
             nextPage();
         }
 
-        if (isPossibleItemClicked((byte) event.getSlot()) && Objects.equals(event.getCurrentItem(), getPrevPageItem())) {
+        if (event.getSlot() == previousPageSlot && Objects.equals(event.getCurrentItem(), getPrevPageItem())) {
             player1.playSound(player1.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1F, 1F);
             previousPage();
         }

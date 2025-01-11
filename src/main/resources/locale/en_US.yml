@@ -542,9 +542,11 @@ coding:
     select_all_entities: "All Entities"
     select_default_entity: "Default Entity"
     select_default_player: "Default Player"
+    select_last_spawned_entity: "Last spawned entity"
     select_player_by_cond: "Players by cond"
     send_selection: "Send selection"
 
+    spawn_mob: "Spawn mob"
     switch_ai: "Change entity's AI"
 
   player_event: "&b&lPlayer Event"

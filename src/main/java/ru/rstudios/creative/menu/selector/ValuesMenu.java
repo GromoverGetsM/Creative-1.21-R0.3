@@ -59,6 +59,7 @@ public class ValuesMenu extends ProtectedMenu {
         public Values(User user, Value.Category category) {
             super(LocaleManages.getLocaleMessage(user.getLocale(), "coding.tech.values", false, ""), user);
             this.category = category;
+            this.itemsSlots = new byte[]{10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
         }
 
         @Override

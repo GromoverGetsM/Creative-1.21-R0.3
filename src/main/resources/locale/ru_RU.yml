@@ -542,9 +542,11 @@ coding:
     select_all_entities: "Все сущности"
     select_default_entity: "Сущность по умолчанию"
     select_default_player: "Игрок по умолчанию"
+    select_last_spawned_entity: "Посл. созданная сущн."
     select_player_by_cond: "Игроки по условию"
     send_selection: "Отпр. текущ. выборку"
 
+    spawn_mob: "Заспавнить моба"
     switch_ai: "Изменить ИИ моба"
 
   player_event: "&b&lСобытие игрока"
