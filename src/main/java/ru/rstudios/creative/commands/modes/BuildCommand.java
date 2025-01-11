@@ -36,12 +36,14 @@ public class BuildCommand implements CommandExecutor {
 
                     for (Player player1 : p.online()) {
                         User user1 = User.asUser(player1);
-                        user1.datastore().remove("isCoding");
 
                         if (!p.isUserInDev(user1) || user1.player() == player) {
+                            user1.datastore().remove("isCoding");
                             p.teleportToPlot(user1);
                         }
                     }
+                } else {
+                    p.teleportToPlot(user);
                 }
 
                 user.sendMessage("info.user-issued-build", true, "");
