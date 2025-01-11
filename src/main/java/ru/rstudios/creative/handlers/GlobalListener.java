@@ -654,6 +654,8 @@ public class GlobalListener implements Listener {
                 event.setCancelled(true);
                 possible.throwException("entities", String.valueOf(world.getEntities().stream().filter(e -> !(e instanceof Player)).toList().size()), String.valueOf(LimitManager.getLimitValue(possible, "entities")));
             }
+
+            if (!event.isCancelled()) possible.handler.lastSpawnedEntity = entity;
         }
     }
 

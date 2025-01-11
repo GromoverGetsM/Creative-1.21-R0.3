@@ -2,13 +2,12 @@ package ru.rstudios.creative.coding.actions;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -525,6 +524,17 @@ public class ActionChest {
         }
 
         return new DynamicVariable("");
+    }
+
+    public static EntityType parseSpawnEgg (ItemStack item) {
+        if (isNullOrAir(item)) return EntityType.CHICKEN;
+        else {
+            try {
+                return EntityType.valueOf(item.getType().name().replace("_SPAWN_EGG", "").trim());
+            } catch (Exception e) {
+                return EntityType.CHICKEN;
+            }
+        }
     }
 
     public static boolean isVector (Object value) {

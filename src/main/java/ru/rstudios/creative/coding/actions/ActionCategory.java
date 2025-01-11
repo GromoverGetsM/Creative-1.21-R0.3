@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.rstudios.creative.coding.MenuCategory;
 import ru.rstudios.creative.coding.actions.actionvar.*;
+import ru.rstudios.creative.coding.actions.entityaction.settings.SpawnMob;
 import ru.rstudios.creative.coding.actions.entityaction.settings.SwitchAI;
 import ru.rstudios.creative.coding.actions.ifplayer.*;
 import ru.rstudios.creative.coding.actions.ifvariable.*;
@@ -209,10 +210,12 @@ public enum ActionCategory {
     SELECT_ALL_ENTITIES(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectAllEntities::new, Material.PIGLIN_HEAD, false, null, null, null),
     SELECT_DEFAULT_ENTITY(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectDefaultEntity::new, Material.LEVER, false, null, null, null),
     SELECT_DEFAULT_PLAYER(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectDefaultPlayer::new, Material.REDSTONE_TORCH, false, null, null, null),
+    SELECT_LAST_SPAWNED_ENTITY(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectLastSpawnedEntity::new, Material.TOTEM_OF_UNDYING, false, null, null, null),
     SELECT_PLAYER_BY_COND(Development.BlockTypes.SELECT, MenuCategory.OTHER, SelectPlayerByCond::new, Material.PLAYER_HEAD, false, null, null, null),
     SEND_SELECTION(Development.BlockTypes.SELECT, MenuCategory.OTHER, SendSelection::new, Material.WRITTEN_BOOK, false, null, null, null),
 
     // Действия сущности
+    SPAWN_MOB(Development.BlockTypes.ENTITY_ACTION, MenuCategory.OTHER, SpawnMob::new, Material.ALLAY_SPAWN_EGG, true, CodingMenu.MenuType.DUO_SET, List.of(CodingMenu.ArgumentType.ITEMSTACK, CodingMenu.ArgumentType.TEXT, CodingMenu.ArgumentType.LOCATION), new LinkedHashMap<>()),
     SWITCH_AI(Development.BlockTypes.ENTITY_ACTION, MenuCategory.PARAMS, SwitchAI::new, Material.ZOMBIE_HEAD, true, CodingMenu.MenuType.DEFAULT, List.of(), new LinkedHashMap<>(Map.of(13,
             new SwitchItem(List.of("true", "false"), "menus.switches.actions.switch_ai", List.of(Material.LIME_CONCRETE_POWDER, Material.RED_CONCRETE_POWDER)))));
 

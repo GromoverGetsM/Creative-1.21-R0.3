@@ -1842,6 +1842,13 @@ menus:
           - "&7the entity is a player."
           - "&7"
           - "&aNo arguments required"
+      select_last_spawned_entity:
+        name: "&eSelect the last spawned entity"
+        lore:
+          - "&7Replaces the selection with the last spawned entity"
+          - "&7in the world, if it exists"
+          - "&7"
+          - "&aNo arguments required"
       select_player_by_cond:
         name: "&eSelect players by condition"
         lore:

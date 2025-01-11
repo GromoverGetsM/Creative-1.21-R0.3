@@ -44,6 +44,7 @@ public class CodeHandler {
     public List<Cycle> cycles = new LinkedList<>();
 
     public int callsAmount = 0;
+    public Entity lastSpawnedEntity;
 
     public CodeHandler (Plot plot) {
         this.plot = plot;
