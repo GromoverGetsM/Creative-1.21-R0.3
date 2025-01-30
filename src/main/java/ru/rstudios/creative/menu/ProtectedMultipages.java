@@ -56,7 +56,7 @@ public abstract class ProtectedMultipages extends ProtectedMenu {
 
             for (ItemStack item : items) {
                 setItem(itemsSlots[slot], item);
-                updateSlot(slot);
+                updateSlot(itemsSlots[slot]);
                 slot++;
             }
         }
@@ -101,7 +101,7 @@ public abstract class ProtectedMultipages extends ProtectedMenu {
         event.setCancelled(true);
         Player player1 = (Player) event.getWhoClicked();
 
-        if ((!isPlayerClicked(event) || !isPossibleItemClicked((byte) event.getSlot())) || Objects.equals(event.getCurrentItem(), DECORATION_ITEM)) {
+        if ((!isPlayerClicked(event) || Objects.equals(event.getCurrentItem(), DECORATION_ITEM))) {
             return;
         }
 
